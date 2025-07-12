@@ -845,3 +845,41 @@ tbody tr:last-child td {
 }
 
 /**/
+
+#cierre-manto-campo .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#cierre-manto-campo .container__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Para 3 columnas */
+    padding-top: 0px;
+    width: 100%;
+}
+
+#cierre-manto-campo .container__grid__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+#cierre-manto-campo .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
