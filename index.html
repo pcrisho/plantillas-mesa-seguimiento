@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://www.hitss.com:443/wp-content/uploads/2025/01/cropped-favicon-32x32.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Plantillas de Mesa de Seguimiento Fija - Hitss Perú</title>
+
+</head>
+
+<body>
+
+    <header>
+
+        <div class="header__container">
+
+            <figure class="nav__logo">
+                <img src="https://www.hitss.com:443/wp-content/uploads/2025/01/cropped-favicon-32x32.png"
+                    alt="Logo de Hitss">
+
+            </figure>
+
+            <ul class="header__list">
+
+                <li class="header__item">
+                    <a href="https://claro360.com/plataforma360/login" class="header__link" target="_blank"
+                        rel="noopener noreferrer">Claro360</a>
+                </li>
+                <li class="header__item">
+                    <a href="https://amx-peru.fs.ocs.oraclecloud.com/" class="header__link" target="_blank"
+                        rel="noopener noreferrer">TOA</a>
+                </li>
+                <li class="header__item">
+                    <a href="http://172.17.51.6/sac/Login_input" class="header__link" target="_blank"
+                        rel="noopener noreferrer">Incognito</a>
+                </li>
+                <li class="header__item">
+                    <a href="https://10.95.224.33:8443/csp/bsf/index.action" class="header__link" target="_blank"
+                        rel="noopener noreferrer">IPCC</a>
+                </li>
+                <li class="header__item">
+                    <a href="https://maps.geodir.co/bravo-maps" class="header__link" target="_blank"
+                        rel="noopener noreferrer">GEODIR</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+    </header>
+
+    <main>
+        <nav class="nav">
+
+            <ul class="list">
+
+                <div class="datos">
+                    <label for="input-adp">Nombre del ADP</label>
+                    <input type="text" id="input-adp" placeholder="Ingresa tus nombres y apellidos" required>
+
+                    <label for="input-usuario">Ingresa tu usuario E (7 caracteres)</label>
+                    <input type="text" id="input-usuario" maxlength="7" placeholder="Ej: E758975" required>
+
+                    <button onclick="guardarDatosAdp()">💾 Guardar</button>
+                </div>
+
+
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M480-400q-50 0-85-35t-35-85v-240q0-50 35-85t85-35q50 0 85 35t35 85v240q0 50-35 85t-85 35Zm0-240Zm-40 520v-123q-104-14-172-93t-68-184h80q0 83 58.5 141.5T480-320q83 0 141.5-58.5T680-520h80q0 105-68 184t-172 93v123h-80Zm40-360q17 0 28.5-11.5T520-520v-240q0-17-11.5-28.5T480-800q-17 0-28.5 11.5T440-760v240q0 17 11.5 28.5T480-480Z" />
+                        </svg>
+                        <a href="#speech-val-llamada" class="nav__link">Speech de Validación</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+                        <li class="list__inside">
+                            <a href="#validacion-general" class="nav__link nav__link--inside">Validación General</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#instalacion-seguimiento" class="nav__link nav__link--inside">Instalación -
+                                Seguimiento</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#postventa-seguimiento" class="nav__link nav__link--inside">Post-venta -
+                                Seguimiento</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#speech-mantenimiento-seguimiento"
+                                class="nav__link nav__link--inside">Mantenimiento -
+                                Seguimiento</a>
+                        </li>
+                    </ul>
+
+                </li>
+
+
+                <li class="list__item">
+                    <div class="list__button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M280-440v320q0 17-11.5 28.5T240-80q-17 0-28.5-11.5T200-120v-680q0-17 11.5-28.5T240-840h541q11 0 19.5 5t13.5 13q5 8 6.5 17.5T818-785l-58 145 58 145q4 10 2.5 19.5T814-458q-5 8-13.5 13t-19.5 5H280Zm0-80h442l-36-90q-6-14-6-30t6-30l36-90H280v240Zm0 0v-240 240Z" />
+                        </svg>
+                        <a href="#flags" class="nav__link">Flags</a>
+                    </div>
+                </li>
+
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="m240-240-92 92q-19 19-43.5 8.5T80-177v-623q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240Z" />
+                        </svg>
+                        <a href="#speech-inicio" class="nav__link">Speech de Inicio</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+                        <li class="list__inside">
+                            <a href="#si-activaciones" class="nav__link nav__link--inside">Activaciones</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#si-rechazos-tecnicos" class="nav__link nav__link--inside">Rechazos técnicos</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#si-validaciones" class="nav__link nav__link--inside">Validaciones</a>
+                        </li>
+                    </ul>
+
+                </li>
+
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm400-120q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z" />
+                        </svg>
+                        <a href="#activaciones" class="nav__link">Activaciones</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+                        <li class="list__inside">
+                            <a href="#a-instalacion" class="nav__link nav__link--inside">Instalación</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-cambio-plan" class="nav__link nav__link--inside">Cambio de plan</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-cambio-equipo" class="nav__link nav__link--inside">Cambio de equipo</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-repetidor-mesh" class="nav__link nav__link--inside">Repetidor Mesh</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-reenvio-senal" class="nav__link nav__link--inside">Reenvío de señal</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-traslado-ext" class="nav__link nav__link--inside">Traslado Externo</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-repetidor-plume" class="nav__link nav__link--inside">Repetidor Plume</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-deco-add" class="nav__link nav__link--inside">Deco Adicional</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-cod-camb-eq" class="nav__link nav__link--inside">Cod. Cambio de equipo</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#a-gen-cod-aut" class="nav__link nav__link--inside">Generador de Cod. de
+                                Autorización</a>
+                        </li>
+                    </ul>
+
+                </li>
+
+                <!-- ========== Start Section ========== -->
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="m702-593 141-142q12-12 28.5-12t28.5 12q12 12 12 28.5T900-678L730-508q-12 12-28 12t-28-12l-85-85q-12-12-12-28.5t12-28.5q12-12 28-12t28 12l57 57ZM360-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-240v-32q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v32q0 33-23.5 56.5T600-160H120q-33 0-56.5-23.5T40-240Z" />
+                        </svg>
+                        <a href="#validaciones" class="nav__link">Validaciones</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+                        <li class="list__inside">
+                            <a href="#val-instalacion" class="nav__link nav__link--inside">Instalación</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#val-postventa" class="nav__link nav__link--inside">Post-venta</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#val-manto-hfc-ftth" class="nav__link nav__link--inside">Mantenimiento HFC-FTTM</a>
+                        </li>
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <li class="list__item">
+                    <div class="list__button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M754-81q-8 0-15-2.5T726-92L522-296q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l85-85q6-6 13-8.5t15-2.5q8 0 15 2.5t13 8.5l204 204q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13l-85 85q-6 6-13 8.5T754-81Zm-549 1q-8 0-15.5-3T176-92l-84-84q-6-6-9-13.5T80-205q0-8 3-15t9-13l212-212h85l34-34-165-165h-57L80-765l113-113 121 121v57l165 165 116-116-43-43 56-56H495l-28-28 142-142 28 28v113l56-56 142 142q17 17 26 38.5t9 45.5q0 24-9 46t-26 39l-85-85-56 56-42-42-207 207v84L233-92q-6 6-13 9t-15 3Z" />
+                        </svg>
+                        <a href="#cod-manto" class="nav__link">Códigos de Manto</a>
+                    </div>
+                </li>
+
+                <!-- ========== Start Section ========== -->
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M620-520q-75 0-127.5-52.5T440-700q0-75 52.5-127.5T620-880q75 0 127.5 52.5T800-700q0 27-8 51t-20 45l100 100q11 11 11 28t-11 28q-11 11-28 11t-28-11L716-548q-21 12-45 20t-51 8Zm0-80q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29ZM160-80q-33 0-56.5-23.5T80-160v-560q0-33 23.5-56.5T160-800h172q17 0 28 14.5t6 31.5q-3 14-4 29t-1 29q0 109 77 182t183 73q19 0 38-2.5t39-8.5l79 79q11 11 17 25.5t6 30.5v157q0 33-23.5 56.5T720-80H160Z" />
+                        </svg>
+                        <a href="#general-seguimiento" class="nav__link">General - Seguimiento</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+                        <li class="list__inside">
+                            <a href="#gs-confirmacion-visita" class="nav__link nav__link--inside">Confirmación de visita
+                                en llamada</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#gs-adelanto-visita" class="nav__link nav__link--inside">Adelanto de visita</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-mantiene-fecha-programada" class="nav__link nav__link--inside">Mantiene fecha
+                                programada</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-habilitacion-franjas" class="nav__link nav__link--inside">Habilitación de
+                                franjas</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-fuera-toa" class="nav__link nav__link--inside">Fuera de TOA</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-ciclo-llamadas" class="nav__link nav__link--inside">Ciclo de llamadas</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-toa-no-interviene" class="nav__link nav__link--inside">TOA no interviene</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-autorizacion-fuera-toa" class="nav__link nav__link--inside">Autorización Fuera
+                                de TOA</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-espera-equipos" class="nav__link nav__link--inside">En espera de equipos</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-espera-equipos-repetidores" class="nav__link nav__link--inside">En espera de
+                                equipos: Repetidores</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-espera-equipos-emta" class="nav__link nav__link--inside">En espera de equipos:
+                                EMTA</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-espera-equipos-materiales-cambio" class="nav__link nav__link--inside">En espera
+                                de equipos: Materiales de
+                                cambio</a>
+                        </li>
+                        <li class="list__inside">
+                            <a href="#gs-espera-equipos-decos" class="nav__link nav__link--inside">En espera de equipos:
+                                Decos</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <!-- ========== Start Section ========== -->
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M760-80H640q-17 0-28.5-11.5T600-120q0-17 11.5-28.5T640-160h120v-400H200v120q0 17-11.5 28.5T160-400q-17 0-28.5-11.5T120-440v-280q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80Zm-393-80H80q-17 0-28.5-11.5T40-200q0-17 11.5-28.5T80-240h287l-75-76q-11-11-11.5-27.5T292-372q11-11 28-11t28 11l144 144q12 12 12 28t-12 28L348-28q-11 11-27.5 11.5T292-28q-11-11-11-28t11-28l75-76Z" />
+                        </svg>
+                        <a href="#reagendados" class="nav__link">Reagendados</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+                        <li class="list__inside">
+                            <a href="#repro-mesa-claro" class="nav__link nav__link--inside">Repro. en Mesa - Claro</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#repro-mesa-cliente" class="nav__link nav__link--inside">Repro. en Mesa -
+                                Cliente</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#repro-campo-claro" class="nav__link nav__link--inside">Repro. en Campo -
+                                Cliente</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#repro-campo-cliente" class="nav__link nav__link--inside">Repro. en Campo -
+                                Cliente</a>
+                        </li>
+
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <!-- ========== Start Section ========== -->
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="m760-183-57 56q-11 11-27.5 11.5T647-127q-11-11-11-28t11-28l56-57-56-57q-11-11-11.5-27.5T647-353q11-11 28-11t28 11l57 56 57-56q11-11 27.5-11.5T873-353q11 11 11 28t-11 28l-56 57 56 57q11 11 11.5 27.5T873-127q-11 11-28 11t-28-11l-57-56ZM400-600q-17 0-28.5-11.5T360-640q0-17 11.5-28.5T400-680h280q17 0 28.5 11.5T720-640q0 17-11.5 28.5T680-600H400Zm0 120q-17 0-28.5-11.5T360-520q0-17 11.5-28.5T400-560h280q17 0 28.5 11.5T720-520q0 17-11.5 28.5T680-480H400ZM240-80q-50 0-85-35t-35-85v-40q0-33 23.5-56.5T200-320h40v-480q0-33 23.5-56.5T320-880h440q33 0 56.5 23.5T840-800v320q0 17-11.5 28.5T800-440q-17 0-28.5-11.5T760-480v-320H320v480h166q18 0 29.5 14t7.5 32q-2 8-2.5 17t-.5 17q0 29 7 57.5t21 54.5q9 17 1 32.5T524-80H240Z" />
+                        </svg>
+                        <a href="#reagendados" class="nav__link">Rechazos: Mesa y Campo</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+                        <li class="list__inside">
+                            <a href="#repro-mesa-claro" class="nav__link nav__link--inside">Cliente no desea
+                                servicio</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#repro-mesa-cliente" class="nav__link nav__link--inside">Por
+                                duplicidad</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#repro-campo-claro" class="nav__link nav__link--inside">Por facilidades
+                                técnicas del cliente</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#repro-campo-cliente" class="nav__link nav__link--inside">Por falta de
+                                contacto</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Por mal ingreso de dirección</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Por mala oferta</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Por mudanza o viaje</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Por SOT con errores de Sistema</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Por posible fraude</a>
+                        </li>
+
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <!-- ========== Start Section ========== -->
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="m760-183-57 56q-11 11-27.5 11.5T647-127q-11-11-11-28t11-28l56-57-56-57q-11-11-11.5-27.5T647-353q11-11 28-11t28 11l57 56 57-56q11-11 27.5-11.5T873-353q11 11 11 28t-11 28l-56 57 56 57q11 11 11.5 27.5T873-127q-11 11-28 11t-28-11l-57-56ZM400-600q-17 0-28.5-11.5T360-640q0-17 11.5-28.5T400-680h280q17 0 28.5 11.5T720-640q0 17-11.5 28.5T680-600H400Zm0 120q-17 0-28.5-11.5T360-520q0-17 11.5-28.5T400-560h280q17 0 28.5 11.5T720-520q0 17-11.5 28.5T680-480H400ZM240-80q-50 0-85-35t-35-85v-40q0-33 23.5-56.5T200-320h40v-480q0-33 23.5-56.5T320-880h440q33 0 56.5 23.5T840-800v320q0 17-11.5 28.5T800-440q-17 0-28.5-11.5T760-480v-320H320v480h166q18 0 29.5 14t7.5 32q-2 8-2.5 17t-.5 17q0 29 7 57.5t21 54.5q9 17 1 32.5T524-80H240Z" />
+                        </svg>
+                        <a href="#reagendados" class="nav__link">Rechazos: Motivo Técnico</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Rechazo por Red Saturada</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Rechazo por Factibilidad Técnica</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Rechazo por Cambio de plano</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Rechazo por Falta de Infraestructura de
+                                Red</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Rechazo por Consulta de Cintillos - HFC</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Rechazo por Consulta de Cintillos - FTTH</a>
+                        </li>
+
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M660-80q-13 0-21.5-8.5T630-110v-170q-9-8-14.5-18.5T610-320q0-21 15-35.5t35-14.5q21 0 35.5 14.5T710-320q0 11-4.5 22T690-280v170q0 13-8.5 21.5T660-80Zm0-341q-42 0-71 29t-29 71q0 12 3.5 24t9.5 23q6 11 5.5 23.5T569-229q-9 9-21.5 8.5T528-231q-14-20-21-43t-7-47q0-67 47-113.5T660-481q67 0 113.5 46.5T820-321q0 23-6.5 46T793-232q-7 10-19 10.5t-21-8.5q-9-8-10-20.5t5-23.5q6-11 9-23t3-24q0-42-29-71t-71-29Zm0-99q-83 0-141.5 58T460-320q0 32 10.5 62t29.5 56q8 11 7 23.5T497-157q-9 9-21 8t-20-11q-26-35-41-75.5T400-320q0-109 76-184.5T660-580q109 0 184.5 75.5T920-320q0 44-14 84.5T865-160q-8 10-20.5 10t-21.5-9q-9-9-9-21t8-23q19-26 28.5-55.5T860-320q0-84-58-142t-142-58ZM100-160q-25 0-42.5-17.5T40-220v-360q0-25 17.5-42.5T100-640h200q25 0 42.5 17.5T360-580v360q0 25-17.5 42.5T300-160H100Zm560-500q-63 0-119 21.5T440-579v-1q0-58-41-99t-99-41H99q-5 0-9.5.5T80-718v-2q0-33 23.5-56.5T160-800h600q33 0 56.5 23.5T840-720v112q-42-25-86.5-38.5T660-660ZM200-459q13 0 21.5-9t8.5-21q0-13-8.5-21.5T200-519q-12 0-21 8.5t-9 21.5q0 12 9 21t21 9Z" />
+                        </svg>
+                        <a href="#reagendados" class="nav__link">Cierre Manto: Mesa</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Ok en Línea</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - Suspención</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - ATC</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - Baja</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - Duplicidad</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - Falta de
+                                Contacto</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - Derivado</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - Facilidades</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Incidencia Mal Generada - Datos
+                                Incorrectos</a>
+                        </li>
+
+
+
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <!-- ========== End Section ========== -->
+
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M660-80q-13 0-21.5-8.5T630-110v-170q-9-8-14.5-18.5T610-320q0-21 15-35.5t35-14.5q21 0 35.5 14.5T710-320q0 11-4.5 22T690-280v170q0 13-8.5 21.5T660-80Zm0-341q-42 0-71 29t-29 71q0 12 3.5 24t9.5 23q6 11 5.5 23.5T569-229q-9 9-21.5 8.5T528-231q-14-20-21-43t-7-47q0-67 47-113.5T660-481q67 0 113.5 46.5T820-321q0 23-6.5 46T793-232q-7 10-19 10.5t-21-8.5q-9-8-10-20.5t5-23.5q6-11 9-23t3-24q0-42-29-71t-71-29Zm0-99q-83 0-141.5 58T460-320q0 32 10.5 62t29.5 56q8 11 7 23.5T497-157q-9 9-21 8t-20-11q-26-35-41-75.5T400-320q0-109 76-184.5T660-580q109 0 184.5 75.5T920-320q0 44-14 84.5T865-160q-8 10-20.5 10t-21.5-9q-9-9-9-21t8-23q19-26 28.5-55.5T860-320q0-84-58-142t-142-58ZM100-160q-25 0-42.5-17.5T40-220v-360q0-25 17.5-42.5T100-640h200q25 0 42.5 17.5T360-580v360q0 25-17.5 42.5T300-160H100Zm560-500q-63 0-119 21.5T440-579v-1q0-58-41-99t-99-41H99q-5 0-9.5.5T80-718v-2q0-33 23.5-56.5T160-800h600q33 0 56.5 23.5T840-720v112q-42-25-86.5-38.5T660-660ZM200-459q13 0 21.5-9t8.5-21q0-13-8.5-21.5T200-519q-12 0-21 8.5t-9 21.5q0 12 9 21t21 9Z" />
+                        </svg>
+                        <a href="#reagendados" class="nav__link">Cierre Manto: Campo</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">MO-01 - Cliente Ausente</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">MO-02 - Cliente dará de baja el servicio</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">MO-04 - No hay facilidades técnicas del
+                                cliente</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">IN-02 - Inspección técnica</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <!-- ========== End Section ========== -->
+
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M80-480q-17 0-29-10.5T41-516q7-85 44-159t96-128.5Q240-858 317-889t163-31q86 0 163 31t136 85.5Q838-749 875-675t44 159q2 15-10 25.5T880-480q-16 0-28-10t-14-26q-14-138-116-231t-242-93q-140 0-242 93T122-516q-2 16-14 26t-28 10Zm160 0q-17 0-28.5-11t-9.5-26q14-104 92.5-173.5T480-760q107 0 185.5 69.5T758-517q2 15-9.5 26T720-480q-16 0-28.5-8.5T677-512q-12-72-67-120t-130-48q-75 0-130 48t-67 120q-2 15-14.5 23.5T240-480Zm240 296-92 92q-11 11-28 11t-28-11q-11-11-11-28t11-28l108-108v-132q-27-12-43.5-37T380-480q0-42 29-71t71-29q42 0 71 29t29 71q0 30-16.5 55T520-388v132l108 108q11 11 11 28t-11 28q-11 11-28 11t-28-11l-92-92Z" />
+                        </svg>
+                        <a href="#reagendados" class="nav__link">Derivación PEXT - HFC</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">TAP sin servicio</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Degradación del servicio HFC - Enlace lento
+                                Flag PEXT alarmado</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Degradación del servicio HFC - Intermitencia
+                                Flag reinicio alarmado</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Mala señal CATV Básico/Digital</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+                <!-- ========== End Section ========== -->
+
+                <li class="list__item list__item--click">
+                    <div class="list__button list__button--click">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M80-480q-17 0-29-10.5T41-516q7-85 44-159t96-128.5Q240-858 317-889t163-31q86 0 163 31t136 85.5Q838-749 875-675t44 159q2 15-10 25.5T880-480q-16 0-28-10t-14-26q-14-138-116-231t-242-93q-140 0-242 93T122-516q-2 16-14 26t-28 10Zm160 0q-17 0-28.5-11t-9.5-26q14-104 92.5-173.5T480-760q107 0 185.5 69.5T758-517q2 15-9.5 26T720-480q-16 0-28.5-8.5T677-512q-12-72-67-120t-130-48q-75 0-130 48t-67 120q-2 15-14.5 23.5T240-480Zm240 296-92 92q-11 11-28 11t-28-11q-11-11-11-28t11-28l108-108v-132q-27-12-43.5-37T380-480q0-42 29-71t71-29q42 0 71 29t29 71q0 30-16.5 55T520-388v132l108 108q11 11 11 28t-11 28q-11 11-28 11t-28-11l-92-92Z" />
+                        </svg>
+                        <a href="#reagendados" class="nav__link">Derivación PEXT - FTTH</a>
+                        <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%229%206%2015%2012%209%2018%22/%3E%3C/svg%3E"
+                            alt="Flecha" width="24" height="24" class="list__arrow">
+                    </div>
+
+                    <ul class="list__show">
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">FAT sin servicio FTTH</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Degradación del servicio FTTH - Enlace lento
+                                Flag PEXT alarmado</a>
+                        </li>
+
+                        <li class="list__inside">
+                            <a href="#" class="nav__link nav__link--inside">Degradación del servicio FTTH -
+                                Intermitencia Flag reinicio alarmado </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+                <!-- ========== End Section ========== -->
+
+
+            </ul>
+            <div style="padding: 10px 0px;"></div>
+        </nav>
+
+        <aside>
+            <div class="container">
+                <h1>Plantillas de Mesa de Seguimiento Fija</h1>
+                <p>Estas plantillas son para el seguimiento de los casos que se encuentran en la mesa de seguimiento
+                    fija. Se hizo una corrreción y adaptación de las diferentes plantillas para facilitar su uso.</p>
+
+            </div>
+
+            <section id="speech-val-llamada">
+                <div class="container">
+                    <h2>Speech de Validación</h2>
+
+                    <div class="container__grid">
+                        <div class="container__grid__item">
+                            <div id="validacion-general">
+                                <h3>Validación General</h3>
+                                <p>Esta plantilla es para validar la llamada de seguimiento al cliente después de una
+                                    instalación o mantenimiento.</p>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        Buenos (días, tardes, noches). Le saluda <span class="adp"></span>,
+                                        vamos a realizar una breve encuesta para validar el servicio. Por su seguridad
+                                        esta llamada está siendo
+                                        grabada el <span class="dia"></span> de <span class="mes"></span> del <span
+                                            class="anio"></span> a
+                                        las <span class="hora"></span>. Indíqueme sus nombres y apellidos completos, así
+                                        también su DNI, por favor. <br>
+                                        <br>
+                                        <b>Encuesta al cliente – Mantenimiento: </b><br>
+
+                                        🔸 ¿El técnico resolvió el problema de (Internet, Cable o Telefonía) reportado?
+                                        <br>
+                                        &nbsp;&nbsp;☐ Respuesta Sí: Continuar validación. <br>
+                                        &nbsp;&nbsp;☐ Respuesta No: Rechazamos. <br>
+                                        <br>
+                                        <b>Preguntas adicionales según servicios contratados: </b><br>
+                                        🔸 ¿Navega por internet desde su celular/laptop? <br>
+                                        &nbsp;&nbsp;☐ Respuesta Sí: Validar. <br>
+                                        &nbsp;&nbsp;☐ Respuesta No: Escalar. <br>
+                                        🔸 ¿Verificó que tiene señal wifi en diferentes puntos de su domicilio? <br>
+                                        &nbsp;&nbsp;☐ Respuesta Sí: Validar. <br>
+                                        &nbsp;&nbsp;☐ Respuesta No: Escalar. <br>
+                                        🔸 ¿Realizó una llamada de prueba desde su línea telefónica? <br>
+                                        &nbsp;&nbsp;☐ Respuesta Sí: Validar. <br>
+                                        &nbsp;&nbsp;☐ Respuesta No: Escalar. <br>
+                                        🔸 ¿Visualizó canales nacionales/internacionales en su televisor? <br>
+                                        &nbsp;&nbsp;☐ Respuesta Sí: Validar. <br>
+                                        &nbsp;&nbsp;☐ Respuesta No: Escalar. <br>
+                                        <br>
+                                        <b>Despedida: </b><br>
+                                        Agradecemos las facilidades que nos ha brindado para realizar la
+                                        instalación de su servicio. Se le recuerda que no debe realizar ningún pago al
+                                        personal
+                                        técnico que lo atendió. Por favor comuníquese con el técnico.
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="instalacion-seguimiento">
+                                <h3>Speech Instalación - Seguimiento</h3>
+                                <p>Esta plantilla es para validar la llamada de seguimiento al cliente después de una
+                                    instalación o mantenimiento.</p>
+                                <div class="plantilla">
+                                    <p>
+                                        Buenos (días, tardes, noches). Le saluda <b><span class="adp"></span></b> del
+                                        área de
+                                        seguimiento de
+                                        Claro ¿Me comunico con [Nombre del Titular, nombre completo]?
+                                        Le llamamos por una solicitud para una instalación de claro hogar. Su visita
+                                        está
+                                        programada para el día [fecha] en la franja horaria de [franja horaria] ¿Nos
+                                        podría confirmar su disponibilidad para esa fecha y hora?<br>
+                                        <br>
+                                        Le informamos que la tecnología a instalarse es: Fibra Coaxial / Fibra
+                                        Óptica<br>
+                                        🔸 SOLAMENTE SI EL CLIENTE PREGUNTA POR LA TECNOLOGÍA*<br>
+                                        &nbsp;&nbsp;☐ Fibra coaxial: la fibra óptica llega hasta el poste y luego se
+                                        realiza el cableado coaxial hasta su domicilio.<br>
+                                        &nbsp;&nbsp;☐ Fibra óptica: la fibra óptica llega hasta el poste y luego se
+                                        realiza el cableado fibra óptica hasta su domicilio.<br>
+                                        <br>
+                                        🔸 El paquete contratado es: (SE INFORMA PAQUETE VALIDADO EN EL SGA)<br>
+                                        &nbsp;&nbsp;☐ Internet [cantidad]<br>
+                                        &nbsp;&nbsp;☐ [cantidad] decodificadores ¿cuenta con los televisores para
+                                        validar la señal de cable? ( IMPORTANTE )<br>
+                                        &nbsp;&nbsp;☐ Telefonía [cantidad] minutos<br><br>
+                                        <b>*Si el cliente cuenta con Repetidores o L1MAX, indicarle dentro de la
+                                            validación
+                                            del plan*</b><br>
+
+                                        Por último, para confirmar la dirección es: [Dirección completa] en el distrito
+                                        de [Nombre del distrito].<br>
+                                        <br>
+                                        De tener errores con el paquete contratado/dirección proceder con una SOT DE
+                                        REEMPLAZO o el rechazo de la solicitud*<br>
+                                        <br>
+                                        Muchas gracias por la confirmación, por favor estar atenta a su celular que el
+                                        técnico se comunicara con usted.
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="postventa-seguimiento">
+                                <h3>Speech Post Veta - Seguimiento</h3>
+                                <p>Esta plantilla es para validar la llamada de seguimiento al cliente después de una
+                                    instalación o mantenimiento.</p>
+                                <div class="plantilla">
+                                    <p>
+                                        Buenos (días, tardes, noches). Le saluda <span class="adp"></span> del área de
+                                        seguimiento de Claro ¿Me comunico con [Nombre del Titular, primer nombre y
+                                        apellido completo]. Le llamamos por solicitud de [TIPO DE POST-VENTA]. Su visita
+                                        está programada para el día [fecha] en la franja horaria de [franja horaria]
+                                        ¿Nos podría confirmar su disponibilidad para esa fecha y hora?<br>
+                                        <br>
+                                        🔸 En caso de tener servicio CATV:<br>
+                                        &nbsp;&nbsp;☐ Me confirma si el decodificador solicitado es [indicar la cantidad
+                                        de los decos solicitado y el modelo si es HD, DVR, BASICO
+                                        HD, IPTV]*<br>
+                                        🔸 TRASLADO EXTERNO, VALIDA SI TIENE LOS EQUIPOS EN LA NUEVA DIRECCIÓN*
+                                        Si el cliente ya no cuenta con los equipos, proceder con el rechazo e
+                                        indicarle:<br>
+                                        &nbsp;&nbsp;☐ Bien estimado vamos a tener que cancelar la solicitud, debe volver
+                                        a llamar al 123 para una REPOSICIÓN DE EQUIPOS<br>
+                                        <br>
+                                        Por último, para confirmar la dirección es: [Dirección completa] en el distrito
+                                        de [Nombre del distrito].
+                                        Muchas gracias por la confirmación, por favor estar atenta a su celular que el
+                                        técnico se comunicara con usted.
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="speech-mantenimiento-seguimiento">
+                                <h3>Speech Mantenimiento - Seguimiento</h3>
+                                <p>Esta plantilla es para validar la llamada de seguimiento al cliente después de una
+                                    instalación o mantenimiento.</p>
+                                <div class="plantilla">
+                                    <p>
+                                        Buenos (días, tardes, noches), le saluda <span class="adp"></span> del área de
+                                        seguimiento de
+                                        Claro ¿Me comunico con [Nombre del Titular, primer nombre y apellido completo]?
+                                        Verificamos que reportó incovenientes con el servicio
+                                        [internet/telefonía/cable], y queremos confirmar si se restableció el
+                                        servicio.<br><br>
+                                        🔸 Si la respuesta es Si: procedemos con el cierre de la solicitud, Gracias por
+                                        su
+                                        atención.<br>
+                                        🔸 Si la respuesta es No: El técnico se estaría acercando entre [indicas franja
+                                        horaria] ¿contaría con disponibilidad para atenderlo?<br><br>
+                                        Por último, para confirmar la dirección es: [Dirección completa] en el distrito
+                                        de [Nombre del distrito]. Muchas gracias por la confirmación, por favor estar
+                                        atenta a su celular que el técnico se comunicara con usted.
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section id="flags">
+
+                <div class="container">
+                    <h2>Flags</h2>
+                    <p>Estas son las flags que se utilizan para el seguimiento de los casos que se encuentran en la
+                        mesa de seguimiento fija.</p>
+
+                    <div class="tabla">
+
+                        <table border="1" cellpadding="8" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Etiqueta</th>
+                                    <th>Representa</th>
+                                    <th>Activación Manual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>📌</td>
+                                    <td>Fuera de TOA</td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>2️⃣</td>
+                                    <td>Mantenimiento 2N</td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>⚓</td>
+                                    <td>Incidencia Técnico</td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>💯</td>
+                                    <td>Full Claro </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🧲</td>
+                                    <td>Retenciones</td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🏠</td>
+                                    <td>Puerta a Puerta</td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>✈️</td>
+                                    <td>Migración FTTH a HFC</td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>⭕</td>
+                                    <td>Revisión Overlap</td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🔁</td>
+                                    <td>Instalaciones FTTH Repetidor Velocidades 400 y 600 Mbps </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🚀</td>
+                                    <td>Instalación 24hrs </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🔧</td>
+                                    <td>Mantenimiento Sin Servicio (24hrs) </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>✂️</td>
+                                    <td>Auditoría de FAT </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>⛑️</td>
+                                    <td>Mantenimiento Cliente FTTH - Sin Servicio (Requiere Escalera) </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🚗</td>
+                                    <td>En Ruta </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>⭐</td>
+                                    <td>Referido (VIP) </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>⏱️</td>
+                                    <td>Alta Dilación </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>🚨</td>
+                                    <td>Alto Reagendamiento </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>🔪</td>
+                                    <td>Adelanto por Contratista </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>😡</td>
+                                    <td>Mantenimiento a 30 Días (Garantía) </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🔒</td>
+                                    <td>Retención Prioridad </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>🍽️</td>
+                                    <td>Almuerzo </td>
+                                    <td>NO</td>
+                                </tr>
+                                <tr>
+                                    <td>⚠️</td>
+                                    <td>Contingencia </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>🔥</td>
+                                    <td>Cliente FOES </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>🚑</td>
+                                    <td>Cliente Recuperado </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>✔️</td>
+                                    <td>Cliente Confirmado Programación </td>
+                                    <td>SÍ</td>
+                                </tr>
+                                <tr>
+                                    <td>✅</td>
+                                    <td>Conforme Whatsapp Seguimiento </td>
+                                    <td>SÍ/NO</td>
+                                </tr>
+                                <tr>
+                                    <td>☑️</td>
+                                    <td>Cliente Confirmado Seguimiento </td>
+                                    <td>SÍ/NO</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </section>
+
+            <section id="speech-inicio">
+
+                <div class="container">
+                    <h2>Speech de Inicio</h2>
+                    <p>Este speech es para iniciar el chat del ticket en Claro360.</p>
+                    <p>Para Activaciones: Confirmación de datos, equipos y tipo de atención. <br>Para Rechazos técnicos:
+                        Confirmación de motivo de rechazo y evidencias. <br>Para validaciones: Datos para confirmar el
+                        servicio con el cliente</p>
+
+                    <div class="container__grid">
+                        <div class="container__grid__item">
+                            <div id="si-activaciones">
+                                <h3>Activaciones</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        Buen día, compañero. Por favor, bríndame los siguientes datos para poder
+                                        ayudarte
+                                        con la activación de los equipos: Tipo de trabajo, plantilla y foto de las
+                                        etiquetas de los equipos a instalar.
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="si-rechazos-tecnicos">
+                                <h3>Rechazos Técnicos</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        Buen día, compañero. Por favor, enviar los siguientes datos y evidencias: Motivo
+                                        de rechazo, coordenadas, observaciones y fotos del domicilio y suministro del
+                                        cliente.
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="si-validaciones">
+                                <h3>Validaciones</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        Buen día, compañero. Por favor, enviar los siguientes datos para confirmar el
+                                        servicio con el cliente: SOT, persona que valida, parentezco, número para
+                                        comunicarnos, Código de Solución(Para mantenimientos*) y alguna
+                                        observación(opcional*).
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </section>
+
+            <section id="activaciones">
+                <div class="container">
+                    <h2>Activaciones</h2>
+                    <p>Estas son las plantillas para las activaciones de equipos en el SGA.</p>
+
+                    <div class="container__grid">
+                        <div class="container__grid__item">
+                            <div id="a-instalacion">
+                                <h3>Instalación</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>ACTIVACION - ADP MULTISKILL HITSS</b><br>
+                                        EQUIPOS ACTIVADOS: <br>
+                                        ESTADO: <br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="a-cambio-plan">
+                                <h3>Cambio de plan</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>CAMBIO DE PLAN - ADP MULTISKILL HITSS</b><br>
+                                        EQUIPOS ACTIVADOS:&nbsp;<br>
+                                        ESTADO:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="a-cambio-equipo">
+                                <h3>Cambio de equipo</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>CAMBIO DE EQUIPO - ADP MULTISKILL HITSS</b><br>
+                                        EQUIPOS ACTIVADOS:&nbsp;<br>
+                                        CODIGO DE AUT.:&nbsp;<br>
+                                        ESTADO:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="a-repetidor-mesh">
+                                <h3>Repetidor Mesh</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>ACTIVACION MESH - ADP MULTISKILL HITSS</b><br>
+                                        SERIE REPETIDOR:&nbsp;<br>
+                                        ESTADO:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="a-reenvio-senal">
+                                <h3>Reenvío de señal</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>REENVÍO - ADP MULTISKILL HITSS</b><br>
+                                        EQUIPOS CON REENVIO DE SEÑAL:&nbsp;<br>
+                                        CONFORMIDAD:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="a-traslado-ext">
+                                <h3>Traslado Externo</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>TRASLADO EXTERNO - ADP MULTISKILL HITSS</b><br>
+                                        EQUIPOS ACTIVADOS:&nbsp;<br>
+                                        ESTADO:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="a-repetidor-plume">
+                                <h3>Repetidor Plume</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>ACTIVACIÓN PLUME - ADP MULTISKILL HITSS</b><br>
+                                        SERIE REPETIDOR:&nbsp;<br>
+                                        MAC REPETIDOR:&nbsp;<br>
+                                        CORREO:&nbsp;<br>
+                                        ESTADO:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="a-deco-add">
+                                <h3>Deco adicional</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>DECO ADICIONAL - ADP MULTISKILL HITSS</b><br>
+                                        EQUIPOS ACTIVADOS:&nbsp;<br>
+                                        ESTADO:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="a-cod-camb-eq">
+                                <h3>Cód. Cambio de equipo</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA HITSS - CODIGO AUTORIZACION</b><br>
+                                        SE AUTORIZA CÓDIGO: <span id="codigo-generado"></span><br>
+                                        SN/MAC A RETIRAR:&nbsp;<br>
+                                        MOTIVO:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Puedes agregar más plantillas aquí -->
+                    </div>
+
+                    <div class="codigos-aut" id="a-gen-cod-aut">
+                        <h3>Generador de Códigos de Autorización</h3>
+                        <div id="historial-codigos">
+                            <h4>Códigos generados</h4>
+                            <ul id="lista-codigos"></ul>
+                        </div>
+                        <div id="a-cod-autorizacion-cambio-equipo">
+                            <button class="button" onclick="generarCodigo()">Generar Código</button>
+                            <button class="button" onclick="descargarCodigos()">Descargar Códigos Generados</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="validaciones">
+
+                <div class="container">
+                    <h2>Validaciones</h2>
+                    <p>Plantillas de validaciones para SGA.</p>
+
+                    <div class="container__grid">
+                        <div class="container__grid__item">
+                            <div id="val-instalacion">
+                                <h3>Instalación</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA MULTISKILL HITSS</b><br>
+                                        ID LLAMADA:&nbsp;<br>
+                                        SOT:&nbsp;<br>
+                                        VALIDADO POR:&nbsp;<br>
+                                        NUMERO WSP:&nbsp;<br>
+                                        ADP:&nbsp;<span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="val-postventa">
+                                <h3>Post-venta</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA MULTISKILL HITSS</b><br>
+                                        ID LLAMADA:&nbsp;<br>
+                                        SOT:&nbsp;<br>
+                                        VALIDADO POR:&nbsp;<br>
+                                        NUMERO WSP:&nbsp;<br>
+                                        ADP:&nbsp;<span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="val-manto-hfc-ftth">
+                                <h3>Mantenimiento HFC - FTTH</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA MULTISKILL HITSS</b><br>
+                                        ID LLAMADA:&nbsp;<br>
+                                        SOT:&nbsp;<br>
+                                        COD. SOLUCIÓN PRINCIPAL:&nbsp;<br>
+                                        VALIDADO POR:&nbsp;<br>
+                                        NUMERO WSP:&nbsp;<br>
+                                        ADP:&nbsp;<span class="adp"></span>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </section>
+
+            <section id="cod-manto">
+                <div class="container">
+                    <h2>Códigos de Mantenimiento</h2>
+                    <p>Estos son los códigos de mantenimiento que se utilizan en el SGA. En progreso...</p>
+
+                </div>
+            </section>
+
+            <section id="general-seguimiento">
+                <div class="container">
+                    <h2>General - Seguimiento</h2>
+                    <p>Estas son las plantillas para seguimiento de clientes.</p>
+
+                    <div class="container__grid">
+                        <div class="container__grid__item">
+                            <div id="gs-confirmacion-visita">
+                                <h3>Confirma visita en llamada</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>***MESA DE PROGRAMACIONES HITSS - CONFIRMA VISITA*</b><br>
+                                        SOT:&nbsp;<br>
+                                        DÍA Y FRANJA:&nbsp;<br>
+                                        CLIENTE:&nbsp;<br>
+                                        NUMERO:&nbsp;<br>
+                                        CONTRATA:&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="gs-adelanto-visita">
+                                <h3>Adelanto de Visita</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>***MESA DE PROGRAMACIONES HITSS - ADELANTA VISITA*</b><br>
+                                        SOT:&nbsp;<br>
+                                        DÍA Y FRANJA:&nbsp;<br>
+                                        CLIENTE:&nbsp;<br>
+                                        NUMERO:&nbsp;<br>
+                                        CONTRATA:&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="gs-mantiene-fecha-programada">
+                                <h3>Mantiene fecha programada</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>***MESA DE PROGRAMACIONES HITSS - MANTIENE FECHA DE VISITA</b><br>
+                                        SOT:&nbsp;<br>
+                                        DÍA Y FRANJA:&nbsp;<br>
+                                        CLIENTE:&nbsp;<br>
+                                        NUMERO:&nbsp;<br>
+                                        CONTRATA:&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="gs-habilitacion-franjas">
+                                <h3>Habilitación de Franjas</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>FORMATO PARA HABILITAR FRANJA</b><br>
+                                        📥 SOT:&nbsp;<br>
+                                        🪚 PLANO:&nbsp;<br>
+                                        📅 FECHA Y FRANJA:&nbsp;<br>
+                                        📧 Motivo: SIN FRANJAS DISPONIBLES<br>
+                                        🚨‍ Sup acargo:&nbsp;
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="gs-fuera-toa">
+                                <h3>Fuera de TOA</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>*FUERA DE TOA*</b><br>
+                                        📥 SOT:&nbsp;<br>
+                                        ⚙️ SUB TIPO:&nbsp;<br>
+                                        🏡 DIRECCIÓN:&nbsp;<br>
+                                        📍 DISTRITO:&nbsp;<br>
+                                        ⚒️ SERVICIO:&nbsp;<br>
+                                        🪚 PLANO:&nbsp;<br>
+                                        👨‍💻 CLIENTE:&nbsp;<br>
+                                        🔣 COD CLIENTE:&nbsp;<br>
+                                        📱 CELULAR DEL CLIENTE:&nbsp;<br>
+                                        📅 FECHA Y FRANJA:&nbsp;<br>
+                                        ✍️ REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="gs-ciclo-llamadas">
+                                <h3>Ciclo de llamadas</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>***MESA DE PROGRAMACIONES HITSS - CICLO DE LLAMADAS***</b><br>
+                                        CICLO DE LLAMADA NRO: 1&nbsp;<br>
+                                        CANTIDAD DE LLAMADAS: 4&nbsp;<br>
+                                        NUMERO:&nbsp;<br>
+                                        MOTIVO: FALTA DE CONTACTO<br>
+                                        SUB-MOTIVO:<br>
+                                        Buzón de voz<br>
+                                        No contesta<br>
+                                        Número no existe<br>
+                                        Apagado<br>
+                                        Corta llamada (Escoger una opción)<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="gs-toa-no-interviene">
+                                <h3>TOA no interviene</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>***MESA DE PROGRAMACIONES HITSS***TOA NO INTERVIENE</b><br>
+                                        ATENCION POR SISTEMAS - NO CORRESPONDE VISITA EN CAMPO&nbsp;<br>
+                                        SE CAMBIA A BANDEJA CLARO PERU (SOLICITAR A SUPERVISOR)&nbsp;<br>
+                                        OBS. MOTIVO:&nbsp;<br>
+                                        REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="gs-autorizacion-fuera-toa">
+                                <h3>Autorización Fuera de TOA</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>Proceder con atención fuera de TOA</b>&nbsp;<br>
+                                        Motivo: SOT sin flujo TOA&nbsp;<br>
+                                        Autorizado por: (Mesa de programaciones HITSS)
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="gs-espera-equipos">
+                                <h3>En espera de equipos</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>***MESA DE PROGRAMACIONES HITSS***&nbsp;<br>
+                                            EN ESPERA DE EQUIPOS</b>&nbsp;<br>
+                                        Sin Stock de equipos en almacén&nbsp;<br>
+                                        EQUIPO/MATERIAL:&nbsp;<br>
+                                        Pendiente de Atención o reasignación&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="gs-espera-equipos-repetidores">
+                                <h3>En espera de equipos: Repetidores</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        MATERIAL: REPETIDOR AR1344E2 KAON&nbsp;<br>
+                                        REPETIDOR WF-808 CIG&nbsp;<br>
+                                        REPETIDOR EBM522C-X54 CASTLENET&nbsp;<br>
+                                        REPETIDOR NM3015 AX3000 SDMC &nbsp;<br>
+                                        REPETIDOR WA8021V5 GPON HUAWEI&nbsp;<br>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="gs-espera-equipos-emta">
+                                <h3>En espera de equipos: EMTA</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>HFC</b><br>
+                                        MODEM TECHINICOLOR CGA2121 3.0&nbsp;<br>
+                                        MODEM ARRIS TG2482 24X8 3.0 S/BAT&nbsp;<br>
+                                        MODEM ARRIS TG3442A 32x8 3.1&nbsp;<br>
+                                        FTHH&nbsp;<br>
+                                        MODEM ROUTER F6600P ZTE&nbsp;<br>
+                                        MODEM ROUTER HG8145V5 HUAWEI&nbsp;<br>
+                                        MODEM ROUTER FAST5670 SAGEMCOM"
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="gs-espera-equipos-materiales-cambio">
+                                <h3>En espera de equipos: Materiales de cambio</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla" SWITCH&nbsp;<br>
+                                        DROP 85 METROS&nbsp;<br>
+                                        DROP 220 METROS&nbsp;<br>
+                                        DROP 150 METROS&nbsp;<br>
+                                        DROP 300 METROS&nbsp;<br>
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="gs-espera-equipos-decos">
+                                <h3>En espera de equipos: Decos</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla" SWITCH&nbsp;<br>
+                                        HFC&nbsp;<br>
+                                        DECODIFICADOR HD DCX700&nbsp;<br>
+                                        DECODIFICADOR HD DCX525e&nbsp;<br>
+                                        FTTH&nbsp;<br>
+                                        DECODIFICADOR IPTV ZXV10 B8866V2
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="reagendados">
+
+                <div class="container">
+                    <h2>Reagendados</h2>
+                    <!-- REAGENDADO POR CLARO -->
+                    <table class="tabla">
+                        <thead class="claro">
+                            <tr>
+                                <th colspan="2">REAGENDADO POR CLARO</th>
+                            </tr>
+                            <tr>
+                                <th>ESCENARIO</th>
+                                <th>MOTIVO DEL REAGENDAMIENTO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Errores en la generación de la SOT</td>
+                                <td>
+                                    <ul>
+                                        <li># Pérdida de fecha de agendamiento</li>
+                                        <li># Caída masiva en sistemas Claro</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Inconvenientes con la contratista</td>
+                                <td>
+                                    <ul>
+                                        <li># Inasistencia de cuadrillas de la contratista</li>
+                                        <li># Retraso de técnicos de la contratista</li>
+                                        <li># Incidencias en el campo durante la instalación</li>
+                                        <li># Falta de materiales: Detallar material</li>
+                                        <li># Retiro anticipado de cuadrillas en campo</li>
+                                        <li># Falta de herramientas</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Configuraciones de TOA (OFSC)</td>
+                                <td>
+                                    <ul>
+                                        <li># Sobreegandamiento de cuotas</li>
+                                        <li># Problemas con las configuraciones de zonas de trabajo</li>
+                                        <li># Cuota configurada incorrectamente</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- REAGENDADO POR CLIENTE -->
+                    <table class="tabla">
+                        <thead class="cliente">
+                            <tr>
+                                <th colspan="2">REAGENDADO POR CLIENTE</th>
+                            </tr>
+                            <tr>
+                                <th>ESCENARIO</th>
+                                <th>MOTIVO DEL REAGENDAMIENTO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A solicitud del Cliente</td>
+                                <td>
+                                    <ul>
+                                        <li># Cambios en las fechas y franjas solicitadas</li>
+                                        <li># Cliente se encuentra de viaje</li>
+                                        <li># Solo puede domingos, horarios especiales, noche.</li>
+                                        <li># Cliente desconoce su fecha de agendamiento</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Facilidades del cliente</td>
+                                <td>
+                                    <ul>
+                                        <li># Cliente no cuenta con equipos en nuevo domicilio</li>
+                                        <li># No brinda facilidades técnicas (ductos, permisos, etc.)</li>
+                                        <li># Factores climatológicos</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Falta de contacto</td>
+                                <td>
+                                    <ul>
+                                        <li># Cliente no responde los 4 intentos de llamada</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ausente</td>
+                                <td>
+                                    <ul>
+                                        <li># Cliente Ausente en Campo</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="container__grid">
+                        <div class="container__grid__item">
+                            <div id="repro-mesa-claro">
+                                <h3>Reprogramación en Mesa - Claro</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS<br>
+                                            REPROGRAMADO EN MESA / REAGENDADO POR CLARO</b><br>
+                                        CLIENTE:&nbsp;<br>
+                                        NÚMERO:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        MOTIVO DE REPROGRAMACIÓN: CLARO #&nbsp;<br>
+                                        CONTRATA:&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        OBSERVACIÓN:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="repro-mesa-cliente">
+                                <h3>Reprogramación en Mesa - Cliente</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS<br>
+                                            REPROGRAMADO EN MESA / REAGENDADO POR CLIENTE</b><br>
+                                        CLIENTE:&nbsp;<br>
+                                        NÚMERO:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        MOTIVO DE REPROGRAMACIÓN: CLIENTE #&nbsp;<br>
+                                        CONTRATA:&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        OBSERVACIÓN:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="repro-campo-claro">
+                                <h3>Reprogramación en Campo - Claro</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS<br>
+                                            REPROGRAMADO EN CAMPO / REAGENDADO POR CLARO</b><br>
+                                        CLIENTE:&nbsp;<br>
+                                        NÚMERO:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        MOTIVO DE REPROGRAMACIÓN: CLARO #&nbsp;<br>
+                                        CONTRATA:&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        OBSERVACIÓN:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="repro-campo-cliente">
+                                <h3>Reprogramación en Campo - Cliente</h3>
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS<br>
+                                            REPROGRAMADO EN CAMPO / REAGENDADO POR CLIENTE</b><br>
+                                        CLIENTE:&nbsp;<br>
+                                        NÚMERO:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        MOTIVO DE REPROGRAMACIÓN: CLIENTE #&nbsp;<br>
+                                        CONTRATA:&nbsp;<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        OBSERVACIÓN:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section id="rechazos-mesa-campo">
+                <div class="container">
+                    <h2>Rechazos: Mesa y Campo</h2>
+                    <p></p>
+
+                    <div class="container__grid">
+
+                        <div class="container__grid__item">
+                            <div id="rmc-cliente-no-desea-servicio-mesa">
+                                <h3>Cliente no desea servicio - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS</b><br>
+                                        RECHAZO EN MESA / CAMPO: RECHAZO EN MESA<br>
+                                        PERSONA QUE CONTESTA:&nbsp;<br>
+                                        NUMERO DE CONTACTO:&nbsp;<br>
+                                        MOTIVO DEL RECHAZO: CLIENTE NO DESEA EL SERVICIO - MESA<br>
+                                        SUBMOTIVO DE RECHAZO: (Escoger 1 opción)<br>
+                                        *Cliente ya tiene servicio de otro operador<br>
+                                        *Titular no ha contratado ningun servicio a Claro<br>
+                                        *Demora en la atención de la solicitud, ya no desea esperar.<br>
+                                        Cliente no desea servicio por Motivos personales.<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-cliente-no-desea-servicio-campo">
+                                <h3>Cliente no desea servicio - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS</b><br>
+                                        RECHAZO EN MESA / CAMPO: RECHAZO EN CAMPO<br>
+                                        PERSONA QUE CONTESTA:&nbsp;<br>
+                                        NUMERO DE CONTACTO:&nbsp;<br>
+                                        MOTIVO DEL RECHAZO: CLIENTE NO DESEA EL SERVICIO<br>
+                                        SUBMOTIVO DE RECHAZO: (Escoger 1 opción)<br>
+                                        *Cliente ya tiene servicio de otro operador<br>
+                                        *Titular no ha contratado ningun servicio a Claro<br>
+                                        *Demora en la atención de la solicitud, ya no desea esperar.<br>
+                                        Cliente no desea servicio por Motivos personales.<br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por dupliciadad - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS</b><br>
+                                        RECHAZO EN MESA / CAMPO: RECHAZADO EN MESA<br>
+                                        NUMERO DE CONTACTO:&nbsp;<br>
+                                        MOTIVO DEL RECHAZO: RECHAZADO POR DUPLICIDAD<br>
+                                        PERSONA QUE CONTESTA: [NO APLICA]<br>
+                                        NUMERO DE CONTACTO: [NO APLICA]<br>
+                                        SUBMOTIVO DE RECHAZO: se atendió con otra SOT<br>
+                                        <b>SE PROCEDE AL RECHAZO DE LA SOLICITUD POR DUPLICIDAD DE SOT, SE ATENDIÓ CON
+                                            LA SOT: (VALIDAR CON DNI O EN HISTORIAL DEL CLIENTE)</b><br>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por dupliciadad - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+                                        <b>MESA DE PROGRAMACIONES HITSS</b><br>
+                                        RECHAZO EN MESA / CAMPO: RECHAZO EN CAMPO<br>
+Z
+                                        NUMERO DE CONTACTO:&nbsp;<br>
+                                        MOTIVO DEL RECHAZO: RECHAZADO POR DUPLICIDAD<br>
+                                        PERSONA QUE CONTESTA: [NO APLICA]<br>
+                                        NUMERO DE CONTACTO: [NO APLICA]<br>
+                                        SUBMOTIVO DE RECHAZO: se atendió con otra SOT<br>
+                                        <b>SE PROCEDE AL RECHAZO DE LA SOLICITUD POR DUPLICIDAD DE SOT, SE ATENDIÓ CON
+                                            LA SOT: (VALIDAR CON DNI O EN HISTORIAL DEL CLIENTE)</b>
+                                        ID DE LLAMADA:&nbsp;<br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por facilidades técnicas del cliente - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por facilidades técnicas del cliente - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por falta de contacto - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por falta de contacto - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por mal ingreso de dirección - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por mal ingreso de dirección - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por mala oferta - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por mala oferta - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por mudanza o viaje - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por mudanza o viaje - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por SOT con errores de Sistema - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por SOT con errores de Sistema - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por posible fraude - Mesa</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__grid__item">
+                            <div id="rmc-">
+                                <h3>Por posible fraude - Campo</h3>
+
+                                <div class="plantilla">
+                                    <p id="texto-plantilla">
+
+                                    </p>
+                                    <div class="copiar-contenedor">
+                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
+                                            <span class="material-symbols-outlined"
+                                                style="color: rgb(101, 101, 101);">content_copy</span>
+                                        </span>
+                                        <span class="copiado hidden">Copiado!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+            </section>
+
+
+
+
+        </aside>
+    </main>
+
+</body>
+
+
+</html>
