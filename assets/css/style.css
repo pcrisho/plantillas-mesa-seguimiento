@@ -67,7 +67,7 @@ header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.150);
     /* Para que el header se quede en la parte superior y ocupe todo el ancho */
     width: 100%;
-    height: 80px;
+    height: 60px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -76,7 +76,7 @@ header {
 }
 
 .header__container {
-    max-width: 100%;
+    width: 100%;
     margin: 0 24px;
     display: flex;
     align-items: center;
@@ -121,7 +121,7 @@ header {
 main {
     display: flex;
     flex-direction: row;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 60px);
     /* Resta la altura del header */
     overflow: hidden;
     /* Muy importante */
@@ -755,3 +755,93 @@ tbody tr:last-child td {
     padding-top: 0px;
     width: 100%;
 }
+
+#rechazos-mesa-campo .container__grid__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+#rechazos-mesa-campo .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#rechazos-motivo-tecnico .container__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Para 3 columnas */
+    padding-top: 0px;
+    width: 100%;
+}
+
+#rechazos-motivo-tecnico .container__grid__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+#rechazos-motivo-tecnico .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/**/
+
+#cierre-manto-mesa .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#cierre-manto-mesa .container__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Para 3 columnas */
+    padding-top: 0px;
+    width: 100%;
+}
+
+#cierre-manto-mesa .container__grid__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+#cierre-manto-mesa .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/**/
