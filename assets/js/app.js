@@ -23,10 +23,43 @@ function guardarDatosAdp() {
 // Función de generación de código de cambio de equipo
 let correlativo = 1;
 let letraActual = "A";
-const codigosGenerados = [];
+let codigosGenerados = [];
+
+// Carga los datos guardados
+function cargarDatosGuardados() {
+    const fechaActual = new Date().toDateString();
+    const fechaGuardada = localStorage.getItem("fechaGuardada");
+    const datosGuardados = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
+
+    // Si es un nuevo día, limpia el almacenamiento
+    if (fechaActual !== fechaGuardada) {
+        localStorage.removeItem("codigosGuardados");
+        localStorage.setItem("fechaGuardada", fechaActual);
+        codigosGenerados = [];
+        correlativo = 1;
+        letraActual = "A";
+        document.getElementById("lista-codigos").innerHTML = "";
+    } else {
+        codigosGenerados = datosGuardados;
+        codigosGenerados.forEach(codigo => {
+            const item = document.createElement("li");
+            item.textContent = codigo;
+            document.getElementById("lista-codigos").appendChild(item);
+        });
+        correlativo = datosGuardados.length + 1;
+        letraActual = datosGuardados.length % 2 === 0 ? "A" : "B";
+    }
+
+    mostrarUltimoCodigoGenerado();
+}
+
+function guardarDatos() {
+    localStorage.setItem("codigosGuardados", JSON.stringify(codigosGenerados));
+    localStorage.setItem("fechaGuardada", new Date().toDateString());
+}
 
 function generarCodigo() {
-    if (usuarioAdp.length !== 7) {
+    if (!usuarioAdp || usuarioAdp.length !== 7) {
         alert("⚠️ Primero guarda tu usuario correctamente.");
         return;
     }
@@ -39,6 +72,7 @@ function generarCodigo() {
 
     document.getElementById("codigo-generado").textContent = codigo;
     codigosGenerados.push(codigo);
+    guardarDatos();
 
     letraActual = letraActual === "A" ? "B" : "A";
     correlativo++;
@@ -47,6 +81,8 @@ function generarCodigo() {
     const item = document.createElement("li");
     item.textContent = codigo;
     lista.appendChild(item);
+
+    localStorage.setItem("codigosGuardados", JSON.stringify(codigosGenerados));
 }
 
 function descargarCodigos() {
@@ -66,6 +102,54 @@ function descargarCodigos() {
 
     URL.revokeObjectURL(url);
 }
+
+function eliminarUltimoCodigo() {
+    const codigosGuardados = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
+
+    if (codigosGuardados.length === 0) {
+        alert("⚠️ No hay códigos generados para eliminar.");
+        return;
+    }
+
+    // Eliminar el último código
+    codigosGuardados.pop();
+
+    // Disminuir el correlativo (mínimo hasta 1)
+    correlativo = Math.max(1, correlativo - 1);
+
+    // Alternar la letra (vuelve a la anterior)
+    letraActual = letraActual === "A" ? "B" : "A";
+
+    // Actualizar en memoria
+    codigosGenerados.pop(); // También quitarlo de la lista en memoria
+    localStorage.setItem("codigosGuardados", JSON.stringify(codigosGuardados));
+
+    // Eliminar visualmente el último <li>
+    const lista = document.getElementById("lista-codigos");
+    if (lista.lastElementChild) {
+        lista.removeChild(lista.lastElementChild);
+    }
+
+    // Mostrar el nuevo último código en el <span>
+    const ultimoCodigo = codigosGuardados[codigosGuardados.length - 1] || "";
+    document.getElementById("codigo-generado").textContent = ultimoCodigo;
+}
+
+// Ejecutar al cargar la página
+window.addEventListener("DOMContentLoaded", cargarDatosGuardados);
+
+
+function mostrarUltimoCodigoGenerado() {
+    const codigoGeneradoElDia = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
+    const ultimoCodigo = codigoGeneradoElDia[codigoGeneradoElDia.length - 1] || "";
+    document.getElementById("codigo-generado").textContent = ultimoCodigo;
+}
+
+
+
+
+
+
 
 const listElements = document.querySelectorAll('.list__button--click');
 

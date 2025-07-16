@@ -197,6 +197,7 @@ nav {
     width: 100%;
 }
 
+
 .nav__link {
     color: #303440;
     display: block;
@@ -605,8 +606,23 @@ tbody tr:last-child td {
 
 }
 
+.button_delete {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
 .button:hover {
     background-color: #0043ce;
+}
+
+.button_delete:hover {
+    background-color: #ff0000;
 }
 
 /* CÓDIGO GENERADO DESTACADO */
