@@ -116,6 +116,14 @@ header {
     text-decoration: none;
 }
 
+.nav__logo {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
 /* Estilos del main */
 
 main {

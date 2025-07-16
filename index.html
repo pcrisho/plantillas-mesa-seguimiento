@@ -25,8 +25,14 @@
         <div class="header__container">
 
             <figure class="nav__logo">
-                <img src="https://www.hitss.com:443/wp-content/uploads/2025/01/cropped-favicon-32x32.png"
-                    alt="Logo de Hitss">
+                <a href="#home">
+                    <img src="https://www.hitss.com:443/wp-content/uploads/2025/01/cropped-favicon-32x32.png"
+                        alt="Logo de Hitss">
+                </a>
+
+                <span class="adp"></span>
+
+                
 
             </figure>
 
@@ -647,7 +653,7 @@
         </nav>
 
         <aside>
-            <div class="container">
+            <div id="home" class="container">
                 <h1>Plantillas de Mesa de Seguimiento Fija</h1>
                 <p>Estas plantillas son para el seguimiento de los casos que se encuentran en la mesa de seguimiento
                     fija. Se hizo una corrreción y adaptación de las diferentes plantillas para facilitar su uso.</p>
@@ -676,7 +682,7 @@
                                     instalación o mantenimiento.</p>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        Buenos (días, tardes, noches). Le saluda <span class="adp"></span>,
+                                        <span class="saludo-dinamico"></span>. Le saluda <span class="adp"></span>,
                                         vamos a realizar una breve encuesta para validar el servicio. Por su seguridad
                                         esta llamada está siendo
                                         grabada el <span class="dia"></span> de <span class="mes"></span> del <span
@@ -729,7 +735,8 @@
                                     instalación o mantenimiento.</p>
                                 <div class="plantilla">
                                     <p>
-                                        Buenos (días, tardes, noches). Le saluda <b><span class="adp"></span></b> del
+                                        <span class="saludo-dinamico"></span>. Le saluda <b><span
+                                                class="adp"></span></b> del
                                         área de
                                         seguimiento de
                                         Claro ¿Me comunico con [Nombre del Titular, nombre completo]?
@@ -782,7 +789,8 @@
                                     instalación o mantenimiento.</p>
                                 <div class="plantilla">
                                     <p>
-                                        Buenos (días, tardes, noches). Le saluda <span class="adp"></span> del área de
+                                        <span class="saludo-dinamico"></span>. Le saluda <span class="adp"></span> del
+                                        área de
                                         seguimiento de Claro ¿Me comunico con [Nombre del Titular, primer nombre y
                                         apellido completo]. Le llamamos por solicitud de [TIPO DE POST-VENTA]. Su visita
                                         está programada para el día [fecha] en la franja horaria de [franja horaria]
@@ -821,7 +829,8 @@
                                     instalación o mantenimiento.</p>
                                 <div class="plantilla">
                                     <p>
-                                        Buenos (días, tardes, noches), le saluda <span class="adp"></span> del área de
+                                        <span class="saludo-dinamico"></span>, le saluda <span class="adp"></span> del
+                                        área de
                                         seguimiento de
                                         Claro ¿Me comunico con [Nombre del Titular, primer nombre y apellido completo]?
                                         Verificamos que reportó incovenientes con el servicio
@@ -1027,7 +1036,8 @@
                                 <h3>Activaciones</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        Buen día, compañero. Por favor, bríndame los siguientes datos para poder
+                                        <span class="saludo-dinamico"></span>, compañero. Por favor, bríndame los
+                                        siguientes datos para poder
                                         ayudarte
                                         con la activación de los equipos: Tipo de trabajo, plantilla y foto de las
                                         etiquetas de los equipos a instalar.
@@ -1048,7 +1058,8 @@
                                 <h3>Rechazos Técnicos</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        Buen día, compañero. Por favor, enviar los siguientes datos y evidencias: Motivo
+                                        <span class="saludo-dinamico"></span>, compañero. Por favor, enviar los
+                                        siguientes datos y evidencias: Motivo
                                         de rechazo, coordenadas, observaciones y fotos del domicilio y suministro del
                                         cliente.
                                     </p>
@@ -1069,7 +1080,8 @@
 
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        Buen día, compañero. Por favor, enviar los siguientes datos para confirmar el
+                                        <span class="saludo-dinamico"></span>, compañero. Por favor, enviar los
+                                        siguientes datos para confirmar el
                                         servicio con el cliente: SOT, persona que valida, parentezco, número para
                                         comunicarnos, Código de Solución(Para mantenimientos*) y alguna
                                         observación(opcional*).
@@ -2078,7 +2090,7 @@
                                     <p id="texto-plantilla">
                                         <b>***MESA DE PROGRAMACIONES HITSS - CONFIRMA VISITA*</b><br>
                                         SOT:&nbsp;<br>
-                                        DÍA Y FRANJA:&nbsp;<br>
+                                        DÍA Y FRANJA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         CLIENTE:&nbsp;<br>
                                         NUMERO:&nbsp;<br>
                                         CONTRATA:&nbsp;<br>
@@ -2103,7 +2115,7 @@
                                     <p id="texto-plantilla">
                                         <b>***MESA DE PROGRAMACIONES HITSS - ADELANTA VISITA*</b><br>
                                         SOT:&nbsp;<br>
-                                        DÍA Y FRANJA:&nbsp;<br>
+                                        DÍA Y FRANJA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         CLIENTE:&nbsp;<br>
                                         NUMERO:&nbsp;<br>
                                         CONTRATA:&nbsp;<br>
@@ -2129,7 +2141,7 @@
                                     <p id="texto-plantilla">
                                         <b>***MESA DE PROGRAMACIONES HITSS - MANTIENE FECHA DE VISITA</b><br>
                                         SOT:&nbsp;<br>
-                                        DÍA Y FRANJA:&nbsp;<br>
+                                        DÍA Y FRANJA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         CLIENTE:&nbsp;<br>
                                         NUMERO:&nbsp;<br>
                                         CONTRATA:&nbsp;<br>
@@ -2155,7 +2167,7 @@
                                         <b>FORMATO PARA HABILITAR FRANJA</b><br>
                                         📥 SOT:&nbsp;<br>
                                         🪚 PLANO:&nbsp;<br>
-                                        📅 FECHA Y FRANJA:&nbsp;<br>
+                                        📅 FECHA Y FRANJA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         📧 Motivo: SIN FRANJAS DISPONIBLES<br>
                                         🚨‍ Sup acargo:&nbsp;
                                     </p>
@@ -2508,7 +2520,7 @@
                                             REPROGRAMADO EN MESA / REAGENDADO POR CLARO</b><br>
                                         CLIENTE:&nbsp;<br>
                                         NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         MOTIVO DE REPROGRAMACIÓN: CLARO #&nbsp;<br>
                                         CONTRATA:&nbsp;<br>
                                         ID DE LLAMADA:&nbsp;<br>
@@ -2535,7 +2547,7 @@
                                             REPROGRAMADO EN MESA / REAGENDADO POR CLIENTE</b><br>
                                         CLIENTE:&nbsp;<br>
                                         NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         MOTIVO DE REPROGRAMACIÓN: CLIENTE #&nbsp;<br>
                                         CONTRATA:&nbsp;<br>
                                         ID DE LLAMADA:&nbsp;<br>
@@ -2562,7 +2574,7 @@
                                             REPROGRAMADO EN CAMPO / REAGENDADO POR CLARO</b><br>
                                         CLIENTE:&nbsp;<br>
                                         NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         MOTIVO DE REPROGRAMACIÓN: CLARO #&nbsp;<br>
                                         CONTRATA:&nbsp;<br>
                                         ID DE LLAMADA:&nbsp;<br>
@@ -2589,7 +2601,7 @@
                                             REPROGRAMADO EN CAMPO / REAGENDADO POR CLIENTE</b><br>
                                         CLIENTE:&nbsp;<br>
                                         NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         MOTIVO DE REPROGRAMACIÓN: CLIENTE #&nbsp;<br>
                                         CONTRATA:&nbsp;<br>
                                         ID DE LLAMADA:&nbsp;<br>
@@ -2723,7 +2735,7 @@
                                         NUMERO DE CONTACTO: [NO APLICA]<br>
                                         SUBMOTIVO DE RECHAZO: se atendió con otra SOT<br>
                                         <b>SE PROCEDE AL RECHAZO DE LA SOLICITUD POR DUPLICIDAD DE SOT, SE ATENDIÓ CON
-                                            LA SOT: (VALIDAR CON DNI O EN HISTORIAL DEL CLIENTE)</b>
+                                            LA SOT: (VALIDAR CON DNI O EN HISTORIAL DEL CLIENTE)</b><br>
                                         ID DE LLAMADA:&nbsp;<br>
                                         REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
 
@@ -4071,6 +4083,7 @@
     </main>
 
     <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/datetime.js"></script>
 </body>
 
 </html>
