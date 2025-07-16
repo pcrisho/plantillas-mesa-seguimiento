@@ -153,8 +153,8 @@ nav {
 .datos {
     display: flex;
     flex-direction: column;
-    align-items:first baseline;
-    padding: 16px;
+    align-items: first baseline;
+    padding: 16px 0px;
     border-bottom: 1px solid #8e8e8e;
 }
 
@@ -166,16 +166,19 @@ nav {
 }
 
 .datos input {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+
     width: 100%;
     margin-bottom: 8px;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: #303440;
 }
 
 .datos button {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
     background-color: #0F62FE;
     color: white;
     border: none;
@@ -208,7 +211,7 @@ nav {
 
 .list {
     width: 100%;
-    flex-grow: 1;  
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     padding-inline-start: 0px;
@@ -255,14 +258,15 @@ nav {
 /* Scrollbar base (track) */
 main nav::-webkit-scrollbar,
 main aside::-webkit-scrollbar {
-  width: 6px;
+    width: 6px;
 }
 
 /* Scrollbar 'thumb' (la parte que se mueve) */
 main nav::-webkit-scrollbar-thumb,
 main aside::-webkit-scrollbar-thumb {
-  background-color: rgba(15, 98, 254, 0.3); /* azul semi-transparente */
-  border-radius: 4px;
+    background-color: rgba(15, 98, 254, 0.3);
+    /* azul semi-transparente */
+    border-radius: 4px;
 }
 
 /* Fin de Estilos del nav*/
@@ -386,46 +390,46 @@ main aside {
 
 .copiar-contenedor {
     height: 30px;
-  display: flex;
-  align-content: center;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 12px;
+    display: flex;
+    align-content: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
 }
 
 .copy-icon {
-  cursor: pointer;
-  color: rgb(101, 101, 101);
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-  display: flex;
-  align-items: center;
+    cursor: pointer;
+    color: rgb(101, 101, 101);
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
 }
 
 .copiado {
-  font-size: 0.8rem;
-  color: rgb(34, 34, 34);    
-  opacity: 0;
-  border-radius: 4px;
-  padding: 4px 4px;
-  transition: opacity 0.3s ease;
-  transition: height .4s ease;
-  
-  background-color: #dddddd;
-  display: flex;
-  align-items: center;
-  align-content: center;
+    font-size: 0.8rem;
+    color: rgb(34, 34, 34);
+    opacity: 0;
+    border-radius: 4px;
+    padding: 4px 4px;
+    transition: opacity 0.3s ease;
+    transition: height .4s ease;
+
+    background-color: #dddddd;
+    display: flex;
+    align-items: center;
+    align-content: center;
     justify-content: center;
 }
 
 .copiado.mostrar {
-  opacity: 1;
+    opacity: 1;
     transition: height .4s ease;
 }
 
 .hidden {
-  display: none;
-  transition: height .4s ease;
+    display: none;
+    transition: height .4s ease;
 }
 
 /*ESTILOS DE TABLA*/
@@ -433,7 +437,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
+    font-size: 0.7rem;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
@@ -451,12 +455,14 @@ thead:hover {
 
 th,
 td {
-    padding: 12px 16px;
+    padding: 8px 8px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
 }
 
+
 tbody tr:hover {
+    font-weight: 600;
     background-color: #f5f5f5;
 }
 
@@ -555,68 +561,69 @@ tbody tr:last-child td {
 
 /* LISTA DE CÓDIGOS */
 #historial-codigos {
-  background-color: #f9f9f9;
-  padding: 12px;
-  border-radius: 8px;
-  min-height: 150px;
-  max-height: 150px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    padding: 12px;
+    border-radius: 8px;
+    min-height: 150px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
 }
 
 #historial-codigos h4 {
-  margin: 0 0 8px 0;
-  color: #4687ff;
-  font-size: 1rem;
+    margin: 0 0 8px 0;
+    color: #4687ff;
+    font-size: 1rem;
 }
 
 #lista-codigos {
-  list-style-type: decimal;
-  padding-left: 20px;
-  margin: 0;
-  font-size: 14px;
-  color: #333;
+    list-style-type: decimal;
+    padding-left: 20px;
+    margin: 0;
+    font-size: 14px;
+    color: #333;
 }
 
 /* BOTONES UNIFICADOS */
 .button {
-  background-color: #0F62FE;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+    background-color: #0F62FE;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
 
 }
 
 .button:hover {
-  background-color: #0043ce;
+    background-color: #0043ce;
 }
 
 /* CÓDIGO GENERADO DESTACADO */
 .codigo-generado {
-  font-family: 'Courier New', monospace;
-  font-size: 16px;
-  background-color: #ebebeb;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  color: #222;
-  margin-top: 12px;
-  word-break: break-word;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    background-color: #ebebeb;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    color: #222;
+    margin-top: 12px;
+    word-break: break-word;
 }
 
 #a-cod-autorizacion-cambio-equipo {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
 }
 
 #a-cod-autorizacion-cambio-equipo .button {
-  flex: 1; /* Ocupa el 50% del espacio (mitad y mitad) */
-  text-align: center;
+    flex: 1;
+    /* Ocupa el 50% del espacio (mitad y mitad) */
+    text-align: center;
 }
 
 #validaciones .container__grid {
@@ -738,7 +745,10 @@ tbody tr:last-child td {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-#repro-mesa-claro, #repro-mesa-cliente, #repro-campo-claro, #repro-campo-cliente {
+#repro-mesa-claro,
+#repro-mesa-cliente,
+#repro-campo-claro,
+#repro-campo-cliente {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
