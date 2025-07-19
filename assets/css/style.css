@@ -121,7 +121,7 @@ header {
 }
 
 .header__link__red{
-    color:rgb(225, 46, 32);
+    color:#e12e20;
     font-weight: 700;
     text-decoration: none;
 }
@@ -160,7 +160,7 @@ nav {
 .nav {
     width: 20%;
     max-height: 100vh;
-    background-color: rgb(238, 238, 238);
+    background-color: #e12e20;
     overflow-y: auto;
     height: 100%;
     display: flex;
@@ -211,7 +211,7 @@ nav {
 
 
 .nav__link {
-    color: #303440;
+    color: #ffffff;
     display: block;
     padding: 8px 0;
     text-decoration: none;
@@ -227,7 +227,7 @@ nav {
 }
 
 .nav__link--inside:hover {
-    background: #F6F8FA;
+    background: #ff3a3a;
 }
 
 .list {
@@ -270,7 +270,7 @@ nav {
 
 .list__show {
     width: 100%;
-    border-left: 4px solid #303440;
+    border-left: 4px solid #ff9f9f;
     list-style: none;
     transition: height .4s ease;
     height: 0;
