@@ -120,10 +120,23 @@ header {
     text-decoration: none;
 }
 
+.header__link:hover {
+    color: #e12e20;
+    transition: all .5s ease;
+    
+}
+
+
 .header__link__red{
     color:#e12e20;
     font-weight: 700;
     text-decoration: none;
+}
+
+.header__link__red:hover {
+    color: rgb(91, 89, 89);
+    transition: all 1s ease;
+    
 }
 
 
@@ -254,9 +267,17 @@ nav {
 .list__button {
     display: flex;
     align-items: center;
-    gap: 1em;
+    padding: 4px 4px 4px 4px;
+    gap: 8px;
     width: 90%;
     margin: 0 auto;
+}
+
+.list__button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+
+
 }
 
 .arrow .list__arrow {
@@ -283,9 +304,14 @@ main aside::-webkit-scrollbar {
 }
 
 /* Scrollbar 'thumb' (la parte que se mueve) */
-main nav::-webkit-scrollbar-thumb,
 main aside::-webkit-scrollbar-thumb {
-    background-color: rgba(15, 98, 254, 0.3);
+    background-color: #ff00004d;
+    /* azul semi-transparente */
+    border-radius: 4px;
+}
+
+main nav::-webkit-scrollbar-thumb{
+    background-color: #ffffff4d;
     /* azul semi-transparente */
     border-radius: 4px;
 }
