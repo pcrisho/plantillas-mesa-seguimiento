@@ -27,7 +27,6 @@ body {
     /* Evita el scroll del body */
     scroll-behavior: smooth;
     font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-    scroll-behavior: smooth;
 }
 
 body {
@@ -38,6 +37,8 @@ body {
     flex-direction: column;
     margin: 0;
     scroll-behavior: smooth;
+
+
 }
 
 h1 {
@@ -63,7 +64,8 @@ ul {
 /* Estilos del header */
 
 header {
-    background-color: white;
+    position: fixed;
+    background-color: rgba(255, 255, 255, 0.4);
     border-bottom: 1px solid rgba(0, 0, 0, 0.150);
     /* Para que el header se quede en la parte superior y ocupe todo el ancho */
     width: 100%;
@@ -73,6 +75,9 @@ header {
     align-items: center;
     justify-content: center;
     z-index: 10;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    /* compatibilidad Safari */
 }
 
 .header__container {
@@ -95,7 +100,6 @@ header {
     display: flex;
     place-content: unset;
     padding: 0;
-    background-color: white;
     gap: 3rem;
 }
 
@@ -111,10 +115,17 @@ header {
 }
 
 .header__link {
-    color: var(--color-texto);
+    color: var(--color-text);
     font-weight: 700;
     text-decoration: none;
 }
+
+.header__link__red{
+    color:rgb(225, 46, 32);
+    font-weight: 700;
+    text-decoration: none;
+}
+
 
 .nav__logo {
     display: flex;
@@ -129,7 +140,7 @@ header {
 main {
     display: flex;
     flex-direction: row;
-    height: calc(100vh - 60px);
+    height: 100vh;
     /* Resta la altura del header */
     overflow: hidden;
     /* Muy importante */
@@ -140,9 +151,10 @@ main {
 nav {
     display: flex;
     flex-direction: row;
-    height: calc(100vh - 80px);
+    height: 100vh;
     /* Resta la altura del header */
     overflow: hidden;
+    padding-top: 60px;
 }
 
 .nav {
@@ -283,9 +295,12 @@ main aside::-webkit-scrollbar-thumb {
 main aside {
     width: 80%;
     background-color: #ffffff;
-    height: 100%;
-    overflow-y: auto;
+    height: 100vh;
     scroll-behavior: smooth;
+    scroll-padding-top: 60px;
+    /* igual a la altura del header */
+    padding-top: 60px;
+    overflow-y: auto;
 }
 
 .container {
