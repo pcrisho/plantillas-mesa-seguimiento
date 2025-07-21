@@ -12,22 +12,49 @@ const hora = `${horas}:${minutos}`;
 let copiaEnProgreso = false;
 let colaMensajes = 0;
 
+const toastQueue = [];
+let toastVisible = false;
+
+function mostrarToast(mensaje = "Plantilla copiada") {
+    const toast = document.getElementById("toast");
+
+    if (toastVisible) {
+        toastQueue.push(mensaje);
+        return;
+    }
+
+    toast.textContent = mensaje;
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+    toast.show();
+    toastVisible = true;
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+
+        setTimeout(() => {
+            toast.close();
+            toastVisible = false;
+
+            // Verificamos si hay más mensajes en la cola
+            if (toastQueue.length > 0) {
+                const siguienteMensaje = toastQueue.shift();
+                mostrarToast(siguienteMensaje);
+            }
+        }, 300); // espera a que termine la animación de salida
+    }, 2000);
+}
+
 function copiarPlantilla(boton) {
     const plantilla = boton.closest(".plantilla");
-    const texto = plantilla.querySelector("p")?.innerText || plantilla.querySelector("p")?.textContent;
-
-    if (!texto) return;
+    const texto = plantilla.querySelector("p").innerText || plantilla.querySelector("p").textContent;
 
     navigator.clipboard.writeText(texto).then(() => {
-        colaMensajes++;
-
-        // Si ya hay uno en progreso, salimos, se procesará después
-        if (copiaEnProgreso) return;
-
-        mostrarDialogoCopia();
-
+        mostrarToast("Plantilla copiada");
     }).catch(err => {
         console.error("Error al copiar:", err);
+        mostrarToast("Error al copiar");
     });
 }
 

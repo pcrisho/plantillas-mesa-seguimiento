@@ -1,75 +1,75 @@
 *,
 ::after,
 ::before {
-    margin: 0;
-    box-sizing: border-box;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 /* Tipografía y colores */
 :root {
-    --color-primary: #0F62FE;
-    /* Azul */
-    --color-text: #21272A;
-    /* Gris oscuro */
-    --color-text-h2: #001D6C;
+  --color-primary: #0F62FE;
+  /* Azul */
+  --color-text: #21272A;
+  /* Gris oscuro */
+  --color-text-h2: #001D6C;
 
-    /* 2do fondo */
-    --background-color-2: #F2F4F8;
-    /* Fondo rojo */
-    --color-red: #e12e20;
+  /* 2do fondo */
+  --background-color-2: #F2F4F8;
+  /* Fondo rojo */
+  --color-red: #e12e20;
 
-    --header-height: 70px;
+  --header-height: 70px;
 }
 
 html,
 body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    /* Evita el scroll del body */
-    scroll-behavior: smooth;
-    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  /* Evita el scroll del body */
+  scroll-behavior: smooth;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
 }
 
 body {
-    /*APP*/
-    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-    color: var(--color-text);
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    scroll-behavior: smooth;
+  /*APP*/
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  scroll-behavior: smooth;
 
 
 }
 
 /* Estilo general del modal */
 #modal {
-    padding: 2rem;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    background-color: white;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  padding: 2rem;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  background-color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Evita borde al enfocar */
 #modal:focus {
-    outline: none;
+  outline: none;
 }
 
 /* Fondo difuminado cuando el modal está abierto */
 #modal::backdrop {
-    background-color: rgba(38, 38, 38, 0.637);
-    backdrop-filter: blur(50px);
+  background-color: rgba(38, 38, 38, 0.637);
+  backdrop-filter: blur(50px);
 }
 
 /* 👇 Estado inicial al abrir */
@@ -89,6 +89,7 @@ dialog.closing {
     transform: translate(-50%, -48%) scale(0.98);
     backdrop-filter: blur(0px);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -103,6 +104,7 @@ dialog.closing {
     transform: translate(-50%, -50%) scale(1);
     backdrop-filter: blur(8px);
   }
+
   to {
     opacity: 0;
     transform: translate(-50%, -48%) scale(0.98);
@@ -126,6 +128,7 @@ dialog.closing::backdrop {
     opacity: 0;
     backdrop-filter: blur(0px);
   }
+
   to {
     opacity: 1;
     backdrop-filter: blur(8px);
@@ -137,6 +140,7 @@ dialog.closing::backdrop {
     opacity: 1;
     backdrop-filter: blur(8px);
   }
+
   to {
     opacity: 0;
     backdrop-filter: blur(0px);
@@ -149,51 +153,51 @@ dialog.closing::backdrop {
 /**/
 
 #confirmar-cierre-sesion {
-    padding: 2rem;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    background-color: white;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  padding: 2rem;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  background-color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #confirmar-cierre-sesion::backdrop {
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(50px);
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(50px);
 }
 
 .confirm-dialog-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
-    gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
 }
 
 .confirm-btn {
-    background-color: #e53935;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    flex: 1;
+  background-color: #e53935;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  flex: 1;
 }
 
 .cancel-btn {
-    background-color: #ccc;
-    color: #333;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    flex: 1;
+  background-color: #ccc;
+  color: #333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  flex: 1;
 }
 
 /**/
@@ -201,40 +205,43 @@ dialog.closing::backdrop {
 /**/
 
 .copiado-dialog {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: transparent;
-    color: var(--color-text);
-    background-color: #21272a25;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border: none;
-    box-shadow: none;
-    font-size: 0.9rem;
-    backdrop-filter: none;
-    animation: fadeOut 2s ease forwards;
-    pointer-events: none; /* Evita que bloquee clicks */
-    z-index: 999;
-    border-radius: 8px;
-    backdrop-filter: blur(50px);
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  color: var(--color-text);
+  background-color: #21272a25;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: none;
+  box-shadow: none;
+  font-size: 0.9rem;
+  backdrop-filter: none;
+  animation: fadeOut 2s ease forwards;
+  pointer-events: none;
+  /* Evita que bloquee clicks */
+  z-index: 999;
+  border-radius: 8px;
+  backdrop-filter: blur(50px);
 }
 
 .copiado-dialog:focus {
-    outline: none;
+  outline: none;
 }
 
 @keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 
@@ -244,6 +251,7 @@ dialog.closing::backdrop {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -255,6 +263,7 @@ dialog.closing::backdrop {
     opacity: 1;
     transform: translateY(0);
   }
+
   to {
     opacity: 0;
     transform: translateY(-10px);
@@ -270,3 +279,51 @@ dialog.closing::backdrop {
   animation: fadeOutSlide 0.3s ease forwards;
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.dialog-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  color: var(--color-text);
+  background-color: #21272a25;
+  font-size: 0.9rem;
+  border: none;
+  font-weight: bold;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(50px);
+}
+
+.dialog-toast.show {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.dialog-toast.hide {
+  animation: fadeOutDown 0.3s ease forwards;
+}

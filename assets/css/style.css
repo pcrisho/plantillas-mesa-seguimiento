@@ -127,12 +127,12 @@ header {
 .header__link:hover {
     color: #e12e20;
     transition: all .5s ease;
-    
+
 }
 
 
-.header__link__red{
-    color:#e12e20;
+.header__link__red {
+    color: #e12e20;
     font-weight: 700;
     text-decoration: none;
 }
@@ -140,7 +140,7 @@ header {
 .header__link__red:hover {
     color: rgb(91, 89, 89);
     transition: all 1s ease;
-    
+
 }
 
 
@@ -197,7 +197,7 @@ main {
 .user-info {
     display: flex;
     flex-direction: column;
-    align-items:flex-start;
+    align-items: flex-start;
     font-size: 0.8rem;
 }
 
@@ -275,7 +275,7 @@ nav {
 
 .datos h2 {
     width: 100%;
-    color: var(--color-text-h2);
+    color: var(--color-red);
     margin-bottom: 8px;
     text-align: center;
 }
@@ -391,7 +391,7 @@ main aside::-webkit-scrollbar-thumb {
     border-radius: 4px;
 }
 
-main nav::-webkit-scrollbar-thumb{
+main nav::-webkit-scrollbar-thumb {
     background-color: #ffffff4d;
     /* azul semi-transparente */
     border-radius: 4px;
@@ -535,6 +535,10 @@ main aside {
     transition: color 0.3s ease;
     display: flex;
     align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    cursor: pointer;
 }
 
 .copiado {
@@ -1089,4 +1093,3 @@ tbody tr:last-child td {
     /* 🔥 lo más importante */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
-
