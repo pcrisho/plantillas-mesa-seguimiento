@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // ELEMENTOS
     const modal = document.querySelector("#modal");
     const btnGuardar = document.querySelector("#btn-guardar");
     const btnSinCredenciales = document.querySelector("#btn-sin-credenciales");
@@ -13,95 +12,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const spanAdp = userCredentials.querySelector(".adp");
     const spanUsuario = userCredentials.querySelector("span:last-child");
 
-    // VARIABLES
     let nombreAsesor = "";
     let usuarioAdp = "";
 
-    // CARGA CREDENCIALES GUARDADAS
-    const adpGuardado = localStorage.getItem("adpNombre");
-    const usuarioGuardado = localStorage.getItem("adpUsuario");
-
-    if (adpGuardado && usuarioGuardado) {
-        nombreAsesor = adpGuardado;
-        usuarioAdp = usuarioGuardado;
-        spanAdp.textContent = nombreAsesor;
-        spanUsuario.textContent = usuarioAdp;
-        userCredentials.style.display = "flex";
-        btnAbrirModal.style.display = "none"; // 👈 aquí
-
-        document.querySelectorAll(".adp").forEach(span => {
-            span.textContent = nombreAsesor;
-        });
-    } else {
-        modal.showModal();
-    }
-
-    // ABRIR MODAL MANUAL
-    btnAbrirModal.addEventListener("click", () => {
-        modal.showModal();
-    });
-
-    // GUARDAR CREDENCIALES
-    btnGuardar.addEventListener("click", () => {
-        const nombre = inputAdp.value.trim();
-        const usuario = inputUsuario.value.trim().toUpperCase();
-
-        if (nombre && usuario.length === 7) {
-            localStorage.setItem("adpNombre", nombre);
-            localStorage.setItem("adpUsuario", usuario);
-
-            nombreAsesor = nombre;
-            usuarioAdp = usuario;
-
-            spanAdp.textContent = nombreAsesor;
-            spanUsuario.textContent = usuarioAdp;
-            userCredentials.style.display = "flex";
-            btnAbrirModal.style.display = "none";
-
-            document.querySelectorAll(".adp").forEach(span => {
-                span.textContent = nombreAsesor;
-            });
-
-            modal.close();
-        } else {
-            alert("⚠️ Por favor, completa los datos correctamente.");
-        }
-    });
-
-    // ACCEDER SIN CREDENCIALES
-    btnSinCredenciales.addEventListener("click", () => {
-        modal.close();
-    });
-
-    // CERRAR SESIÓN
-    btnCerrarSesion.addEventListener("click", () => {
-        localStorage.removeItem("adpNombre");
-        localStorage.removeItem("adpUsuario");
-
-        userCredentials.style.display = "none";
-        btnAbrirModal.style.display = "flex"; // o "flex", según tu estilo original
-
-        spanAdp.textContent = "";
-        spanUsuario.textContent = "";
-
-        document.querySelectorAll(".adp").forEach(span => {
-            span.textContent = "";
-        });
-
-        nombreAsesor = "";
-        usuarioAdp = "";
-
-        modal.showModal();
-    });
-
-    // ---------- GENERACIÓN DE CÓDIGOS ----------
     let correlativo = 1;
     let letraActual = "A";
     let codigosGenerados = [];
 
+    // --- FUNCIONES PARA CÓDIGOS ---
+    function claveUsuario() {
+        return `codigos_${usuarioAdp}`;
+    }
+
     function guardarDatos() {
-        localStorage.setItem("codigosGuardados", JSON.stringify(codigosGenerados));
-        localStorage.setItem("fechaGuardada", new Date().toDateString());
+        localStorage.setItem(claveUsuario(), JSON.stringify(codigosGenerados));
+        localStorage.setItem(`fecha_${usuarioAdp}`, new Date().toDateString());
     }
 
     function mostrarUltimoCodigoGenerado() {
@@ -110,30 +35,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function cargarDatosGuardados() {
-        const fechaActual = new Date().toDateString();
-        const fechaGuardada = localStorage.getItem("fechaGuardada");
-        const datosGuardados = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
+        if (!usuarioAdp) return;
 
-        if (fechaActual !== fechaGuardada) {
-            localStorage.removeItem("codigosGuardados");
-            localStorage.setItem("fechaGuardada", fechaActual);
-            codigosGenerados = [];
-            correlativo = 1;
-            letraActual = "A";
-            document.getElementById("lista-codigos").innerHTML = "";
-        } else {
-            codigosGenerados = datosGuardados;
-            codigosGenerados.forEach(codigo => {
-                const item = document.createElement("li");
-                item.textContent = codigo;
-                document.getElementById("lista-codigos").appendChild(item);
-            });
-            correlativo = codigosGenerados.length + 1;
-            letraActual = codigosGenerados.length % 2 === 0 ? "A" : "B";
-        }
+        verificarFechaUsuario(); // ✅ Comprobación diaria por usuario
+
+        const datosGuardados = JSON.parse(localStorage.getItem(claveUsuario())) || [];
+
+        codigosGenerados = datosGuardados;
+        correlativo = codigosGenerados.length + 1;
+        letraActual = codigosGenerados.length % 2 === 0 ? "A" : "B";
+
+        const lista = document.getElementById("lista-codigos");
+        lista.innerHTML = "";
+        codigosGenerados.forEach(codigo => {
+            const item = document.createElement("li");
+            item.textContent = codigo;
+            lista.appendChild(item);
+        });
 
         mostrarUltimoCodigoGenerado();
     }
+
 
     function generarCodigo() {
         if (!usuarioAdp || usuarioAdp.length !== 7) {
@@ -181,6 +103,99 @@ document.addEventListener("DOMContentLoaded", () => {
         mostrarUltimoCodigoGenerado();
     }
 
+    function limpiarCodigosVisuales() {
+        document.getElementById("lista-codigos").innerHTML = "";
+        document.getElementById("codigo-generado").textContent = "";
+    }
+
+    // --- FUNCIONES DE SESIÓN ---
+    function cargarCredenciales() {
+        const adpGuardado = localStorage.getItem("adpNombre");
+        const usuarioGuardado = localStorage.getItem("adpUsuario");
+
+        if (adpGuardado && usuarioGuardado) {
+            nombreAsesor = adpGuardado;
+            usuarioAdp = usuarioGuardado;
+
+            spanAdp.textContent = nombreAsesor;
+            spanUsuario.textContent = usuarioAdp;
+
+            userCredentials.style.display = "flex";
+            btnAbrirModal.style.display = "none";
+
+            document.querySelectorAll(".adp").forEach(span => {
+                span.textContent = nombreAsesor;
+            });
+
+            cargarDatosGuardados();
+        } else {
+            modal.showModal();
+        }
+    }
+
+    // --- EVENTOS ---
+    btnAbrirModal.addEventListener("click", () => {
+        modal.showModal();
+    });
+
+    btnGuardar.addEventListener("click", () => {
+        const nombre = inputAdp.value.trim();
+        const usuario = inputUsuario.value.trim().toUpperCase();
+
+        if (nombre && usuario.length === 7) {
+            localStorage.setItem("adpNombre", nombre);
+            localStorage.setItem("adpUsuario", usuario);
+
+            nombreAsesor = nombre;
+            usuarioAdp = usuario;
+
+            spanAdp.textContent = nombreAsesor;
+            spanUsuario.textContent = usuarioAdp;
+            userCredentials.style.display = "flex";
+            btnAbrirModal.style.display = "none";
+
+            document.querySelectorAll(".adp").forEach(span => {
+                span.textContent = nombreAsesor;
+            });
+
+            modal.close();
+            cargarDatosGuardados();
+        } else {
+            alert("⚠️ Por favor, completa los datos correctamente.");
+        }
+    });
+
+    btnSinCredenciales.addEventListener("click", () => {
+        modal.close();
+    });
+
+    btnCerrarSesion.addEventListener("click", () => {
+        localStorage.removeItem("adpNombre");
+        localStorage.removeItem("adpUsuario");
+
+        userCredentials.style.display = "none";
+        btnAbrirModal.style.display = "flex";
+
+        spanAdp.textContent = "";
+        spanUsuario.textContent = "";
+
+        document.querySelectorAll(".adp").forEach(span => {
+            span.textContent = "";
+        });
+
+        codigosGenerados = [];
+        correlativo = 1;
+        letraActual = "A";
+
+        limpiarCodigosVisuales();
+
+        nombreAsesor = "";
+        usuarioAdp = "";
+
+        modal.showModal();
+    });
+
+    // --- DESCARGA CÓDIGOS ---
     window.generarCodigo = generarCodigo;
     window.eliminarUltimoCodigo = eliminarUltimoCodigo;
     window.descargarCodigos = function () {
@@ -201,5 +216,23 @@ document.addEventListener("DOMContentLoaded", () => {
         URL.revokeObjectURL(url);
     }
 
-    cargarDatosGuardados();
+    cargarCredenciales(); // Inicializa todo
 });
+
+function verificarFechaUsuario() {
+    const hoy = new Date().toDateString();
+    const claveFecha = `fecha_${usuarioAdp}`;
+    const fechaGuardada = localStorage.getItem(claveFecha);
+
+    if (fechaGuardada !== hoy) {
+        // Es un nuevo día → limpia los códigos de este usuario
+        codigosGenerados = [];
+        correlativo = 1;
+        letraActual = "A";
+
+        localStorage.setItem(claveUsuario(), JSON.stringify([]));
+        localStorage.setItem(claveFecha, hoy);
+
+        limpiarCodigosVisuales();
+    }
+}

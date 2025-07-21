@@ -18,6 +18,8 @@
     --background-color-2: #F2F4F8;
     /* Fondo rojo */
     --color-red: #e12e20;
+
+    --header-height: 70px;
 }
 
 html,
@@ -71,7 +73,7 @@ header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.150);
     /* Para que el header se quede en la parte superior y ocupe todo el ancho */
     width: 100%;
-    height: 60px;
+    height: var(--header-height);
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -177,8 +179,8 @@ main {
     align-items: center;
     gap: 8px;
     background-color: var(--color-text);
-    padding: 4px 8px;
-    border-radius: 8px;
+    padding: 6px 8px;
+    border-radius: 16px;
 }
 
 /* Vista de usuario activa en el header */
@@ -221,7 +223,7 @@ nav {
     height: 100vh;
     /* Resta la altura del header */
     overflow: hidden;
-    padding-top: 60px;
+    padding-top: 70px;
 }
 
 
@@ -379,9 +381,9 @@ main aside {
     background-color: #ffffff;
     height: 100vh;
     scroll-behavior: smooth;
-    scroll-padding-top: 60px;
+    scroll-padding-top: var(--header-height);
     /* igual a la altura del header */
-    padding-top: 60px;
+    padding-top: var(--header-height);
     overflow-y: auto;
 }
 
