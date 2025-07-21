@@ -1,237 +1,205 @@
-// Variables globales para nombre y usuario
-let nombreAsesor = "";
-let usuarioAdp = "";
+document.addEventListener("DOMContentLoaded", () => {
+    // ELEMENTOS
+    const modal = document.querySelector("#modal");
+    const btnGuardar = document.querySelector("#btn-guardar");
+    const btnSinCredenciales = document.querySelector("#btn-sin-credenciales");
+    const btnAbrirModal = document.querySelector("#btn-abrir-modal");
+    const btnCerrarSesion = document.querySelector("#cerrar-sesion");
 
-// Guardar datos ingresados
-function guardarDatosAdp() {
-    const inputNombre = document.getElementById("input-adp").value.trim();
-    const inputUsuario = document.getElementById("input-usuario").value.trim().toUpperCase();
+    const inputAdp = document.querySelector("#input-adp");
+    const inputUsuario = document.querySelector("#input-usuario");
 
-    if (inputNombre === "" || inputUsuario.length !== 7) {
-        alert("⚠️ Ingresa un nombre y un usuario válido (7 caracteres).");
-        return;
-    }
+    const userCredentials = document.querySelector("#user-credentials");
+    const spanAdp = userCredentials.querySelector(".adp");
+    const spanUsuario = userCredentials.querySelector("span:last-child");
 
-    nombreAsesor = inputNombre;
-    usuarioAdp = inputUsuario;
+    // VARIABLES
+    let nombreAsesor = "";
+    let usuarioAdp = "";
 
-    document.querySelectorAll(".adp").forEach(span => span.textContent = nombreAsesor);
+    // CARGA CREDENCIALES GUARDADAS
+    const adpGuardado = localStorage.getItem("adpNombre");
+    const usuarioGuardado = localStorage.getItem("adpUsuario");
 
-    alert("✅ Datos guardados correctamente.");
-}
+    if (adpGuardado && usuarioGuardado) {
+        nombreAsesor = adpGuardado;
+        usuarioAdp = usuarioGuardado;
+        spanAdp.textContent = nombreAsesor;
+        spanUsuario.textContent = usuarioAdp;
+        userCredentials.style.display = "flex";
+        btnAbrirModal.style.display = "none"; // 👈 aquí
 
-// Función de generación de código de cambio de equipo
-let correlativo = 1;
-let letraActual = "A";
-let codigosGenerados = [];
-
-// Carga los datos guardados
-function cargarDatosGuardados() {
-    const fechaActual = new Date().toDateString();
-    const fechaGuardada = localStorage.getItem("fechaGuardada");
-    const datosGuardados = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
-
-    // Si es un nuevo día, limpia el almacenamiento
-    if (fechaActual !== fechaGuardada) {
-        localStorage.removeItem("codigosGuardados");
-        localStorage.setItem("fechaGuardada", fechaActual);
-        codigosGenerados = [];
-        correlativo = 1;
-        letraActual = "A";
-        document.getElementById("lista-codigos").innerHTML = "";
+        document.querySelectorAll(".adp").forEach(span => {
+            span.textContent = nombreAsesor;
+        });
     } else {
-        codigosGenerados = datosGuardados;
-        codigosGenerados.forEach(codigo => {
-            const item = document.createElement("li");
-            item.textContent = codigo;
-            document.getElementById("lista-codigos").appendChild(item);
-        });
-        correlativo = datosGuardados.length + 1;
-        letraActual = datosGuardados.length % 2 === 0 ? "A" : "B";
+        modal.showModal();
     }
 
-    mostrarUltimoCodigoGenerado();
-}
+    // ABRIR MODAL MANUAL
+    btnAbrirModal.addEventListener("click", () => {
+        modal.showModal();
+    });
 
-function guardarDatos() {
-    localStorage.setItem("codigosGuardados", JSON.stringify(codigosGenerados));
-    localStorage.setItem("fechaGuardada", new Date().toDateString());
-}
+    // GUARDAR CREDENCIALES
+    btnGuardar.addEventListener("click", () => {
+        const nombre = inputAdp.value.trim();
+        const usuario = inputUsuario.value.trim().toUpperCase();
 
-function generarCodigo() {
-    if (!usuarioAdp || usuarioAdp.length !== 7) {
-        alert("⚠️ Primero guarda tu usuario correctamente.");
-        return;
-    }
+        if (nombre && usuario.length === 7) {
+            localStorage.setItem("adpNombre", nombre);
+            localStorage.setItem("adpUsuario", usuario);
 
-    const fecha = new Date();
-    const dia = fecha.getDate().toString().padStart(2, "0");
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-    const anio = fecha.getFullYear();
-    const codigo = `${correlativo}${usuarioAdp}${dia}${mes}${anio}${letraActual}`;
+            nombreAsesor = nombre;
+            usuarioAdp = usuario;
 
-    document.getElementById("codigo-generado").textContent = codigo;
-    codigosGenerados.push(codigo);
-    guardarDatos();
+            spanAdp.textContent = nombreAsesor;
+            spanUsuario.textContent = usuarioAdp;
+            userCredentials.style.display = "flex";
+            btnAbrirModal.style.display = "none";
 
-    letraActual = letraActual === "A" ? "B" : "A";
-    correlativo++;
+            document.querySelectorAll(".adp").forEach(span => {
+                span.textContent = nombreAsesor;
+            });
 
-    const lista = document.getElementById("lista-codigos");
-    const item = document.createElement("li");
-    item.textContent = codigo;
-    lista.appendChild(item);
-
-    localStorage.setItem("codigosGuardados", JSON.stringify(codigosGenerados));
-}
-
-function descargarCodigos() {
-    if (codigosGenerados.length === 0) {
-        alert("No hay códigos generados aún.");
-        return;
-    }
-
-    const contenido = codigosGenerados.join("\n");
-    const blob = new Blob([contenido], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-
-    const enlace = document.createElement("a");
-    enlace.href = url;
-    enlace.download = "codigos-cambio-equipo.txt";
-    enlace.click();
-
-    URL.revokeObjectURL(url);
-}
-
-function eliminarUltimoCodigo() {
-    const codigosGuardados = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
-
-    if (codigosGuardados.length === 0) {
-        alert("⚠️ No hay códigos generados para eliminar.");
-        return;
-    }
-
-    // Eliminar el último código
-    codigosGuardados.pop();
-
-    // Disminuir el correlativo (mínimo hasta 1)
-    correlativo = Math.max(1, correlativo - 1);
-
-    // Alternar la letra (vuelve a la anterior)
-    letraActual = letraActual === "A" ? "B" : "A";
-
-    // Actualizar en memoria
-    codigosGenerados.pop(); // También quitarlo de la lista en memoria
-    localStorage.setItem("codigosGuardados", JSON.stringify(codigosGuardados));
-
-    // Eliminar visualmente el último <li>
-    const lista = document.getElementById("lista-codigos");
-    if (lista.lastElementChild) {
-        lista.removeChild(lista.lastElementChild);
-    }
-
-    // Mostrar el nuevo último código en el <span>
-    const ultimoCodigo = codigosGuardados[codigosGuardados.length - 1] || "";
-    document.getElementById("codigo-generado").textContent = ultimoCodigo;
-}
-
-// Ejecutar al cargar la página
-window.addEventListener("DOMContentLoaded", cargarDatosGuardados);
-
-
-function mostrarUltimoCodigoGenerado() {
-    const codigoGeneradoElDia = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
-    const ultimoCodigo = codigoGeneradoElDia[codigoGeneradoElDia.length - 1] || "";
-    document.getElementById("codigo-generado").textContent = ultimoCodigo;
-}
-
-
-
-
-
-
-
-const listElements = document.querySelectorAll('.list__button--click');
-
-listElements.forEach(listElement => {
-    listElement.addEventListener('click', () => {
-        const menu = listElement.nextElementSibling;
-
-        // Cierra los demás desplegables
-        listElements.forEach(el => {
-            if (el !== listElement) {
-                el.classList.remove('arrow');
-                const otro = el.nextElementSibling;
-                if (otro) {
-                    otro.style.height = "0px";
-                }
-            }
-        });
-
-        const isOpen = menu.style.height && menu.style.height !== "0px";
-
-        if (isOpen) {
-            listElement.classList.remove('arrow');
-            menu.style.height = "0px";
+            modal.close();
         } else {
-            listElement.classList.add('arrow');
-            menu.style.height = menu.scrollHeight + "px";
-
-            // 👇 FORZAMOS actualizacion del scroll de NAV
-            const nav = listElement.closest("nav");
-            if (nav) {
-                nav.style.overflowY = "hidden";
-                void nav.offsetHeight; // Forzar reflow
-                nav.style.overflowY = "auto";
-            }
-
-            // 👇 Scroll al item si se desea
-            setTimeout(() => {
-                listElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            }, 300);
+            alert("⚠️ Por favor, completa los datos correctamente.");
         }
     });
-});
 
-/*var nombreAsesor = prompt('Ingresa tus nombre');*/
-// Obtener la fecha actual
-const fecha = new Date();
-const dia = fecha.getDate();
-const mes = fecha.toLocaleString("es-PE", { month: "long" }); // "julio"
-const anio = fecha.getFullYear();
-// Hora con ceros a la izquierda si es necesario
-const horas = fecha.getHours().toString().padStart(2, "0");
-const minutos = fecha.getMinutes().toString().padStart(2, "0");
-const hora = `${horas}:${minutos}`;
-
-// Función para copiar la plantilla al portapapeles
-function copiarPlantilla(boton) {
-    const plantilla = boton.closest(".plantilla");
-    const texto = plantilla.querySelector("p").innerText ||
-        plantilla.querySelector("p").textContent;
-
-    navigator.clipboard.writeText(texto).then(() => {
-        const copiadoSpan = boton.parentElement.querySelector(".copiado");
-
-        copiadoSpan.classList.remove("hidden");
-        copiadoSpan.classList.add("mostrar");
-
-        // Ocultamos el mensaje después de 2 segundos
-        setTimeout(() => {
-            copiadoSpan.classList.remove("mostrar");
-            copiadoSpan.classList.add("hidden");
-        }, 2000);
-    }).catch(err => {
-        console.error("Error al copiar:", err);
+    // ACCEDER SIN CREDENCIALES
+    btnSinCredenciales.addEventListener("click", () => {
+        modal.close();
     });
-}
 
+    // CERRAR SESIÓN
+    btnCerrarSesion.addEventListener("click", () => {
+        localStorage.removeItem("adpNombre");
+        localStorage.removeItem("adpUsuario");
 
-// Insertar en los elementos HTML
-document.querySelectorAll(".adp").forEach(span => {
-    span.textContent = nombreAsesor;
+        userCredentials.style.display = "none";
+        btnAbrirModal.style.display = "flex"; // o "flex", según tu estilo original
+
+        spanAdp.textContent = "";
+        spanUsuario.textContent = "";
+
+        document.querySelectorAll(".adp").forEach(span => {
+            span.textContent = "";
+        });
+
+        nombreAsesor = "";
+        usuarioAdp = "";
+
+        modal.showModal();
+    });
+
+    // ---------- GENERACIÓN DE CÓDIGOS ----------
+    let correlativo = 1;
+    let letraActual = "A";
+    let codigosGenerados = [];
+
+    function guardarDatos() {
+        localStorage.setItem("codigosGuardados", JSON.stringify(codigosGenerados));
+        localStorage.setItem("fechaGuardada", new Date().toDateString());
+    }
+
+    function mostrarUltimoCodigoGenerado() {
+        const ult = codigosGenerados[codigosGenerados.length - 1] || "";
+        document.getElementById("codigo-generado").textContent = ult;
+    }
+
+    function cargarDatosGuardados() {
+        const fechaActual = new Date().toDateString();
+        const fechaGuardada = localStorage.getItem("fechaGuardada");
+        const datosGuardados = JSON.parse(localStorage.getItem("codigosGuardados")) || [];
+
+        if (fechaActual !== fechaGuardada) {
+            localStorage.removeItem("codigosGuardados");
+            localStorage.setItem("fechaGuardada", fechaActual);
+            codigosGenerados = [];
+            correlativo = 1;
+            letraActual = "A";
+            document.getElementById("lista-codigos").innerHTML = "";
+        } else {
+            codigosGenerados = datosGuardados;
+            codigosGenerados.forEach(codigo => {
+                const item = document.createElement("li");
+                item.textContent = codigo;
+                document.getElementById("lista-codigos").appendChild(item);
+            });
+            correlativo = codigosGenerados.length + 1;
+            letraActual = codigosGenerados.length % 2 === 0 ? "A" : "B";
+        }
+
+        mostrarUltimoCodigoGenerado();
+    }
+
+    function generarCodigo() {
+        if (!usuarioAdp || usuarioAdp.length !== 7) {
+            alert("⚠️ Primero guarda tu usuario correctamente.");
+            return;
+        }
+
+        const fecha = new Date();
+        const dia = fecha.getDate().toString().padStart(2, "0");
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+        const anio = fecha.getFullYear();
+        const codigo = `${correlativo}${usuarioAdp}${dia}${mes}${anio}${letraActual}`;
+
+        codigosGenerados.push(codigo);
+        guardarDatos();
+
+        document.getElementById("codigo-generado").textContent = codigo;
+
+        letraActual = letraActual === "A" ? "B" : "A";
+        correlativo++;
+
+        const lista = document.getElementById("lista-codigos");
+        const item = document.createElement("li");
+        item.textContent = codigo;
+        lista.appendChild(item);
+    }
+
+    function eliminarUltimoCodigo() {
+        if (codigosGenerados.length === 0) {
+            alert("⚠️ No hay códigos para eliminar.");
+            return;
+        }
+
+        codigosGenerados.pop();
+        correlativo = Math.max(1, correlativo - 1);
+        letraActual = letraActual === "A" ? "B" : "A";
+
+        guardarDatos();
+
+        const lista = document.getElementById("lista-codigos");
+        if (lista.lastElementChild) {
+            lista.removeChild(lista.lastElementChild);
+        }
+
+        mostrarUltimoCodigoGenerado();
+    }
+
+    window.generarCodigo = generarCodigo;
+    window.eliminarUltimoCodigo = eliminarUltimoCodigo;
+    window.descargarCodigos = function () {
+        if (codigosGenerados.length === 0) {
+            alert("No hay códigos generados aún.");
+            return;
+        }
+
+        const contenido = codigosGenerados.join("\n");
+        const blob = new Blob([contenido], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+
+        const enlace = document.createElement("a");
+        enlace.href = url;
+        enlace.download = "codigos-cambio-equipo.txt";
+        enlace.click();
+
+        URL.revokeObjectURL(url);
+    }
+
+    cargarDatosGuardados();
 });
-document.querySelectorAll(".dia").forEach(el => el.textContent = dia);
-document.querySelectorAll(".mes").forEach(el => el.textContent = mes);
-document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
-document.querySelectorAll(".hora").forEach(el => el.textContent = hora);

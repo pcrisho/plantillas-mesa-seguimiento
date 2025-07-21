@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/table-styles.css">
+    <link rel="stylesheet" href="./assets/css/modals.css">
 
     <title>Plantillas de Mesa de Seguimiento Fija - Hitss Perú</title>
 
@@ -24,17 +25,32 @@
 
         <div class="header__container">
 
-            <figure class="nav__logo">
-                <a href="#home">
-                    <img src="https://www.hitss.com:443/wp-content/uploads/2025/01/cropped-favicon-32x32.png"
-                        alt="Logo de Hitss">
-                </a>
+            <button id="btn-abrir-modal" class="log-in-button">Iniciar Sesión</button>
 
-                <span class="adp"></span>
+            <div class="user-credentials" id="user-credentials" style="display: none;">
+
+                <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px"
+                    fill="#ffffff">
+                    <path
+                        d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" />
+                </svg>
+
+                <div class="user-info">
+                    <span class="adp"></span>
+                    <span style="color: #ffffff;">E758475</span>
+
+                </div>
+
+                <svg id="cerrar-sesion" xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px"
+                    fill="#e12e20">
+                    <path
+                        d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h264v72H216Zm432-168-51-51 81-81H384v-72h294l-81-81 51-51 168 168-168 168Z" />
+                </svg>
 
 
 
-            </figure>
+
+            </div>
 
             <ul class="header__list">
 
@@ -72,6 +88,7 @@
     </header>
 
     <main>
+
         <nav class="nav">
 
             <ul class="list">
@@ -664,21 +681,26 @@
             <div style="padding: 10px 0px;"></div>
         </nav>
 
+        <dialog id="modal">
+            <div class="datos">
+                <label for="input-adp">Nombre del ADP</label>
+                <input type="text" id="input-adp" placeholder="Ingresa tus nombres y apellidos" required>
+
+                <label for="input-usuario">Ingresa tu usuario E (7 caracteres)</label>
+                <input type="text" id="input-usuario" maxlength="7" placeholder="Ej: E758975" required>
+
+                <button id="btn-guardar">💾 Guardar</button>
+                <button id="btn-sin-credenciales">Acceder sin credenciales</button>
+            </div>
+        </dialog>
+
         <aside>
             <div id="home" class="container">
                 <h1>Plantillas de Mesa de Seguimiento Fija</h1>
                 <p>Estas plantillas son para el seguimiento de los casos que se encuentran en la mesa de seguimiento
                     fija. Se hizo una corrreción y adaptación de las diferentes plantillas para facilitar su uso.</p>
 
-                <div class="datos">
-                    <label for="input-adp">Nombre del ADP</label>
-                    <input type="text" id="input-adp" placeholder="Ingresa tus nombres y apellidos" required>
 
-                    <label for="input-usuario">Ingresa tu usuario E (7 caracteres)</label>
-                    <input type="text" id="input-usuario" maxlength="7" placeholder="Ej: E758975" required>
-
-                    <button onclick="guardarDatosAdp()">💾 Guardar</button>
-                </div>
 
             </div>
 
@@ -4098,6 +4120,8 @@
 
     <script src="./assets/js/app.js"></script>
     <script src="./assets/js/datetime.js"></script>
+    <script src="./assets/js/nav.js"></script>
+    <script src="./assets/js/copy.js"></script>
 </body>
 
 </html>

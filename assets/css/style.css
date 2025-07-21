@@ -15,7 +15,9 @@
     --color-text-h2: #001D6C;
 
     /* 2do fondo */
-    --background-color-2: #F2F4F8
+    --background-color-2: #F2F4F8;
+    /* Fondo rojo */
+    --color-red: #e12e20;
 }
 
 html,
@@ -159,6 +161,58 @@ main {
     /* Muy importante */
 }
 
+.log-in-button {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    background-color: #0F62FE;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.user-credentials {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--color-text);
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+/* Vista de usuario activa en el header */
+.user-view {
+    background-color: var(--color-text);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    font-size: 0.8rem;
+}
+
+#cerrar-sesion {
+    cursor: pointer;
+    color: #e12e20;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+#cerrar-sesion:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
 /* Estilos del nav*/
 
 nav {
@@ -169,6 +223,8 @@ nav {
     overflow: hidden;
     padding-top: 60px;
 }
+
+
 
 .nav {
     width: 20%;
