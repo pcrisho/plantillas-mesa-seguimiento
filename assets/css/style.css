@@ -15,7 +15,11 @@
     --color-text-h2: #001D6C;
 
     /* 2do fondo */
-    --background-color-2: #F2F4F8
+    --background-color-2: #F2F4F8;
+    /* Fondo rojo */
+    --color-red: #e12e20;
+
+    --header-height: 70px;
 }
 
 html,
@@ -69,7 +73,7 @@ header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.150);
     /* Para que el header se quede en la parte superior y ocupe todo el ancho */
     width: 100%;
-    height: 60px;
+    height: var(--header-height);
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -123,12 +127,12 @@ header {
 .header__link:hover {
     color: #e12e20;
     transition: all .5s ease;
-    
+
 }
 
 
-.header__link__red{
-    color:#e12e20;
+.header__link__red {
+    color: #e12e20;
     font-weight: 700;
     text-decoration: none;
 }
@@ -136,7 +140,7 @@ header {
 .header__link__red:hover {
     color: rgb(91, 89, 89);
     transition: all 1s ease;
-    
+
 }
 
 
@@ -159,6 +163,63 @@ main {
     /* Muy importante */
 }
 
+.log-in-button {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    background-color: #0F62FE;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.user-credentials {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--color-text);
+    padding: 6px 8px;
+    border-radius: 16px;
+}
+
+/* Vista de usuario activa en el header */
+.user-view {
+    background-color: var(--color-text);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.8rem;
+}
+
+.user-info .adp {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+#cerrar-sesion {
+    cursor: pointer;
+    color: #e12e20;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+#cerrar-sesion:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
 /* Estilos del nav*/
 
 nav {
@@ -167,8 +228,9 @@ nav {
     height: 100vh;
     /* Resta la altura del header */
     overflow: hidden;
-    padding-top: 60px;
 }
+
+
 
 .nav {
     width: 20%;
@@ -181,20 +243,21 @@ nav {
 
 }
 
+#modal {}
 
 
 .datos {
     display: flex;
     flex-direction: column;
     align-items: first baseline;
+    gap: 8px;
     padding: 16px 0px;
-    border-bottom: 1px solid #8e8e8e;
 }
 
 .datos label {
     color: #303440;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     padding-bottom: 4px;
 }
 
@@ -206,14 +269,32 @@ nav {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     color: #303440;
 }
 
-.datos button {
+.datos h2 {
+    width: 100%;
+    color: var(--color-red);
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.datos #btn-guardar {
     font-family: 'Montserrat', Helvetica, Arial, sans-serif;
     background-color: #0F62FE;
     color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.datos #btn-sin-credenciales {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    color: var(--color-text);
     border: none;
     padding: 8px 16px;
     border-radius: 6px;
@@ -310,7 +391,7 @@ main aside::-webkit-scrollbar-thumb {
     border-radius: 4px;
 }
 
-main nav::-webkit-scrollbar-thumb{
+main nav::-webkit-scrollbar-thumb {
     background-color: #ffffff4d;
     /* azul semi-transparente */
     border-radius: 4px;
@@ -323,9 +404,9 @@ main aside {
     background-color: #ffffff;
     height: 100vh;
     scroll-behavior: smooth;
-    scroll-padding-top: 60px;
+    scroll-padding-top: var(--header-height);
     /* igual a la altura del header */
-    padding-top: 60px;
+    padding-top: var(--header-height);
     overflow-y: auto;
 }
 
@@ -454,6 +535,10 @@ main aside {
     transition: color 0.3s ease;
     display: flex;
     align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    cursor: pointer;
 }
 
 .copiado {
@@ -554,17 +639,6 @@ tbody tr:last-child td {
     width: 100%;
     /* 🔥 lo más importante */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-
-#si-activaciones,
-#si-rechazos-tecnicos,
-#si-validaciones {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    gap: 8px;
 }
 
 /**/
@@ -727,16 +801,6 @@ tbody tr:last-child td {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-#val-instalacion,
-#val-postventa,
-#val-manto-hfc-ftth {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    gap: 8px;
-}
-
 
 /**/
 
@@ -810,16 +874,7 @@ tbody tr:last-child td {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-#repro-mesa-claro,
-#repro-mesa-cliente,
-#repro-campo-claro,
-#repro-campo-cliente {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    gap: 8px;
-}
+
 
 /**/
 
@@ -950,6 +1005,86 @@ tbody tr:last-child td {
 }
 
 #cierre-manto-campo .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/**/
+
+#derivacion-pext-hfc .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#derivacion-pext-hfc .container__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Para 3 columnas */
+    padding-top: 0px;
+    width: 100%;
+}
+
+#derivacion-pext-hfc .container__grid__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+#derivacion-pext-hfc .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/**/
+
+#derivacion-pext-ftth .plantilla {
+    flex: 1;
+    background-color: #ebebeb;
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    /* 🔥 lo más importante */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#derivacion-pext-ftth .container__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Para 3 columnas */
+    padding-top: 0px;
+    width: 100%;
+}
+
+#derivacion-pext-ftth .container__grid__item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+#derivacion-pext-ftth .plantilla {
     flex: 1;
     background-color: #ebebeb;
     padding: 16px;
