@@ -8,26 +8,51 @@ const horas = fecha.getHours().toString().padStart(2, "0");
 const minutos = fecha.getMinutes().toString().padStart(2, "0");
 const hora = `${horas}:${minutos}`;
 
-// Función para copiar la plantilla al portapapeles
+// Cola de mensajes para copiar
+let copiaEnProgreso = false;
+let colaMensajes = 0;
+
 function copiarPlantilla(boton) {
     const plantilla = boton.closest(".plantilla");
-    const texto = plantilla.querySelector("p").innerText ||
-        plantilla.querySelector("p").textContent;
+    const texto = plantilla.querySelector("p")?.innerText || plantilla.querySelector("p")?.textContent;
+
+    if (!texto) return;
 
     navigator.clipboard.writeText(texto).then(() => {
-        const copiadoSpan = boton.parentElement.querySelector(".copiado");
+        colaMensajes++;
 
-        copiadoSpan.classList.remove("hidden");
-        copiadoSpan.classList.add("mostrar");
+        // Si ya hay uno en progreso, salimos, se procesará después
+        if (copiaEnProgreso) return;
 
-        // Ocultamos el mensaje después de 2 segundos
-        setTimeout(() => {
-            copiadoSpan.classList.remove("mostrar");
-            copiadoSpan.classList.add("hidden");
-        }, 2000);
+        mostrarDialogoCopia();
+
     }).catch(err => {
         console.error("Error al copiar:", err);
     });
+}
+
+function mostrarDialogoCopia() {
+    if (colaMensajes === 0) return;
+
+    const dialog = document.getElementById("copiado-dialog");
+    if (!dialog) return;
+
+    copiaEnProgreso = true;
+
+    dialog.show();
+    dialog.classList.remove("hide");
+
+    setTimeout(() => {
+        dialog.close();
+        colaMensajes--; // Restamos uno de la cola
+        copiaEnProgreso = false;
+
+        // Si hay más en cola, mostramos el siguiente
+        if (colaMensajes > 0) {
+            setTimeout(() => mostrarDialogoCopia(), 200);
+        }
+
+    }, 2000);
 }
 
 

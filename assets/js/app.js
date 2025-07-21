@@ -12,6 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const spanAdp = userCredentials.querySelector(".adp");
     const spanUsuario = userCredentials.querySelector("span:last-child");
 
+    // Confirmar cierre de sesión
+    const confirmDialog = document.querySelector("#confirmar-cierre-sesion");
+    const btnConfirmarCerrarSesion = document.querySelector("#confirmar-cerrar-sesion");
+    const btnCancelarCerrarSesion = document.querySelector("#cancelar-cerrar-sesion");
+
     let nombreAsesor = "";
     let usuarioAdp = "";
 
@@ -25,9 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function guardarDatos() {
-        localStorage.setItem(claveUsuario(), JSON.stringify(codigosGenerados));
-        localStorage.setItem(`fecha_${usuarioAdp}`, new Date().toDateString());
+        const fecha = new Date().toDateString();
+        const clave = `codigos_${usuarioAdp}`;
+        localStorage.setItem(clave, JSON.stringify({
+            fecha,
+            codigos: codigosGenerados
+        }));
     }
+
 
     function mostrarUltimoCodigoGenerado() {
         const ult = codigosGenerados[codigosGenerados.length - 1] || "";
@@ -37,24 +47,34 @@ document.addEventListener("DOMContentLoaded", () => {
     function cargarDatosGuardados() {
         if (!usuarioAdp) return;
 
-        verificarFechaUsuario(); // ✅ Comprobación diaria por usuario
+        const clave = `codigos_${usuarioAdp}`;
+        const data = JSON.parse(localStorage.getItem(clave));
 
-        const datosGuardados = JSON.parse(localStorage.getItem(claveUsuario())) || [];
+        const fechaActual = new Date().toDateString();
 
-        codigosGenerados = datosGuardados;
-        correlativo = codigosGenerados.length + 1;
-        letraActual = codigosGenerados.length % 2 === 0 ? "A" : "B";
+        if (!data || data.fecha !== fechaActual) {
+            codigosGenerados = [];
+            correlativo = 1;
+            letraActual = "A";
+            localStorage.setItem(clave, JSON.stringify({ fecha: fechaActual, codigos: [] }));
+            document.getElementById("lista-codigos").innerHTML = "";
+        } else {
+            codigosGenerados = data.codigos;
+            document.getElementById("lista-codigos").innerHTML = "";
 
-        const lista = document.getElementById("lista-codigos");
-        lista.innerHTML = "";
-        codigosGenerados.forEach(codigo => {
-            const item = document.createElement("li");
-            item.textContent = codigo;
-            lista.appendChild(item);
-        });
+            codigosGenerados.forEach(codigo => {
+                const item = document.createElement("li");
+                item.textContent = codigo;
+                document.getElementById("lista-codigos").appendChild(item);
+            });
+
+            correlativo = codigosGenerados.length + 1;
+            letraActual = codigosGenerados.length % 2 === 0 ? "A" : "B";
+        }
 
         mostrarUltimoCodigoGenerado();
     }
+
 
 
     function generarCodigo() {
@@ -151,30 +171,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
             spanAdp.textContent = nombreAsesor;
             spanUsuario.textContent = usuarioAdp;
-            userCredentials.style.display = "flex";
-            btnAbrirModal.style.display = "none";
+            toggleElementVisibility(userCredentials, true);
+            toggleElementVisibility(btnAbrirModal, false);
 
             document.querySelectorAll(".adp").forEach(span => {
                 span.textContent = nombreAsesor;
             });
 
-            modal.close();
+            cerrarDialogConAnimacion(modal);;
             cargarDatosGuardados();
         } else {
             alert("⚠️ Por favor, completa los datos correctamente.");
         }
+
+        cargarDatosGuardados();
     });
 
     btnSinCredenciales.addEventListener("click", () => {
-        modal.close();
+        cerrarDialogConAnimacion(modal);;
     });
 
     btnCerrarSesion.addEventListener("click", () => {
+        confirmDialog.showModal();
+    });
+
+    // Confirmar cierre
+    btnConfirmarCerrarSesion.addEventListener("click", () => {
         localStorage.removeItem("adpNombre");
         localStorage.removeItem("adpUsuario");
 
-        userCredentials.style.display = "none";
-        btnAbrirModal.style.display = "flex";
+        toggleElementVisibility(userCredentials, false);
+        toggleElementVisibility(btnAbrirModal, true);
 
         spanAdp.textContent = "";
         spanUsuario.textContent = "";
@@ -183,16 +210,21 @@ document.addEventListener("DOMContentLoaded", () => {
             span.textContent = "";
         });
 
-        codigosGenerados = [];
-        correlativo = 1;
-        letraActual = "A";
-
-        limpiarCodigosVisuales();
-
         nombreAsesor = "";
         usuarioAdp = "";
 
+        // Limpiar códigos de usuario actual de la vista
+        codigosGenerados = [];
+        document.getElementById("lista-codigos").innerHTML = "";
+        document.getElementById("codigo-generado").textContent = "";
+
+        confirmDialog.close();
         modal.showModal();
+    });
+
+    // Cancelar cierre
+    btnCancelarCerrarSesion.addEventListener("click", () => {
+        confirmDialog.close();
     });
 
     // --- DESCARGA CÓDIGOS ---
@@ -236,3 +268,30 @@ function verificarFechaUsuario() {
         limpiarCodigosVisuales();
     }
 }
+
+function cerrarDialogConAnimacion(dialog) {
+    dialog.classList.add("closing");
+    setTimeout(() => {
+        dialog.classList.remove("closing");
+        dialog.close();
+    }, 300); // tiempo exacto de animación
+}
+
+function toggleElementVisibility(element, visible, displayMode = "flex") {
+  if (visible) {
+    element.style.display = displayMode;
+    element.classList.remove("fade-out"); // por si acaso
+    element.classList.add("fade-in");
+  } else {
+    element.classList.remove("fade-in"); // elimina animación de entrada
+    element.style.display = "none"; // oculta inmediatamente sin animación
+  }
+}
+
+
+
+dialog.classList.add("closing");
+setTimeout(() => {
+    dialog.close();
+    dialog.classList.remove("closing");
+}, 300); // igual a duración del zoomOut
