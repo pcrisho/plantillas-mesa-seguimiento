@@ -159,7 +159,6 @@ main {
     flex-direction: row;
     height: 100vh;
     /* Resta la altura del header */
-    overflow: hidden;
     /* Muy importante */
 }
 
@@ -228,22 +227,35 @@ nav {
     height: 100vh;
     /* Resta la altura del header */
     overflow: hidden;
+
 }
 
 
 
 .nav {
     width: 20%;
-    max-height: 100vh;
+    height: 100vh;
     background-color: #e12e20;
-    overflow-y: auto;
-    height: 100%;
     display: flex;
     flex-direction: column;
-
+    overflow: hidden;
+    /* 👈 muy importante */
 }
 
-#modal {}
+.sticky-header-space {
+    height: var(--header-height);
+    flex-shrink: 0;
+    background-color: White;
+}
+
+.nav_scroll {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height); /* 👈 evita que los anchors se tapen */
+}
+
+
 
 
 .datos {
@@ -379,7 +391,7 @@ nav {
 }
 
 /* Scrollbar base (track) */
-main nav::-webkit-scrollbar,
+
 main aside::-webkit-scrollbar {
     width: 6px;
 }
@@ -391,10 +403,17 @@ main aside::-webkit-scrollbar-thumb {
     border-radius: 4px;
 }
 
-main nav::-webkit-scrollbar-thumb {
-    background-color: #ffffff4d;
-    /* azul semi-transparente */
+.nav_scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nav_scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3); /* un blanco tenue */
     border-radius: 4px;
+}
+
+.nav_scroll::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 /* Fin de Estilos del nav*/
