@@ -249,11 +249,12 @@ nav {
 }
 
 .nav_scroll {
-  flex: 1;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  padding-top: 16px;
-  scroll-padding-top: var(--header-height); /* 👈 evita que los anchors se tapen */
+    flex: 1;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-top: 16px;
+    scroll-padding-top: var(--header-height);
+    /* 👈 evita que los anchors se tapen */
 }
 
 
@@ -324,6 +325,7 @@ nav {
     text-decoration: none;
     font-size: 0.7rem;
     font-weight: 600;
+    text-align: left;
 }
 
 .nav__link--inside {
@@ -409,7 +411,8 @@ main aside::-webkit-scrollbar-thumb {
 }
 
 .nav_scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3); /* un blanco tenue */
+    background-color: rgba(255, 255, 255, 0.3);
+    /* un blanco tenue */
     border-radius: 4px;
 }
 
@@ -597,6 +600,7 @@ table {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
+    table-layout: fixed;
 }
 
 thead {
@@ -1112,4 +1116,157 @@ tbody tr:last-child td {
     width: 100%;
     /* 🔥 lo más importante */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 1240px) {
+    .nav {
+        width: 30%;
+    }
+
+    main aside {
+        width: 70%;
+    }
+
+    .header__list {
+        gap: 1rem;
+    }
+
+    #cierre-manto-mesa .container__grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 810px) {
+    .nav {
+        width: 35%;
+    }
+
+    main aside {
+        width: 65%;
+    }
+
+    .header__list {
+        visibility: hidden;
+        gap: 1rem;
+    }
+
+    #speech-inicio .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 4 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #activaciones .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 4 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #validaciones .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 4 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #general-seguimiento .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #reagendados .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #rechazos-mesa-campo .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #rechazos-motivo-tecnico .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #cierre-manto-mesa .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #cierre-manto-campo .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+
+    #derivacion-pext-hfc .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+}
+
+    #derivacion-pext-ftth .container__grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /* Para 3 columnas */
+        padding-top: 0px;
+        width: 100%;
+    }
+    #cod-manto {
+        width: 1px;
+        height: 1px;
+        visibility: hidden;
+    }
+
+
+}
+
+@media (max-width: 600px) {
+    .nav {
+        width: 40%;
+    }
+
+    main aside {
+        width: 60%;
+    }
+
+    .header__list {
+        visibility: hidden;
+        gap: 1rem;
+    }
+    #cod-manto {
+        width: 1px;
+        height: 1px;
+        visibility: hidden;
+    }
+
 }

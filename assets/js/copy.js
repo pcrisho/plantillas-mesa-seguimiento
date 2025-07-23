@@ -1,13 +1,3 @@
-// Obtener la fecha actual
-const fecha = new Date();
-const dia = fecha.getDate();
-const mes = fecha.toLocaleString("es-PE", { month: "long" }); // "julio"
-const anio = fecha.getFullYear();
-// Hora con ceros a la izquierda si es necesario
-const horas = fecha.getHours().toString().padStart(2, "0");
-const minutos = fecha.getMinutes().toString().padStart(2, "0");
-const hora = `${horas}:${minutos}`;
-
 // Cola de mensajes para copiar
 let copiaEnProgreso = false;
 let colaMensajes = 0;
@@ -87,7 +77,3 @@ function mostrarDialogoCopia() {
 document.querySelectorAll(".adp").forEach(span => {
     span.textContent = nombreAsesor;
 });
-document.querySelectorAll(".dia").forEach(el => el.textContent = dia);
-document.querySelectorAll(".mes").forEach(el => el.textContent = mes);
-document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
-document.querySelectorAll(".hora").forEach(el => el.textContent = hora);

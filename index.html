@@ -1061,11 +1061,18 @@
                 <div class="container">
                     <h2>Flags</h2>
                     <p>Estas son las flags que se utilizan para el seguimiento de los casos que se encuentran en la
-                        mesa de seguimiento fija.</p>
+                        mesa de seguimiento fija. Son alertas visuales que ayudan a identificar clientes, estados y/o
+                        actividades específicas asignadas a un técnico. Se precisa utilizar adecuadamente las Flags.</p>
 
                     <div class="tabla">
 
                         <table border="1" cellpadding="8" cellspacing="0">
+
+                            <colgroup>
+                                <col style="width: 10%;">
+                                <col style="width: 80%;">
+                                <col style="width: 10%; text-align:right">
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th>Etiqueta</th>
@@ -1279,7 +1286,8 @@
                                         siguientes datos para confirmar el
                                         servicio con el cliente: SOT, persona que valida, parentezco, número para
                                         comunicarnos, Código de Solución(Para mantenimientos*) y alguna
-                                        observación(opcional*).
+                                        observación(opcional*). También te pido por favor que le informes al cliente que
+                                        se le estará haciendo una llamada.
                                     </p>
                                     <div class="copiar-contenedor">
                                         <span class="copy-icon" onclick="copiarPlantilla(this)">
@@ -1599,14 +1607,56 @@
             <section id="cod-manto">
                 <div class="container">
                     <h2>Códigos de Mantenimiento</h2>
-                    <p>Estos son los códigos de mantenimiento que se utilizan en el SGA. En progreso...</p>
+                    <p>Estos son los códigos de mantenimiento que se utilizan en el SGA. Actualizado hasta el cambio de
+                        códigos previsto el 04/03 del 2025.</p>
 
-                    <table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="sheet0 gridlines">
-                        <col class="col0">
-                        <col class="col1">
-                        <col class="col2">
-                        <col class="col3">
-                        <col class="col4">
+                    <table border="1" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                        <colgroup>
+                            <col style="width: 20%;">
+                            <col style="width: 80%;">
+                        </colgroup>
+                        <tr>
+                            <td style="background-color: #8eaadb;"></td>
+                            <td>CÓDIGOS PARA SERVICIOS CLARO NEGOCIO</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #c8c8c8;"></td>
+                            <td>CÓDIGO QUE DEBEN DE CONTAR CON UNA ANOTACIÓN EN SGA DE DICHA DERIVACIÓN - SOLO VALIDA
+                                TÉCNICO SI ES CÓDIGO ÚNICO</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #f4b083;"></td>
+                            <td>CÓDIGOS QUE NO SE TRABAJAN EN MESA RECHAZAR</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #737373;"></td>
+                            <td>CÓDIGOS QUE DEBEN DE TENER UNA AUTORIZACIÓN DE MULTISKILL</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ffff00;"></td>
+                            <td>CÓDIGOS QUE NO SE DEBE DE VALIDAR CUANDO HAYA FLAG ALARMADO CONECTIVIDAD IN HOUSE EN
+                                FRONT</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #9933ff;"></td>
+                            <td>CÓDIGOS QUE SON NESESARIOS REVISAR EN EL TRACER</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ffc000;"></td>
+                            <td>CÓDIGO QUE SOLO SE PASA A VIDEOLLAMA (360) CUANDO ES PRIORIZADO</td>
+                        </tr>
+                    </table>
+
+
+                    <table border="0" cellpadding="0" cellspacing="0">
+
+                        <colgroup>
+                            <col style="width: 5%;">
+                            <col style="width: 10%;">
+                            <col style="width: 55%;">
+                            <col style="width: 20%;">
+                            <col style="width: 10%;">
+                        </colgroup>
                         <tbody>
                             <tr class="row0">
                                 <td class="column0 style3 s">CÓDIGO </td>
@@ -2394,7 +2444,7 @@
                                         👨‍💻 CLIENTE:&nbsp;<br>
                                         🔣 COD CLIENTE:&nbsp;<br>
                                         📱 CELULAR DEL CLIENTE:&nbsp;<br>
-                                        📅 FECHA Y FRANJA:&nbsp;<br>
+                                        📅 FECHA Y FRANJA:&nbsp;<span class="fecha-dinamica"></span><br>
                                         ✍️ REALIZADO POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
                                     </p>
                                     <div class="copiar-contenedor">
@@ -2608,6 +2658,17 @@
 
                 <div class="container">
                     <h2>Reagendados</h2>
+                    <p>Estas son las flags que se utilizan para el reagendamiento de los casos que se encuentran en la
+                        mesa de seguimiento fija. Recuerda: debemos copiar el # correcto para la reprogramación según
+                        sea el caso. Este debe colocase en el campo de *motivo reprogramación*. <br><br>
+                        Adicional a ello: en el campo "observación" debemos colocar toda información relevante para
+                        alertar en la sot. Ejemplo: cliente corta llamadas y no permite agendar en una fecha y franja
+                        futura. <br><br>Si cliente está ausente, deberemos poner en la observación: 1ra visita. <br><br>
+                        Si ya cuenta con la 1ra visita en campo por ausente, y esta es la segunda, deberemos a proceder
+                        con el rechazo en campo y workflow <br><br>
+                        <b>EN CASO EL INCUMPLIMIENTO DE LA VISITA SEA POR EL MOTIVO DE REAGENDAMIENTO CLARO, DEBEREMOS
+                            REPROGRAMAR POR TOA PRIMERO Y EN LA FRANJA PM4: 20:00 - 22:00 Y SGA</b>
+                    </p>
                     <!-- REAGENDADO POR CLARO -->
                     <table class="tabla">
                         <thead class="claro">
@@ -3578,37 +3639,37 @@
                             </thead>
                             <tbody>
 
-                                <tr class="row2">
-                                    <td class="column0 style7 s">OK EN LINEA</td>
-                                    <td class="column1 style8 s">FALSA AVERIA</td>
-                                    <td class="column2 style9 s">Cliente informa servicio conforme - Ok en linea</td>
+                                <tr">
+                                    <td>OK EN LINEA</td>
+                                    <td>FALSA AVERIA</td>
+                                    <td>Cliente informa servicio conforme - Ok en linea</td>
                                 </tr>
-                                <tr class="row3">
-                                    <td class="column0 style10 s style15" rowspan="8">INCIDENCIA MAL GENERADA</td>
-                                    <td class="column1 style11 s style16" rowspan="8">FALSA AVERIA</td>
-                                    <td class="column2 style9 s">Cliente con corte o suspensión</td>
+                                <tr>
+                                    <td rowspan="8">INCIDENCIA MAL GENERADA</td>
+                                    <td rowspan="8">FALSA AVERIA</td>
+                                    <td>Cliente con corte o suspensión</td>
                                 </tr>
-                                <tr class="row4">
-                                    <td class="column2 style14 s">Incidencia mal generada por ATC</td>
+                                <tr>
+                                    <td>Incidencia mal generada por ATC</td>
                                 </tr>
-                                <tr class="row5">
-                                    <td class="column2 style14 s">Cliente informa que dará de baja el servicio</td>
+                                <tr>
+                                    <td>Cliente informa que dará de baja el servicio</td>
                                 </tr>
-                                <tr class="row6">
-                                    <td class="column2 style14 s">Incidencia mal generada por duplicidad</td>
+                                <tr>
+                                    <td>Incidencia mal generada por duplicidad</td>
                                 </tr>
-                                <tr class="row7">
-                                    <td class="column2 style14 s">Cerrada por falta de contacto</td>
+                                <tr>
+                                    <td>Cerrada por falta de contacto</td>
                                 </tr>
-                                <tr class="row8">
-                                    <td class="column2 style14 s">Cliente derivado a otras áreas</td>
+                                <tr>
+                                    <td>Cliente derivado a otras áreas</td>
                                 </tr>
-                                <tr class="row9">
-                                    <td class="column2 style14 s">Cliente no permite visita por disponibilidad horaria/
+                                <tr>
+                                    <td>Cliente no permite visita por disponibilidad horaria/
                                         acceso a domicilio</td>
                                 </tr>
-                                <tr class="row10">
-                                    <td class="column2 style17 s">Sot con datos incorrectos</td>
+                                <tr>
+                                    <td>Sot con datos incorrectos</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -3622,15 +3683,14 @@
                                 <h3>Ok en Línea</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
-                                        OK&nbsp;EN&nbsp;LINEA<br>
-                                        MOTIVO:&nbsp;CLIENTE&nbsp;INFORMA&nbsp;QUE&nbsp;SERVICIO&nbsp;YA&nbsp;ESTA&nbsp;RESTABLECIDO<br>
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
+                                        OK EN LINEA<br>
+                                        MOTIVO:&nbsp;CLIENTE INFORMA QUE SERVICIO YA ESTA RESTABLECIDO<br>
                                         TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
+                                        SE ADJUNTA AUDIO (NO)<br>
                                         CONTRATA:&nbsp;<br>
                                         ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
+                                        REALIZADO&nbsp;POR:&nbsp;<span class="adp"></span> - ADP MULTISKILL HITSS
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3649,15 +3709,15 @@
                                 <h3>IMG - Suspensión</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
                                         INCIDENCIA MAL GENERADA<br>
-                                        MOTIVO:&nbsp;Cliente&nbsp;con&nbsp;corte&nbsp;o&nbsp;suspensión<br>
-                                        TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
+                                        MOTIVO: Cliente con corte o suspensión<br>
+                                        TELÉFONO: <br>
+                                        SE ADJUNTA AUDIO (NO)<br>
+                                        CONTRATA: <br>
+                                        ID DE LLAMADA: <br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3676,15 +3736,14 @@
                                 <h3>IMG - ATC</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
-                                        INCIDENCIA&nbsp;MAL&nbsp;GENERADA<br>
-                                        MOTIVO:&nbsp;Incidencia&nbsp;mal&nbsp;generada&nbsp;por&nbsp;ATC<br>
-                                        TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
+                                        INCIDENCIA MAL GENERADA<br>
+                                        MOTIVO: Incidencia mal generada por ATC<br>
+                                        TELÉFONO: <br>
+                                        SE ADJUNTA AUDIO (NO)<br>
+                                        CONTRATA: <br>
+                                        ID DE LLAMADA: <br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3703,16 +3762,14 @@
                                 <h3>IMG - Baja</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
-                                        INCIDENCIA&nbsp;MAL&nbsp;GENERADA<br>
-                                        MOTIVO:&nbsp;Cliente informa que dará de baja el servicio<br>
-                                        TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
-
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
+                                        INCIDENCIA MAL GENERADA<br>
+                                        MOTIVO: Cliente informa que dará de baja el servicio<br>
+                                        TELÉFONO: <br>
+                                        SE ADJUNTA AUDIO (NO)<br>
+                                        CONTRATA: <br>
+                                        ID DE LLAMADA: <br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
                                     </p>
                                     <div class="copiar-contenedor">
                                         <span class="copy-icon" onclick="copiarPlantilla(this)">
@@ -3730,7 +3787,7 @@
                                 <h3>IMG - Duplicidad</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
                                         INCIDENCIA&nbsp;MAL&nbsp;GENERADA<br>
                                         MOTIVO:&nbsp;Incidencia mal generada por duplicidad<br>
                                         TELÉFONO:&nbsp;<br>
@@ -3757,15 +3814,15 @@
                                 <h3>IMG - Falta de Contacto</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
-                                        INCIDENCIA&nbsp;MAL&nbsp;GENERADA<br>
-                                        MOTIVO:&nbsp;Cerrada por falta de contacto<br>
-                                        TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
+                                        INCIDENCIA MAL GENERADA<br>
+                                        MOTIVO: Incidencia mal generada por duplicidad<br>
+                                        TELÉFONO: <br>
+                                        SE ADJUNTA AUDIO (NO)<br>
+                                        CONTRATA: <br>
+                                        ID DE LLAMADA: <br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3784,15 +3841,14 @@
                                 <h3>IMG - Derivado</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
-                                        INCIDENCIA&nbsp;MAL&nbsp;GENERADA<br>
-                                        MOTIVO:&nbsp;Cliente derivado a otras áreas<br>
-                                        TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
+                                        INCIDENCIA MAL GENERADA<br>
+                                        MOTIVO: Cliente derivado a otras áreas<br>
+                                        TELÉFONO: <br>
+                                        SE ADJUNTA AUDIO (NO)<br>
+                                        CONTRATA: <br>
+                                        ID DE LLAMADA: <br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3811,16 +3867,16 @@
                                 <h3>IMG - Facilidades</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
-                                        INCIDENCIA&nbsp;MAL&nbsp;GENERADA<br>
-                                        MOTIVO:&nbsp;Cliente no permite visita por disponibilidad horaria/ acceso a
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
+                                        INCIDENCIA MAL GENERADA<br>
+                                        MOTIVO: Cliente no permite visita por disponibilidad horaria/ acceso a
                                         domicilio<br>
-                                        TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
+                                        TELÉFONO: <br>
+                                        SE ADJUNTA AUDIO (NO)<br>
+                                        CONTRATA: <br>
+                                        ID DE LLAMADA: <br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3839,15 +3895,15 @@
                                 <h3>IMG - Datos Incorrectos</h3>
                                 <div class="plantilla">
                                     <p id="texto-plantilla">
-                                        <b>***MESA DE SEGUIMINETO FIJA HITSS***</b><br>
-                                        INCIDENCIA&nbsp;MAL&nbsp;GENERADA<br>
-                                        MOTIVO:&nbsp;Sot&nbsp;con&nbsp;datos&nbsp;incorrectos<br>
-                                        TELÉFONO:&nbsp;<br>
-                                        SE&nbsp;ADJUNTA&nbsp;AUDIO&nbsp;(NO)<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID&nbsp;DE&nbsp;LLAMADA:&nbsp;<br>
-                                        REALIZADO&nbsp;POR:&nbsp;<span
-                                            class="adp"></span>&nbsp;-&nbsp;ADP&nbsp;MULTISKILL&nbsp;HITSS
+                                        <b>***MESA DE SEGUIMIENTO FIJA HITSS***</b><br>
+                                        INCIDENCIA MAL GENERADA<br>
+                                        MOTIVO: Sot con datos incorrectos<br>
+                                        TELÉFONO: <br>
+                                        SE ADJUNTA AUDIO (NO)<br>
+                                        CONTRATA: <br>
+                                        ID DE LLAMADA: <br>
+                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
+
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3892,18 +3948,18 @@
                             </thead>
                             <tbody>
                                 <tr class="row3">
-                                    <td class="column0 style10 s style15" rowspan="4">INCIDENCIA MAL GENERADA</td>
-                                    <td class="column1 style11 s style16" rowspan="4">FALSA AVERIA</td>
-                                    <td class="column2 style9 s">Cliente esta ausente</td>
+                                    <td rowspan="4">INCIDENCIA MAL GENERADA</td>
+                                    <td rowspan="4">MOVILIZACIÓN</td>
+                                    <td>Cliente esta ausente</td>
                                 </tr>
-                                <tr class="row5">
-                                    <td class="column2 style14 s">Cliente dara de baja el servico</td>
+                                <tr>
+                                    <td>Cliente dara de baja el servico</td>
                                 </tr>
-                                <tr class="row6">
-                                    <td class="column2 style14 s">No hay facilidades tecnicas</td>
+                                <tr>
+                                    <td>No hay facilidades tecnicas</td>
                                 </tr>
-                                <tr class="row7">
-                                    <td class="column2 style14 s">Cliente informa ya no desea asistencia tecnica</td>
+                                <tr>
+                                    <td>Cliente informa ya no desea asistencia tecnica</td>
                                 </tr>
                             </tbody>
                         </table>

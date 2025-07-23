@@ -249,6 +249,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     cargarCredenciales(); // Inicializa todo
+
+    const fecha = new Date();
+
+    const dia = fecha.getDate();
+    const mes = fecha.toLocaleString("es-PE", { month: "long" }); // mes en español
+    const anio = fecha.getFullYear();
+
+    const horas = fecha.getHours().toString().padStart(2, "0");
+    const minutos = fecha.getMinutes().toString().padStart(2, "0");
+    const hora = `${horas}:${minutos}`;
+
+    document.querySelectorAll(".dia").forEach(el => el.textContent = dia);
+    document.querySelectorAll(".mes").forEach(el => el.textContent = mes);
+    document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
+    document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
 });
 
 function verificarFechaUsuario() {
@@ -278,14 +293,14 @@ function cerrarDialogConAnimacion(dialog) {
 }
 
 function toggleElementVisibility(element, visible, displayMode = "flex") {
-  if (visible) {
-    element.style.display = displayMode;
-    element.classList.remove("fade-out"); // por si acaso
-    element.classList.add("fade-in");
-  } else {
-    element.classList.remove("fade-in"); // elimina animación de entrada
-    element.style.display = "none"; // oculta inmediatamente sin animación
-  }
+    if (visible) {
+        element.style.display = displayMode;
+        element.classList.remove("fade-out"); // por si acaso
+        element.classList.add("fade-in");
+    } else {
+        element.classList.remove("fade-in"); // elimina animación de entrada
+        element.style.display = "none"; // oculta inmediatamente sin animación
+    }
 }
 
 
@@ -295,3 +310,5 @@ setTimeout(() => {
     dialog.close();
     dialog.classList.remove("closing");
 }, 300); // igual a duración del zoomOut
+
+
