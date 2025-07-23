@@ -17,6 +17,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnConfirmarCerrarSesion = document.querySelector("#confirmar-cerrar-sesion");
     const btnCancelarCerrarSesion = document.querySelector("#cancelar-cerrar-sesion");
 
+    
+    const btnNotas = document.getElementById("btn-notas");
+    const dialogNotas = document.getElementById("notas-dialog");
+
+    btnNotas.addEventListener("click", () => {
+
+        if (!dialogNotas.open) {
+            dialogNotas.showModal();
+        } else {
+            dialogNotas.close();
+        }
+
+    });
+
     let nombreAsesor = "";
     let usuarioAdp = "";
 
