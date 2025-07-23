@@ -252,6 +252,7 @@ nav {
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
+  padding-top: 16px;
   scroll-padding-top: var(--header-height); /* 👈 evita que los anchors se tapen */
 }
 
@@ -360,14 +361,14 @@ nav {
 .list__button {
     display: flex;
     align-items: center;
-    padding: 4px 4px 4px 4px;
+    padding: 8px 4px 8px 8px;
     gap: 8px;
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
 }
 
 .list__button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
     border-radius: 8px;
 
 
