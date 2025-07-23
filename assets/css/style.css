@@ -228,6 +228,7 @@ nav {
     height: 100vh;
     /* Resta la altura del header */
     overflow: hidden;
+    margin-top: 60px solid;
 }
 
 
