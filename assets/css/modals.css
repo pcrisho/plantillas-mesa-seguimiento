@@ -322,8 +322,13 @@ dialog.closing::backdrop {
 
 .dialog-toast.show {
   animation: fadeInUp 0.3s ease forwards;
+  border: none;
+    outline: none;
+
 }
 
 .dialog-toast.hide {
   animation: fadeOutDown 0.3s ease forwards;
+  border: none;
+    outline: none;
 }
