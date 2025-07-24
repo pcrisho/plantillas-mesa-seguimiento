@@ -264,6 +264,226 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".mes").forEach(el => el.textContent = mes);
     document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
     document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
+
+    const datosReagendamiento = {
+        CLARO: {
+            "Errores en la generación de la SOT": [
+                "Pérdida de fecha de agendamiento",
+                "Caída masiva en sistemas Claro"
+            ],
+            "Inconvenientes con la contratista": [
+                "Inasistencia de cuadrillas de la contratista",
+                "Retraso de técnicos de la contratista",
+                "Incidencias en el campo durante la instalación",
+                "Falta de materiales: Detallar material",
+                "Retiro anticipado de cuadrillas en campo",
+                "Falta de herramientas"
+            ],
+            "Configuraciones de TOA (OFSC)": [
+                "Sobreegandamiento de cuotas",
+                "Problemas con las configuraciones de zonas de trabajo",
+                "Cuota configurada incorrectamente"
+            ]
+        },
+        CLIENTE: {
+            "A solicitud del Cliente": [
+                "Cambios en las fechas y franjas solicitadas",
+                "Cliente se encuentra de viaje",
+                "Solo puede domingos, horarios especiales, noche.",
+                "Cliente desconoce su fecha de agendamiento"
+            ],
+            "Facilidades del cliente": [
+                "Cliente no cuenta con equipos en nuevo domicilio",
+                "No brinda facilidades técnicas (ductos, permisos, etc.)",
+                "Factores climatológicos"
+            ],
+            "Falta de contacto": ["Cliente no responde los 4 intentos de llamada"],
+            "Ausente": ["Cliente Ausente en Campo"]
+        }
+    };
+
+    function cargarEscenarios() {
+        const tipo = document.getElementById("tipo-reagendado").value;
+        const escenarioSelect = document.getElementById("escenario");
+        escenarioSelect.innerHTML = "";
+
+        for (const esc in datosReagendamiento[tipo]) {
+            const opt = document.createElement("option");
+            opt.value = esc;
+            opt.textContent = esc;
+            escenarioSelect.appendChild(opt);
+        }
+
+        cargarMotivos(); // actualiza los motivos del primer escenario
+    }
+
+    function cargarMotivos() {
+        const tipo = document.getElementById("tipo-reagendado").value;
+        const escenario = document.getElementById("escenario").value;
+        const motivoSelect = document.getElementById("motivo");
+        motivoSelect.innerHTML = "";
+
+        datosReagendamiento[tipo][escenario].forEach(motivo => {
+            const opt = document.createElement("option");
+            opt.value = motivo;
+            opt.textContent = motivo;
+            motivoSelect.appendChild(opt);
+        });
+
+        actualizarPlantilla(); // actualiza la vista
+    }
+
+    function actualizarPlantilla() {
+        const tipoRepro = document.getElementById("tipo-reprogramado").value;
+        const tipoReagen = document.getElementById("tipo-reagendado").value;
+        const motivo = document.getElementById("motivo").value;
+
+        document.getElementById("val-reprogramado").textContent = tipoRepro;
+        document.getElementById("val-reagendado").textContent = tipoReagen;
+        document.getElementById("val-reagendado2").textContent = tipoReagen;
+        document.getElementById("val-motivo").textContent = motivo;
+    }
+
+    // Inicializar cuando el DOM esté listo
+    cargarEscenarios();
+
+    document.getElementById("tipo-reprogramado").addEventListener("change", actualizarPlantilla);
+    document.getElementById("tipo-reagendado").addEventListener("change", () => {
+        cargarEscenarios();
+        actualizarPlantilla();
+    });
+    document.getElementById("escenario").addEventListener("change", () => {
+        cargarMotivos();
+        actualizarPlantilla();
+    });
+    document.getElementById("motivo").addEventListener("change", actualizarPlantilla);
+
+    //
+
+    const motivosRechazo = {
+        "CLIENTE NO DESEA SERVICIO": {
+            pre: "PERSONA QUE CONTESTA: \nNUMERO DE CONTACTO: ",
+            submotivos: [
+                "Cliente ya tiene servicio de otro operador",
+                "Titular no ha contratado ningun servicio a Claro",
+                "Demora en la atención de la solicitud, ya no desea esperar",
+                "Cliente no desea servicio por Motivos personales"
+            ]
+        },
+        "RECHAZO POR DUPLICIDAD": {
+            pre: "Cliente ya tiene un servicio activo en la misma dirección",
+            submotivos: ["Se atendió con otra SOT"]
+        },
+        "FACILIDADES TÉCNICAS DEL CLIENTE": {
+            submotivos: [
+                "Dueño de casa y/o edificio no autoriza la instalación",
+                "Al momento de la instalación no hay acceso al techo",
+                "Al momento de la instalación se valida ducterías obstruidas",
+                "Cliente cuenta con SOT de suspensión y/o baja"
+            ]
+        },
+        "FALTA DE CONTACTO": {
+            submotivos: ["No hay contacto con el cliente (números errados)"]
+        },
+        "MAL INGRESO DE DIRECCIÓN": {
+            submotivos: ["Dirección registrada en el sistema es errada. (numero, lt, mz, nombre calle, distrito)"]
+        },
+        "MALA OFERTA": {
+            submotivos: [
+                "Tecnología incorrecta FTTH/HFC/OVERLAP Instalación/ Post Venta",
+                "Velocidad de Internet no es acorde a lo solicitado por el cliente",
+                "Cantidad o Modelo de Decos no es acorde a lo solicitado por el cliente",
+                "Cliente solicito atención PostVenta (Decos adicionales, traslados, etc.)",
+                "Cliente solicita adicionar la telefonía",
+                "Decodificadores descontinuados (Básico HD, Básico, Standard, DVR)"
+            ]
+        },
+        "MUDANZA O VIAJE": {
+            submotivos: [
+                "Cliente salió de viaje  y en el domicilio no tienen conocimiento de la Instalación",
+                "Cliente no vive en esta dirección, se mudó",
+                "Cliente indica que pronto se mudará o viajará y rechaza instalación",
+                "Cliente salió de viaje  y en el domicilio no tienen conocimiento de la Instalación"
+            ]
+        },
+        "SOT CON ERRORES EN EL SISTEMA": {
+            submotivos: [
+                "Sin workflow, sin tareas generadas",
+                "Campaña mal configurada, no figura etiquetas correctas",
+                "Solicitud mal generada (no genera reservas, duplicidad de números, duplicidad de etiquetas, Sin Co_id, sin CustomerID, Sin plano, etc.)"
+            ]
+        },
+        "POSIBLE FRAUDE": {
+            submotivos: ["Cliente ya tiene un servicio activo en la misma dirección"]
+        }
+    };
+
+    function cargarMotivosRechazo() {
+        const motivoSelect = document.getElementById("motivo-rechazo");
+        motivoSelect.innerHTML = "";
+
+        for (const motivo in motivosRechazo) {
+            const option = document.createElement("option");
+            option.value = motivo;
+            option.textContent = motivo;
+            motivoSelect.appendChild(option);
+        }
+
+        cargarSubmotivos(); // carga el primer motivo por defecto
+    }
+
+    function cargarSubmotivos() {
+        const motivo = document.getElementById("motivo-rechazo").value;
+        const submotivoGroup = document.getElementById("grupo-submotivo");
+        const submotivoSelect = document.getElementById("submotivo-rechazo");
+
+        const submotivos = motivosRechazo[motivo]?.submotivos || [];
+
+        if (submotivos.length > 0) {
+            submotivoGroup.style.display = "block";
+            submotivoSelect.innerHTML = "";
+
+            submotivos.forEach(sub => {
+                const opt = document.createElement("option");
+                opt.value = sub;
+                opt.textContent = sub;
+                submotivoSelect.appendChild(opt);
+            });
+        } else {
+            submotivoGroup.style.display = "none";
+            submotivoSelect.innerHTML = "";
+        }
+
+        actualizarPlantillaRechazo();
+    }
+
+    function actualizarPlantillaRechazo() {
+        const rechazoEn = document.getElementById("rechazo-en").value;
+        const pre = "";
+        const motivo = document.getElementById("motivo-rechazo").value;
+        const submotivo = document.getElementById("submotivo-rechazo").value || "";
+
+        document.getElementById("val-rechazo-en").textContent = rechazoEn;
+        document.getElementById("val-motivo-rechazo").textContent = pre+motivo+pre;
+        document.getElementById("val-submotivo-rechazo").textContent = submotivo || "[NO APLICA]";
+    }
+
+    // Event Listeners
+    document.getElementById("rechazo-en").addEventListener("change", actualizarPlantillaRechazo);
+    document.getElementById("motivo-rechazo").addEventListener("change", () => {
+        cargarSubmotivos();
+        actualizarPlantillaRechazo();
+    });
+    document.getElementById("submotivo-rechazo").addEventListener("change", actualizarPlantillaRechazo);
+
+    // Inicialización
+    cargarMotivosRechazo();
+
+
+
+
+
+
 });
 
 function verificarFechaUsuario() {
