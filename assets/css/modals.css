@@ -19,6 +19,13 @@
   --color-red: #e12e20;
 
   --header-height: 70px;
+
+  --color-primary: #0F62FE;
+  --color-text: #21272A;
+  --color-attended: #4CAF50;
+  /* Verde */
+  --color-in-attention: #FFC107;
+  /* Amarillo */
 }
 
 html,
@@ -361,27 +368,35 @@ dialog.closing::backdrop {
 
 /* Estilos del panel lateral derecho */
 .todo-dialog {
-  margin: auto 0;
+  /* Anula estilos del dialog general */
   top: 0;
+  left: auto;
   right: 0;
   bottom: 0;
-  height: 90vh;
-  /* Ocupa el 90% de la altura */
+  margin: auto 0px;
   max-width: 500px;
   width: 100%;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2 );
+  z-index: 1000;
   padding: 0;
   border: none;
   outline: none;
-  border-radius: 10px 0 0 10px;
-  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
   text-align: left;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);
+
   display: flex;
   flex-direction: column;
+
+  /* Animación de entrada y salida */
   transform: translateX(100%);
-  opacity: 0;
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+
+  /* Se anulan las animaciones por defecto del dialog[open] */
+  animation: none !important;
+  height: 95vh;
+
 }
 
 .todo-dialog[open] {
@@ -395,7 +410,7 @@ dialog.closing::backdrop {
 }
 
 .todo-dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
   transition: opacity 0.3s ease-out;
 }
 
@@ -486,6 +501,7 @@ dialog.closing::backdrop {
 }
 
 .task-description {
+  font-family: consolas, monospace;
   font-size: 0.9rem;
   line-height: 1.4;
 }

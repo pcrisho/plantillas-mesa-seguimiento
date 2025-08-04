@@ -68,8 +68,8 @@ addTaskBtn.addEventListener('click', () => {
     const tasks = loadTasks();
     const newTask = {
         id: Date.now(),
-        title: 'Nueva Tarea',
-        description: 'Descripción de la tarea',
+        title: 'Ingresar SOT',
+        description: 'Descripción de la Plantilla',
         status: 'in-attention',
     };
     tasks.push(newTask);
