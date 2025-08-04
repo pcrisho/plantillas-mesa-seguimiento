@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dialog de Pantalla Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Estilos base para centrar el botón en la página */
+        .container-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f4f8; /* Color de fondo suave */
+        }
+
+        /* Estilos para el dialog que lo hacen de pantalla completa */
+        .full-screen-dialog {
+            /* Anula los estilos predeterminados de posición y tamaño */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 90vw;  /* Ocupa el 100% del ancho del viewport */
+            height: 96vh; /* Ocupa el 100% del alto del viewport */
+
+            /* Anula el margen y el borde predeterminados */
+            margin: 0;
+            padding: 0;
+            border: none;
+
+            /* Estilos de fondo y contenido para que se vea bien */
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilos para el fondo oscuro (backdrop) detrás del dialog */
+        .full-screen-dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .dialog-content {
+            text-align: center;
+            padding: 2rem;
+            max-width: 90%;
+        }
+
+        /* Estilos para el botón de cerrar */
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: #d1d5db; /* Gris claro */
+            transition: color 0.2s;
+        }
+
+        .close-button:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <button id="openDialog" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">
+            Abrir Dialog
+        </button>
+
+    <div class="container-center">
+        <!-- Botón para abrir el dialog -->
+        <button id="openDialog" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">
+            Abrir Dialog
+        </button>
+    </div>
+
+    <!-- El elemento dialog -->
+    <dialog id="fullScreenDialog" class="full-screen-dialog" closedby="any">
+        <!-- Botón para cerrar el dialog -->
+        <button id="closeDialog" class="close-button">&times;</button>
+
+        <div class="dialog-content">
+            <h1 class="text-4xl font-bold mb-4">¡Este dialog ocupa el 100% de la pantalla!</h1>
+            <p class="text-lg mb-8">
+                Aquí puedes mostrar contenido importante, como una galería de fotos, un formulario de registro o cualquier otra cosa que necesite la atención completa del usuario.
+            </p>
+            <p class="text-sm text-gray-400">
+                Se puede cerrar con el botón "X" o presionando la tecla Escape.
+            </p>
+        </div>
+    </dialog>
+
+    <script>
+        // Obtener los elementos del DOM
+        const openDialogButton = document.getElementById('openDialog');
+        const closeDialogButton = document.getElementById('closeDialog');
+        const fullScreenDialog = document.getElementById('fullScreenDialog');
+
+        // Escuchar el evento de clic en el botón de abrir
+        openDialogButton.addEventListener('click', () => {
+            // Usa showModal() para que el dialog actúe como una superposición
+            // que bloquea la interacción con el resto de la página.
+            fullScreenDialog.showModal();
+        });
+
+        // Escuchar el evento de clic en el botón de cerrar
+        closeDialogButton.addEventListener('click', () => {
+            fullScreenDialog.close();
+        });
+    </script>
+</body>
+</html>

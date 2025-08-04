@@ -45,6 +45,24 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem(claveNotas(), textarea.value);
     });
 
+    window.addEventListener('keydown', (event) => {
+        // Verifica si se presiona la tecla 'B' junto con Ctrl (Windows/Linux) o Cmd (Mac)
+        const isCtrlCmd = event.ctrlKey || event.metaKey;
+        const isB = event.key === 'b';
+
+        if (isCtrlCmd && isB) {
+            // Evita el comportamiento por defecto del navegador (negrita)
+            event.preventDefault();
+            
+            // Abre el modal si no está ya abierto
+            if (!dialog.open) {
+                const guardado = localStorage.getItem(claveNotas());
+                if (guardado) textarea.value = guardado;
+                dialog.showModal();
+            }
+        }
+    });
+
     ///
 
     let nombreAsesor = "";

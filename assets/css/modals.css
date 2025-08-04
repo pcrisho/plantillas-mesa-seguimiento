@@ -350,122 +350,129 @@ dialog.closing::backdrop {
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-        /*
+/*
          * --- CORRECCIÓN DEFINITIVA EN EL DIALOG ---
          * Se ha asegurado que los estilos del notepad-dialog prevalezcan.
          */
-        .notepad-dialog {
-            /* Anula estilos del dialog general */
-            top: 0;
-            left: auto;
-            right: 0;
-            bottom: 0;
-            margin: 0;
-            height: 100vh;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            padding: 0;
-            border: none;
-            outline: none;
-            border-radius: 0;
-            text-align: left;
-            background-color: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(30px);
-            
-            display: flex;
-            flex-direction: column;
-            
-            /* Animación de entrada y salida */
-            transform: translateX(100%);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            
-            /* Se anulan las animaciones por defecto del dialog[open] */
-            animation: none !important;
-        }
-        
-        .notepad-dialog[open] {
-            transform: translateX(0);
-            /* Se asegura de que la animación de la clase se aplique */
-            animation: slideInRight 0.3s ease forwards;
-        }
+.notepad-dialog {
+  /* Anula estilos del dialog general */
+  top: 0;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  margin: auto 0px;
+  
+  max-width: 500px;
+  width: 100%;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  padding: 0;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  text-align: left;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(30px);
 
-        .notepad-dialog.closing {
-            /* Se anula la animación de cierre del dialog general */
-            animation: slideOutRight 0.3s ease forwards;
-        }
-        
-        /* Nuevas animaciones para el dialog del bloc de notas */
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
+  display: flex;
+  flex-direction: column;
 
-        .notepad-dialog::backdrop {
-            background-color: rgba(0, 0, 0, 0.4);
-            backdrop-filter: none;
-        }
+  /* Animación de entrada y salida */
+  transform: translateX(100%);
+  transition: transform 0.5s ease, opacity 0.5s ease;
 
-        .notepad-header {
-            background-color: #f2f2f2;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 70px;
-        }
+  /* Se anulan las animaciones por defecto del dialog[open] */
+  animation: none !important;
+  height: 100vh;
+}
 
-        /* --- CORRECCIÓN FINAL EN EL TEXTAREA --- */
-        #notepad-content {
-            /* Se elimina flex-grow y flex-basis y se usa una altura calculada */
-            height: calc(100vh - 70px);
-            border: none;
-            resize: none;
-            padding: 1rem;
-            font-family: consolas, 'Courier New', monospace;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            box-sizing: border-box;
-            outline: none;
-            overflow-y: auto;
-            background-color: hsla(0, 0%, 100%, 0.246);
-        }
-        
-        /* Scrollbar del textarea */
-        #notepad-content::-webkit-scrollbar {
-            background-color: rgb(172, 172, 172);
-            width: 6px;
-        }
+.notepad-dialog[open] {
+  transform: translateX(0);
+  /* Se asegura de que la animación de la clase se aplique */
+  animation: slideInRight 0.5s ease forwards;
+}
 
-        /* Scrollbar 'thumb' (la parte que se mueve) */
-        #notepad-content::-webkit-scrollbar-thumb {
-            background-color: #3838384d;
-            border-radius: 4px;
-        }
+.notepad-dialog.closing {
+  /* Se anula la animación de cierre del dialog general */
+  animation: slideOutRight 0.5s ease forwards;
+}
 
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-        }
+/* Nuevas animaciones para el dialog del bloc de notas */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.notepad-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: none;
+}
+
+.notepad-header {
+  background-color: rgba(242, 242, 242, 0.7);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 70px;
+}
+
+/* --- CORRECCIÓN FINAL EN EL TEXTAREA --- */
+#notepad-content {
+  /* Se elimina flex-grow y flex-basis y se usa una altura calculada */
+  height: 100vh;
+  border: none;
+  resize: none;
+  padding: 1rem;
+  margin-bottom: 16px;
+  font-family: consolas, 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  box-sizing: border-box;
+  outline: none;
+  overflow-y: auto;
+  background-color: hsla(0, 0%, 100%, 0.2);
+}
+
+/* Scrollbar del textarea */
+#notepad-content::-webkit-scrollbar {
+  background-color: rgb(172, 172, 172);
+  width: 6px;
+}
+
+/* Scrollbar 'thumb' (la parte que se mueve) */
+#notepad-content::-webkit-scrollbar-thumb {
+  background-color: #3838384d;
+  border-radius: 4px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
