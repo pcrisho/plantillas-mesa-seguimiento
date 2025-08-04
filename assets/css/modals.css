@@ -70,7 +70,7 @@ body {
 #modal::backdrop {
   background-color: rgba(38, 38, 38, 0.637);
   /**/
-  backdrop-filter: blur(50px);
+  backdrop-filter: blur(8px);
 }
 
 /* 👇 Estado inicial al abrir */
@@ -88,13 +88,13 @@ dialog.closing {
   from {
     opacity: 0;
     transform: translate(-50%, -48%) scale(0.98);
-    backdrop-filter: blur(0px);
+
   }
 
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
-    backdrop-filter: blur(8px);
+
   }
 }
 
@@ -103,13 +103,13 @@ dialog.closing {
   from {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
-    backdrop-filter: blur(8px);
+
   }
 
   to {
     opacity: 0;
     transform: translate(-50%, -48%) scale(0.98);
-    backdrop-filter: blur(0px);
+
   }
 }
 
@@ -117,7 +117,7 @@ dialog.closing {
 dialog::backdrop {
   animation: backdropFadeIn 0.3s ease forwards;
   background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);/**/
+
 }
 
 dialog.closing::backdrop {
@@ -127,24 +127,24 @@ dialog.closing::backdrop {
 @keyframes backdropFadeIn {
   from {
     opacity: 0;
-    backdrop-filter: blur(0px);
+
   }
 
   to {
     opacity: 1;
-    backdrop-filter: blur(8px);
+
   }
 }
 
 @keyframes backdropFadeOut {
   from {
     opacity: 1;
-    backdrop-filter: blur(8px);
+
   }
 
   to {
     opacity: 0;
-    backdrop-filter: blur(0px);
+
   }
 }
 
@@ -354,30 +354,38 @@ dialog.closing::backdrop {
 
 /* Diálogo del bloc de notas */
 .notepad-dialog {
-  height: 100vh;
-  width: 30%;
-  max-width: 400px;
-
-  background-color: white;
+  height: 100%;
+  width: 100%;
+  max-width: 500px;
   box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   
   z-index: 1000;
-
-  padding: 2rem;
+  padding: 16px;
   border: none;
   outline: none;
-  border-radius: 10px;
-  max-width: 400px;
-  width: 90%;
+  border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.2);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   animation: slideIn 0.3s ease forwards;
+  backdrop-filter: blur(30px);
+}
+
+#notepad-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: none;
+  /* Evita el fondo difuminado */
+}
+
+.notepad-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: none;
+  /* Evita el fondo difuminado */
 }
 
 
@@ -404,7 +412,7 @@ dialog.closing::backdrop {
 
 #notepad-content {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 150px);
   border: none;
   resize: none;
   padding: 1rem;
@@ -414,8 +422,21 @@ dialog.closing::backdrop {
   box-sizing: border-box;
   outline: none;
   overflow-y: auto;
-  background-color: #ffffff;
-  border: solid 1px #ccc;
+  background-color: hsla(0, 0%, 100%, 0.246);
+  font-family: consolas, 'Courier New', monospace;
+}
+
+
+#notepad-content::-webkit-scrollbar {
+  background-color: rgb(172, 172, 172);
+    width: 6px;
+}
+
+/* Scrollbar 'thumb' (la parte que se mueve) */
+#notepad-content::-webkit-scrollbar-thumb {
+    background-color: #3838384d;
+    /* azul semi-transparente */
+    border-radius: 4px;
 }
 
 .close-btn {
