@@ -352,106 +352,120 @@ dialog.closing::backdrop {
   z-index: 100;
 }
 
-/*
-         * --- CORRECCIÓN FINAL Y DEFINITIVA ---
-         * Se han agregado las propiedades `top: 0; right: 0; bottom: 0;`
-         * y `margin: 0;` para anular por completo los estilos predeterminados del navegador.
+        /*
+         * --- CORRECCIÓN DEFINITIVA EN EL DIALOG ---
+         * Se ha asegurado que los estilos del notepad-dialog prevalezcan.
          */
-.notepad-dialog {
-  /* Posicionamiento y dimensiones */
-  position: fixed;
-  top: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  margin: 0 !important;
-  /* Reinicia el margen que el navegador podría aplicar */
-  left: auto !important;
-  /* Se asegura de que no se posicione a la izquierda */
+        .notepad-dialog {
+            /* Anula estilos del dialog general */
+            top: 0;
+            left: auto;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            height: 100vh;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 0;
+            border: none;
+            outline: none;
+            border-radius: 0;
+            text-align: left;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            
+            display: flex;
+            flex-direction: column;
+            
+            /* Animación de entrada y salida */
+            transform: translateX(100%);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            
+            /* Se anulan las animaciones por defecto del dialog[open] */
+            animation: none !important;
+        }
+        
+        .notepad-dialog[open] {
+            transform: translateX(0);
+            /* Se asegura de que la animación de la clase se aplique */
+            animation: slideInRight 0.3s ease forwards;
+        }
 
-  height: 100vh !important;
-  width: 100%;
-  max-width: 500px;
+        .notepad-dialog.closing {
+            /* Se anula la animación de cierre del dialog general */
+            animation: slideOutRight 0.3s ease forwards;
+        }
+        
+        /* Nuevas animaciones para el dialog del bloc de notas */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
 
-  /* Estilos de apariencia */
-  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  padding: 0;
-  border: none;
-  outline: none;
-  border-radius: 0;
-  text-align: left;
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(30px);
+        .notepad-dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: none;
+        }
 
-  /* Layout usando Flexbox */
-  display: flex;
-  flex-direction: column;
+        .notepad-header {
+            background-color: #f2f2f2;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 70px;
+        }
 
-  /* Animación */
-  transform: translateX(100%);
-  /* Posición inicial fuera de pantalla */
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  /* Transición suave */
-}
+        /* --- CORRECCIÓN FINAL EN EL TEXTAREA --- */
+        #notepad-content {
+            /* Se elimina flex-grow y flex-basis y se usa una altura calculada */
+            height: calc(100vh - 70px);
+            border: none;
+            resize: none;
+            padding: 1rem;
+            font-family: consolas, 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-sizing: border-box;
+            outline: none;
+            overflow-y: auto;
+            background-color: hsla(0, 0%, 100%, 0.246);
+        }
+        
+        /* Scrollbar del textarea */
+        #notepad-content::-webkit-scrollbar {
+            background-color: rgb(172, 172, 172);
+            width: 6px;
+        }
 
-/* Muestra el dialog y lo anima cuando el atributo 'open' está presente */
-.notepad-dialog[open] {
-  transform: translateX(0) !important;
-  /* Posición final en pantalla */
-  opacity: 1;
-}
+        /* Scrollbar 'thumb' (la parte que se mueve) */
+        #notepad-content::-webkit-scrollbar-thumb {
+            background-color: #3838384d;
+            border-radius: 4px;
+        }
 
-/* Estilos para el backdrop */
-.notepad-dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: none;
-}
-
-.notepad-header {
-  background-color: #f2f2f2;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* --- CORRECCIÓN EN EL TEXTAREA --- */
-#notepad-content {
-  /* width: 100%; */
-  /* height: auto; */
-  flex-grow: 1;
-
-  border: none;
-  resize: none;
-  padding: 1rem;
-  /* Mantiene el padding interno para el texto */
-  font-family: consolas, 'Courier New', monospace;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  box-sizing: border-box;
-  outline: none;
-  overflow-y: auto;
-  background-color: hsla(0, 0%, 100%, 0.246);
-}
-
-/* Se ha eliminado la regla height: calc(100vh - 150px); porque ahora usamos flexbox */
-
-/* Scrollbar del textarea */
-#notepad-content::-webkit-scrollbar {
-  background-color: rgb(172, 172, 172);
-  width: 6px;
-}
-
-/* Scrollbar 'thumb' (la parte que se mueve) */
-#notepad-content::-webkit-scrollbar-thumb {
-  background-color: #3838384d;
-  border-radius: 4px;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-}
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
