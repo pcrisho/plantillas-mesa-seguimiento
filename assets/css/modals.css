@@ -496,8 +496,10 @@ dialog.closing::backdrop {
 }
 
 .task-title {
+  border: solid 1px #ccc;
   font-weight: 600;
   font-size: 1rem;
+
 }
 
 .task-description {
@@ -508,7 +510,9 @@ dialog.closing::backdrop {
 
 .task-title:focus,
 .task-description:focus {
-  background-color: #e6f7ff;
+  background-color: #ffffff8a;
+  backdrop-filter: blur(30px);
+
 }
 
 /* Botones de acción */
