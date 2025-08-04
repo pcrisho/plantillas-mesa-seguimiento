@@ -17,6 +17,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnConfirmarCerrarSesion = document.querySelector("#confirmar-cerrar-sesion");
     const btnCancelarCerrarSesion = document.querySelector("#cancelar-cerrar-sesion");
 
+
+    ///
+
+    const openBtn = document.querySelector("#open-notes-btn");
+    const closeBtn = document.querySelector("#close-notes-btn");
+    const dialog = document.querySelector("#notepad-dialog");
+    const textarea = document.querySelector("#notepad-content");
+
+    const claveNotas = () => `notas_${localStorage.getItem("adpUsuario") || "anonimo"}`;
+
+    // Cargar notas al abrir
+    openBtn.addEventListener("click", () => {
+        const guardado = localStorage.getItem(claveNotas());
+        if (guardado) textarea.value = guardado;
+        dialog.showModal();
+    });
+
+    // Cerrar con botón
+    closeBtn.addEventListener("click", () => {
+        dialog.close();
+    });
+
+    // Guardar en tiempo real
+    textarea.addEventListener("input", () => {
+        localStorage.setItem(claveNotas(), textarea.value);
+    });
+
+    ///
+
     let nombreAsesor = "";
     let usuarioAdp = "";
 

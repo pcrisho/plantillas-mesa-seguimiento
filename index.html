@@ -1676,15 +1676,15 @@
                             <col style="width: 10%;">
                         </colgroup>
 
-                         <thead>
-                                <tr>
-                                    <th>CÓDIGO</th>
-                                    <th>ESCENARIO</th>
-                                    <th>SOLUCIÓN TÉCNICA</th>
-                                    <th>SERVICIO</th>
-                                    <th>GESTIONES</th>
-                                </tr>
-                            </thead>
+                        <thead>
+                            <tr>
+                                <th>CÓDIGO</th>
+                                <th>ESCENARIO</th>
+                                <th>SOLUCIÓN TÉCNICA</th>
+                                <th>SERVICIO</th>
+                                <th>GESTIONES</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr class="row1">
                                 <td class="column0 style4 s">AB01</td>
@@ -3663,34 +3663,34 @@
                                     <td>OK EN LINEA</td>
                                     <td>FALSA AVERIA</td>
                                     <td>Cliente informa servicio conforme - Ok en linea</td>
-                                </tr>
-                                <tr>
-                                    <td rowspan="8">INCIDENCIA MAL GENERADA</td>
-                                    <td rowspan="8">FALSA AVERIA</td>
-                                    <td>Cliente con corte o suspensión</td>
-                                </tr>
-                                <tr>
-                                    <td>Incidencia mal generada por ATC</td>
-                                </tr>
-                                <tr>
-                                    <td>Cliente informa que dará de baja el servicio</td>
-                                </tr>
-                                <tr>
-                                    <td>Incidencia mal generada por duplicidad</td>
-                                </tr>
-                                <tr>
-                                    <td>Cerrada por falta de contacto</td>
-                                </tr>
-                                <tr>
-                                    <td>Cliente derivado a otras áreas</td>
-                                </tr>
-                                <tr>
-                                    <td>Cliente no permite visita por disponibilidad horaria/
-                                        acceso a domicilio</td>
-                                </tr>
-                                <tr>
-                                    <td>Sot con datos incorrectos</td>
-                                </tr>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="8">INCIDENCIA MAL GENERADA</td>
+                                        <td rowspan="8">FALSA AVERIA</td>
+                                        <td>Cliente con corte o suspensión</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Incidencia mal generada por ATC</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cliente informa que dará de baja el servicio</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Incidencia mal generada por duplicidad</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cerrada por falta de contacto</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cliente derivado a otras áreas</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cliente no permite visita por disponibilidad horaria/
+                                            acceso a domicilio</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sot con datos incorrectos</td>
+                                    </tr>
                             </tbody>
                         </table>
 
@@ -4348,7 +4348,7 @@
 
             <section id="modelos-mta-ont">
 
-                <div class="container" >
+                <div class="container">
 
                     <h2>Modelos MTA - ONT</h2>
                     <p>Guía de modelos</p>
@@ -4369,7 +4369,7 @@
                         <div class="container__grid__item">
                             <img src="./assets/img/modelos ONT .webp" alt="" style="width: 500px;">
                         </div>
-                    
+
                     </div>
 
 
@@ -4397,6 +4397,23 @@
             </div>
         </div>
     </dialog>
+
+    <!-- Botón flotante -->
+    <button id="open-notes-btn" class="floating-btn" title="Bloc de notas">
+        📝
+    </button>
+
+    <!-- Dialogo del bloc de notas -->
+    <dialog id="notepad-dialog" class="notepad-dialog">
+        <form method="dialog">
+            <div class="notepad-header">
+                <h3>Bloc de Notas</h3>
+                <button id="close-notes-btn" class="close-btn" type="button">✖</button>
+            </div>
+            <textarea id="notepad-content" placeholder="Escribe tus notas aquí..."></textarea>
+        </form>
+    </dialog>
+
 
     <dialog id="toast" class="dialog-toast">Plantilla copiada</dialog>
 
