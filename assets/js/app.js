@@ -20,8 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ///
 
-    const openBtn = document.querySelector("#open-notes-btn");
-    const closeBtn = document.querySelector("#close-notes-btn");
+    const openBtn = document.getElementById('open-notes-btn');
+    const closeBtn = document.getElementById('close-notes-btn');
+    const notepadDialog = document.getElementById('notepad-dialog');
     const dialog = document.querySelector("#notepad-dialog");
     const textarea = document.querySelector("#notepad-content");
 

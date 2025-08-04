@@ -352,54 +352,60 @@ dialog.closing::backdrop {
   z-index: 100;
 }
 
-/* Diálogo del bloc de notas */
+/*
+         * --- CORRECCIÓN FINAL Y DEFINITIVA ---
+         * Se han agregado las propiedades `top: 0; right: 0; bottom: 0;`
+         * y `margin: 0;` para anular por completo los estilos predeterminados del navegador.
+         */
 .notepad-dialog {
-  height: 100%;
+  /* Posicionamiento y dimensiones */
+  position: fixed;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  /* Reinicia el margen que el navegador podría aplicar */
+  left: auto !important;
+  /* Se asegura de que no se posicione a la izquierda */
+
+  height: 100vh !important;
   width: 100%;
   max-width: 500px;
+
+  /* Estilos de apariencia */
   box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  
   z-index: 1000;
-  padding: 16px;
+  padding: 0;
   border: none;
   outline: none;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  text-align: center;
+  border-radius: 0;
+  text-align: left;
   background-color: rgba(255, 255, 255, 0.2);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: slideIn 0.3s ease forwards;
   backdrop-filter: blur(30px);
+
+  /* Layout usando Flexbox */
+  display: flex;
+  flex-direction: column;
+
+  /* Animación */
+  transform: translateX(100%);
+  /* Posición inicial fuera de pantalla */
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  /* Transición suave */
 }
 
-#notepad-dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: none;
-  /* Evita el fondo difuminado */
+/* Muestra el dialog y lo anima cuando el atributo 'open' está presente */
+.notepad-dialog[open] {
+  transform: translateX(0) !important;
+  /* Posición final en pantalla */
+  opacity: 1;
 }
 
+/* Estilos para el backdrop */
 .notepad-dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: none;
-  /* Evita el fondo difuminado */
-}
-
-
-
-/* Animación de entrada  */
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0%);
-    opacity: 1;
-  }
 }
 
 .notepad-header {
@@ -410,33 +416,37 @@ dialog.closing::backdrop {
   align-items: center;
 }
 
+/* --- CORRECCIÓN EN EL TEXTAREA --- */
 #notepad-content {
-  width: 100%;
-  height: calc(100vh - 150px);
+  /* width: 100%; */
+  /* height: auto; */
+  flex-grow: 1;
+
   border: none;
   resize: none;
   padding: 1rem;
-  font-family: 'Montserrat', sans-serif;
+  /* Mantiene el padding interno para el texto */
+  font-family: consolas, 'Courier New', monospace;
   font-size: 0.9rem;
   line-height: 1.4;
   box-sizing: border-box;
   outline: none;
   overflow-y: auto;
   background-color: hsla(0, 0%, 100%, 0.246);
-  font-family: consolas, 'Courier New', monospace;
 }
 
+/* Se ha eliminado la regla height: calc(100vh - 150px); porque ahora usamos flexbox */
 
+/* Scrollbar del textarea */
 #notepad-content::-webkit-scrollbar {
   background-color: rgb(172, 172, 172);
-    width: 6px;
+  width: 6px;
 }
 
 /* Scrollbar 'thumb' (la parte que se mueve) */
 #notepad-content::-webkit-scrollbar-thumb {
-    background-color: #3838384d;
-    /* azul semi-transparente */
-    border-radius: 4px;
+  background-color: #3838384d;
+  border-radius: 4px;
 }
 
 .close-btn {
