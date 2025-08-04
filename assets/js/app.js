@@ -1,4 +1,167 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+// === TO-DO APP ===
+const openTodoBtn = document.querySelector("#open-todo-btn");
+const closeTodoBtn = document.querySelector("#close-todo-btn");
+const todoDialog = document.querySelector("#todo-dialog");
+const taskListContainer = document.querySelector("#task-list");
+const addTaskBtn = document.querySelector("#add-task-btn");
+
+const usuarioActual = localStorage.getItem("adpUsuario") || "anonimo";
+const TODO_STORAGE_KEY = `todo_list_${usuarioActual}`;
+
+// Cargar tareas desde localStorage
+const loadTasks = () => {
+    const tasksJson = localStorage.getItem(TODO_STORAGE_KEY);
+    return tasksJson ? JSON.parse(tasksJson) : [];
+};
+
+// Guardar tareas en localStorage
+const saveTasks = (tasks) => {
+    localStorage.setItem(TODO_STORAGE_KEY, JSON.stringify(tasks));
+};
+
+// Renderiza una tarea
+const renderTask = (task) => {
+    const taskItem = document.createElement('div');
+    taskItem.className = `task-item ${task.status}`;
+    taskItem.dataset.id = task.id;
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'task-title';
+    titleDiv.contentEditable = true;
+    titleDiv.textContent = task.title;
+
+    const descriptionDiv = document.createElement('div');
+    descriptionDiv.className = 'task-description';
+    descriptionDiv.contentEditable = true;
+    descriptionDiv.textContent = task.description;
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'task-actions';
+
+    const statusBtn = document.createElement('button');
+    statusBtn.className = `status-btn ${task.status}`;
+    statusBtn.textContent = task.status === 'in-attention' ? 'Marcar como Atendido' : 'Marcar como En Atención';
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = 'Eliminar';
+
+    actionsDiv.appendChild(statusBtn);
+    actionsDiv.appendChild(deleteBtn);
+
+    taskItem.appendChild(titleDiv);
+    taskItem.appendChild(descriptionDiv);
+    taskItem.appendChild(actionsDiv);
+    taskListContainer.appendChild(taskItem);
+};
+
+// Renderiza todas las tareas
+const renderAllTasks = (tasks) => {
+    taskListContainer.innerHTML = '';
+    tasks.forEach(renderTask);
+};
+
+// Añadir nueva tarea
+addTaskBtn.addEventListener('click', () => {
+    const tasks = loadTasks();
+    const newTask = {
+        id: Date.now(),
+        title: 'Nueva Tarea',
+        description: 'Descripción de la tarea',
+        status: 'in-attention',
+    };
+    tasks.push(newTask);
+    saveTasks(tasks);
+    renderTask(newTask);
+});
+
+// Cambiar estado o eliminar tarea
+taskListContainer.addEventListener('click', (event) => {
+    const target = event.target;
+    const taskItem = target.closest('.task-item');
+    if (!taskItem) return;
+
+    const taskId = parseInt(taskItem.dataset.id);
+    let tasks = loadTasks();
+    const taskIndex = tasks.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return;
+
+    if (target.classList.contains('delete-btn')) {
+        tasks.splice(taskIndex, 1);
+        saveTasks(tasks);
+        taskItem.remove();
+    } else if (target.classList.contains('status-btn')) {
+        const newStatus = tasks[taskIndex].status === 'in-attention' ? 'attended' : 'in-attention';
+        tasks[taskIndex].status = newStatus;
+        saveTasks(tasks);
+        taskItem.className = `task-item ${newStatus}`;
+        target.textContent = newStatus === 'in-attention' ? 'Marcar como Atendido' : 'Marcar como En Atención';
+        target.className = `status-btn ${newStatus}`;
+    }
+});
+
+// Guardar edición de texto
+taskListContainer.addEventListener('input', (event) => {
+    const target = event.target;
+    const taskItem = target.closest('.task-item');
+    if (!taskItem) return;
+
+    const taskId = parseInt(taskItem.dataset.id);
+    const tasks = loadTasks();
+    const taskIndex = tasks.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return;
+
+    if (target.classList.contains('task-title')) {
+        tasks[taskIndex].title = target.textContent;
+    } else if (target.classList.contains('task-description')) {
+        tasks[taskIndex].description = target.textContent;
+    }
+
+    saveTasks(tasks);
+});
+
+// Abrir diálogo
+openTodoBtn.addEventListener("click", () => {
+    renderAllTasks(loadTasks());
+    todoDialog.showModal();
+});
+
+// Cerrar diálogo
+closeTodoBtn.addEventListener("click", () => {
+    todoDialog.classList.add("closing");
+});
+
+// Cerrar después de animación
+todoDialog.addEventListener("transitionend", (event) => {
+    if (event.propertyName === 'transform' && todoDialog.classList.contains("closing")) {
+        todoDialog.classList.remove("closing");
+        todoDialog.close();
+    }
+});
+
+// Atajo de teclado: Ctrl + B
+window.addEventListener('keydown', (event) => {
+    const isCtrlCmd = event.ctrlKey || event.metaKey;
+    const isB = event.key.toLowerCase() === 'b';
+
+    if (isCtrlCmd && isB) {
+        event.preventDefault();
+        if (!todoDialog.open) {
+            renderAllTasks(loadTasks());
+            todoDialog.showModal();
+        }
+    }
+});
+
+
+
+
+
+
+    // ACÁ TERMINA EL TODO
+
     const modal = document.querySelector("#modal");
     const btnGuardar = document.querySelector("#btn-guardar");
     const btnSinCredenciales = document.querySelector("#btn-sin-credenciales");
@@ -17,51 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnConfirmarCerrarSesion = document.querySelector("#confirmar-cerrar-sesion");
     const btnCancelarCerrarSesion = document.querySelector("#cancelar-cerrar-sesion");
 
-
-    ///
-
-    const openBtn = document.getElementById('open-notes-btn');
-    const closeBtn = document.getElementById('close-notes-btn');
-    const notepadDialog = document.getElementById('notepad-dialog');
-    const dialog = document.querySelector("#notepad-dialog");
-    const textarea = document.querySelector("#notepad-content");
-
-    const claveNotas = () => `notas_${localStorage.getItem("adpUsuario") || "anonimo"}`;
-
-    // Cargar notas al abrir
-    openBtn.addEventListener("click", () => {
-        const guardado = localStorage.getItem(claveNotas());
-        if (guardado) textarea.value = guardado;
-        dialog.showModal();
-    });
-
-    // Cerrar con botón
-    closeBtn.addEventListener("click", () => {
-        dialog.close();
-    });
-
-    // Guardar en tiempo real
-    textarea.addEventListener("input", () => {
-        localStorage.setItem(claveNotas(), textarea.value);
-    });
-
-    window.addEventListener('keydown', (event) => {
-        // Verifica si se presiona la tecla 'B' junto con Ctrl (Windows/Linux) o Cmd (Mac)
-        const isCtrlCmd = event.ctrlKey || event.metaKey;
-        const isB = event.key === 'b';
-
-        if (isCtrlCmd && isB) {
-            // Evita el comportamiento por defecto del navegador (negrita)
-            event.preventDefault();
-            
-            // Abre el modal si no está ya abierto
-            if (!dialog.open) {
-                const guardado = localStorage.getItem(claveNotas());
-                if (guardado) textarea.value = guardado;
-                dialog.showModal();
-            }
-        }
-    });
 
     ///
 
