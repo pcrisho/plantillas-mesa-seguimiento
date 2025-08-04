@@ -345,8 +345,8 @@ dialog.closing::backdrop {
 /* Botón flotante */
 .floating-btn {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 30px;
+  right: 30px;
   background-color: #0F62FE;
   color: white;
   border: none;
