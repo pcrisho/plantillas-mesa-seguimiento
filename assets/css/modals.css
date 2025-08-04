@@ -556,6 +556,10 @@ dialog.closing::backdrop {
 
 /* Botón para añadir nueva tarea */
 .add-task-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem ;
   margin: 1rem;
   padding: 1rem;
   background-color: var(--color-primary);
