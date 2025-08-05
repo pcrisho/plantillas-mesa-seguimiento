@@ -487,6 +487,8 @@ function toggleElementVisibility(element, visible, displayMode = "flex") {
 
 
 
+
+
 dialog.classList.add("closing");
 setTimeout(() => {
     dialog.close();
