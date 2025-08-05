@@ -221,6 +221,10 @@
                                 <a href="#a-gen-cod-aut" class="nav__link nav__link--inside">Generador de Cod. de
                                     Autorización</a>
                             </li>
+
+                            <li class="list__inside">
+                                <a href="#mac-converter" class="nav__link nav__link--inside">Convertidor de MAC</a>
+                            </li>
                         </ul>
 
                     </li>
@@ -1520,19 +1524,51 @@
                         <!-- Puedes agregar más plantillas aquí -->
                     </div>
 
-                    <div class="codigos-aut" id="a-gen-cod-aut">
-                        <h3>Generador de Códigos de Autorización</h3>
-                        <div id="historial-codigos">
-                            <h4>Códigos generados</h4>
-                            <ul id="lista-codigos"></ul>
+                    <div class="container__grid__two-rows">
+
+                        <div class="container__grid__item">
+
+                            <div class="codigos-aut" id="a-gen-cod-aut">
+                                <h3>Generador de Códigos de Autorización</h3>
+                                <div id="historial-codigos">
+                                    <h4>Códigos generados</h4>
+                                    <ul id="lista-codigos"></ul>
+                                </div>
+                                <div id="a-cod-autorizacion-cambio-equipo">
+                                    <button class="button" onclick="generarCodigo()">Generar Código</button>
+                                    <button class="button_delete" onclick="eliminarUltimoCodigo()">Eliminar Último
+                                        Código</button>
+                                    <button class="button" onclick="descargarCodigos()">Descargar Códigos
+                                        Generados</button>
+                                </div>
+                            </div>
+
                         </div>
-                        <div id="a-cod-autorizacion-cambio-equipo">
-                            <button class="button" onclick="generarCodigo()">Generar Código</button>
-                            <button class="button_delete" onclick="eliminarUltimoCodigo()">Eliminar Último
-                                Código</button>
-                            <button class="button" onclick="descargarCodigos()">Descargar Códigos Generados</button>
+
+                        <div class="container__grid__item">
+                            <div class="codigos-aut" id="mac-converter">
+                                <h3>Convertidor de MAC</h3>
+                                <input type="text" id="mac-input" maxlength="12"
+                                    placeholder="Ingresa la MAC (ej. 647352618364)" pattern="[A-Fa-f0-9]{12}"
+                                    style="padding: 8px; width: 100%; margin-bottom: 10px;" />
+                                <button class="button" onclick="convertirMAC()">Convertir MAC</button>
+
+                                <div class="mac-resultado"
+                                    style="display: flex; align-items: center; gap: 4px;">
+                                    <span id="mac-generada" style="font-family: 'Consolas', monospace;"></span>
+                                    <span class="copy-icon" onclick="copiarPlantillaMAC(this)">
+                                        <span class="material-symbols-outlined"
+                                            style="color: rgb(101, 101, 101); cursor: pointer;">content_copy</span>
+                                    </span>
+                                </div>
+
+                            </div>
                         </div>
+
+
                     </div>
+
+
 
                 </div>
             </section>
@@ -4332,7 +4368,6 @@
                                             <span class="material-symbols-outlined"
                                                 style="color: rgb(101, 101, 101);">content_copy</span>
                                         </span>
-                                        <span class="copiado hidden">Copiado!</span>
                                     </div>
                                 </div>
                             </div>
@@ -4387,6 +4422,7 @@
     <script src="./assets/js/datetime.js"></script>
     <script src="./assets/js/nav.js"></script>
     <script src="./assets/js/copy.js"></script>
+    <script src="./assets/js/mac-converter.js"></script>
 
     <dialog id="confirmar-cierre-sesion">
         <div class="confirm-dialog-content">
