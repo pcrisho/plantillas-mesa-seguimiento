@@ -303,7 +303,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="task-title" contenteditable="true">${task.titulo}</div>
                     <div class="task-description" contenteditable="true">${task.descripcion}</div>
                 </div>
-                <button class="delete-task-btn" title="Eliminar"><svg class="delete-task-btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323"><path class="delete-task-btn" d="M280-120q-33 0-56.5-23.5T200-200v-520q-17 0-28.5-11.5T160-760q0-17 11.5-28.5T200-800h160q0-17 11.5-28.5T400-840h160q17 0 28.5 11.5T600-800h160q17 0 28.5 11.5T800-760q0 17-11.5 28.5T760-720v520q0 33-23.5 56.5T680-120H280Zm120-160q17 0 28.5-11.5T440-320v-280q0-17-11.5-28.5T400-640q-17 0-28.5 11.5T360-600v280q0 17 11.5 28.5T400-280Zm160 0q17 0 28.5-11.5T600-320v-280q0-17-11.5-28.5T560-640q-17 0-28.5 11.5T520-600v280q0 17 11.5 28.5T560-280Z"/></svg></button>
+                <button class="delete-task-btn" title="Eliminar">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323">
+          <path d="M280-120q-33 0-56.5-23.5T200-200v-520q-17 0-28.5-11.5T160-760q0-17 11.5-28.5T200-800h160q0-17 11.5-28.5T400-840h160q17 0 28.5 11.5T600-800h160q17 0 28.5 11.5T800-760q0 17-11.5 28.5T760-720v520q0 33-23.5 56.5T680-120H280Zm120-160q17 0 28.5-11.5T440-320v-280q0-17-11.5-28.5T400-640q-17 0-28.5 11.5T360-600v280q0 17 11.5 28.5T400-280Zm160 0q17 0 28.5-11.5T600-320v-280q0-17-11.5-28.5T560-640q-17 0-28.5 11.5T520-600v280q0 17 11.5 28.5T560-280Z"/>
+      </svg>
+  </button>
             `;
 
             taskList.appendChild(li);
@@ -328,26 +332,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     taskList.addEventListener('click', (e) => {
-        const li = e.target.closest('.task-item');
-        if (!li) return;
+        const taskId = e.target.closest('.task-item')?.dataset.id;
 
-        const id = parseInt(li.dataset.id);
-        const tarea = tareas.find(t => t.id === id);
-        if (!tarea) return;
+        // ✅ Alternar completado
+        if (e.target.tagName === 'INPUT') {
+            const index = tareas.findIndex(t => t.id == taskId);
+            tareas[index].completada = !tareas[index].completada;
+            saveTareas();
+            renderTareas();
+            return;
+        }
 
-        if (e.target.type === 'checkbox') {
-            tarea.completada = e.target.checked;
+        // ✅ Eliminar con closest()
+        const deleteBtn = e.target.closest('.delete-task-btn');
+        if (deleteBtn) {
+            tareas = tareas.filter(t => t.id != taskId);
             saveTareas();
             renderTareas();
         }
-
-        if (e.target.classList.contains('delete-task-btn')) {
-            tareas = tareas.filter(t => t.id !== id);
-            saveTareas();
-            renderTareas();
-        }
-
-        
     });
 
     taskList.addEventListener('input', (e) => {
