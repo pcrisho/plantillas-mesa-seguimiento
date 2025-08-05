@@ -1,3 +1,35 @@
+function mostrarToast(mensaje = "Plantilla copiada") {
+    const toast = document.getElementById("toast");
+
+    if (toastVisible) {
+        toastQueue.push(mensaje);
+        return;
+    }
+
+    toast.textContent = mensaje;
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+    toast.show();
+    toastVisible = true;
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+
+        setTimeout(() => {
+            toast.close();
+            toastVisible = false;
+
+            // Verificamos si hay más mensajes en la cola
+            if (toastQueue.length > 0) {
+                const siguienteMensaje = toastQueue.shift();
+                mostrarToast(siguienteMensaje);
+            }
+        }, 300); // espera a que termine la animación de salida
+    }, 2000);
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = document.querySelector("#modal");
@@ -256,176 +288,190 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //inicia TODO
 
-    // === TO-DO APP ===
-    const openBtn = document.querySelector("#open-todo-btn");
-    const closeBtn = document.querySelector("#close-todo-btn");
-    const dialog = document.querySelector("#todo-dialog");
-    const taskListContainer = document.querySelector("#task-list");
-    const addTaskBtn = document.querySelector("#add-task-btn");
+    // Lista de tareas (To-Do List)
+    const openTodoBtn = document.getElementById('open-todo-btn');
+    const closeTodoBtn = document.getElementById('close-todo-btn');
+    const todoDialog = document.getElementById('todo-dialog');
+    const newTaskInput = document.getElementById('new-task-input');
+    const taskList = document.getElementById('task-list');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const clearAllTasksBtn = document.getElementById('clear-all-tasks-btn');
+    const downloadTasksBtn = document.getElementById('download-tasks-btn');
 
-    const TODO_STORAGE_KEY = `todo_${localStorage.getItem("adpUsuario") || "anonimo"}`;
 
-    // Cargar tareas desde localStorage
-    const loadTasks = () => {
-        const data = localStorage.getItem(TODO_STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
-    };
+    const adp = localStorage.getItem("adpUsuario") || "anonimo";
+    const KEY_TODOS = `tareas_${adp}`;
+    const KEY_FILTER = `filtro_tareas_${adp}`;
 
-    // Guardar tareas en localStorage
-    const saveTasks = (tasks) => {
-        localStorage.setItem(TODO_STORAGE_KEY, JSON.stringify(tasks));
-    };
+    let tareas = JSON.parse(localStorage.getItem(KEY_TODOS)) || [];
+    let filtroActual = localStorage.getItem(KEY_FILTER) || 'all';
 
-    // Renderizar una sola tarea
-    const renderTask = (task) => {
-        const taskItem = document.createElement("div");
-        taskItem.className = `task-item ${task.status}`;
-        taskItem.dataset.id = task.id;
+    function saveTareas() {
+        localStorage.setItem(KEY_TODOS, JSON.stringify(tareas));
+        localStorage.setItem(KEY_FILTER, filtroActual);
+    }
 
-        const titleDiv = document.createElement("div");
-        titleDiv.className = "task-title";
-        titleDiv.contentEditable = true;
-        titleDiv.textContent = task.title;
+    function renderTareas() {
+        taskList.innerHTML = '';
 
-        const descriptionDiv = document.createElement("div");
-        descriptionDiv.className = "task-description";
-        descriptionDiv.contentEditable = true;
-        descriptionDiv.innerHTML = task.description.replace(/\n/g, "<br>");
-
-        // Soporte para pegar saltos de línea como <br>
-        descriptionDiv.addEventListener("paste", (e) => {
-            e.preventDefault();
-            const text = (e.clipboardData || window.clipboardData).getData("text");
-            document.execCommand("insertHTML", false, text.replace(/\n/g, "<br>"));
+        const filtradas = tareas.filter(task => {
+            if (filtroActual === 'all') return true;
+            if (filtroActual === 'pending') return !task.completada;
+            if (filtroActual === 'completed') return task.completada;
         });
 
-        const actionsDiv = document.createElement("div");
-        actionsDiv.className = "task-actions";
+        if (filtradas.length === 0) {
+            taskList.innerHTML = `<p class="empty-state-message">No hay tareas para mostrar.</p>`;
+            return;
+        }
 
-        const statusBtn = document.createElement("button");
-        statusBtn.className = `status-btn ${task.status}`;
-        statusBtn.textContent = task.status === "in-attention" ? "Marcar como Atendido" : "Marcar como En Atención";
+        filtradas.forEach(task => {
+            const li = document.createElement('li');
+            li.className = 'task-item';
+            li.classList.add(task.completada ? 'attended' : 'in-attention');
+            li.dataset.id = task.id;
 
-        const deleteBtn = document.createElement("button");
-        deleteBtn.className = "delete-btn";
-        deleteBtn.textContent = "Eliminar";
+            li.innerHTML = `
+                <input type="checkbox" ${task.completada ? 'checked' : ''}>
+                <div class="task-text-container" style="width: 100%;">
+                    <div class="task-title" contenteditable="true">${task.titulo}</div>
+                    <div class="task-description" contenteditable="true">${task.descripcion}</div>
+                </div>
+                <button class="delete-task-btn" title="Eliminar">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323">
+          <path d="M280-120q-33 0-56.5-23.5T200-200v-520q-17 0-28.5-11.5T160-760q0-17 11.5-28.5T200-800h160q0-17 11.5-28.5T400-840h160q17 0 28.5 11.5T600-800h160q17 0 28.5 11.5T800-760q0 17-11.5 28.5T760-720v520q0 33-23.5 56.5T680-120H280Zm120-160q17 0 28.5-11.5T440-320v-280q0-17-11.5-28.5T400-640q-17 0-28.5 11.5T360-600v280q0 17 11.5 28.5T400-280Zm160 0q17 0 28.5-11.5T600-320v-280q0-17-11.5-28.5T560-640q-17 0-28.5 11.5T520-600v280q0 17 11.5 28.5T560-280Z"/>
+      </svg>
+  </button>
+            `;
 
-        actionsDiv.appendChild(statusBtn);
-        actionsDiv.appendChild(deleteBtn);
+            taskList.appendChild(li);
+        });
+    }
 
-        taskItem.appendChild(titleDiv);
-        taskItem.appendChild(descriptionDiv);
-        taskItem.appendChild(actionsDiv);
-        taskListContainer.appendChild(taskItem);
-    };
+    function addTarea() {
+        const texto = newTaskInput.value.trim();
+        if (!texto) return;
 
-    // Renderizar todas las tareas
-    const renderAllTasks = (tasks) => {
-        taskListContainer.innerHTML = "";
-        tasks.forEach(renderTask);
-    };
+        let tareasPorAtender = 6;
 
-    // Añadir nueva tarea
-    addTaskBtn.addEventListener("click", () => {
-        const tasks = loadTasks();
-        const newTask = {
+        // ✅ Validación: máximo 6 tareas pendientes
+        const pendientes = tareas.filter(t => !t.completada);
+        if (pendientes.length >= tareasPorAtender) {
+            mostrarToast("Regulariza tus plantillas antes de agregar más");
+            return;
+        }
+
+        const nueva = {
             id: Date.now(),
-            title: "Nueva Tarea",
-            description: "",
-            status: "in-attention"
+            titulo: texto,
+            descripcion: '',
+            completada: false
         };
-        tasks.push(newTask);
-        saveTasks(tasks);
-        renderTask(newTask);
-    });
 
-    // Cambiar estado o eliminar
-    taskListContainer.addEventListener("click", (e) => {
-        const target = e.target;
-        const taskItem = target.closest(".task-item");
-        if (!taskItem) return;
+        tareas.push(nueva);
+        newTaskInput.value = '';
+        saveTareas();
+        renderTareas();
+    }
 
-        const taskId = parseInt(taskItem.dataset.id);
-        const tasks = loadTasks();
-        const index = tasks.findIndex(t => t.id === taskId);
-        if (index === -1) return;
+    taskList.addEventListener('click', (e) => {
+        const taskId = e.target.closest('.task-item')?.dataset.id;
 
-        if (target.classList.contains("delete-btn")) {
-            tasks.splice(index, 1);
-            saveTasks(tasks);
-            taskItem.remove();
+        // ✅ Alternar completado
+        if (e.target.tagName === 'INPUT') {
+            const index = tareas.findIndex(t => t.id == taskId);
+            tareas[index].completada = !tareas[index].completada;
+            saveTareas();
+            renderTareas();
+            return;
         }
 
-        if (target.classList.contains("status-btn")) {
-            const newStatus = tasks[index].status === "in-attention" ? "attended" : "in-attention";
-            tasks[index].status = newStatus;
-            saveTasks(tasks);
-            taskItem.className = `task-item ${newStatus}`;
-            target.textContent = newStatus === "in-attention" ? "Marcar como Atendido" : "Marcar como En Atención";
-            target.className = `status-btn ${newStatus}`;
+        // ✅ Eliminar con closest()
+        const deleteBtn = e.target.closest('.delete-task-btn');
+        if (deleteBtn) {
+            tareas = tareas.filter(t => t.id != taskId);
+            saveTareas();
+            renderTareas();
         }
     });
 
-    // Guardar ediciones de texto
-    taskListContainer.addEventListener("input", (e) => {
-        const target = e.target;
-        const taskItem = target.closest(".task-item");
-        if (!taskItem) return;
+    taskList.addEventListener('input', (e) => {
+        const li = e.target.closest('.task-item');
+        if (!li) return;
 
-        const taskId = parseInt(taskItem.dataset.id);
-        const tasks = loadTasks();
-        const index = tasks.findIndex(t => t.id === taskId);
-        if (index === -1) return;
+        const id = parseInt(li.dataset.id);
+        const tarea = tareas.find(t => t.id === id);
+        if (!tarea) return;
 
-        if (target.classList.contains("task-title")) {
-            tasks[index].title = target.textContent;
+        if (e.target.classList.contains('task-title')) {
+            tarea.titulo = e.target.textContent.trim();
         }
 
-        if (target.classList.contains("task-description")) {
-            // Elimina saltos dobles convirtiendo <br><br> o <div><br></div> a uno solo
-            const cleanText = target.innerHTML
-                .replace(/<div><br><\/div>/gi, '\n') // En caso se use <div><br></div>
-                .replace(/<div>/gi, '\n')            // En caso de divs normales
-                .replace(/<\/div>/gi, '')            // Cierra divs
-                .replace(/<br\s*\/?>/gi, '\n')       // Reemplaza <br> con \n
-                .replace(/\n{2,}/g, '\n');           // Previene saltos dobles
-            tasks[index].description = cleanText.trim(); // Guarda limpio
+        if (e.target.classList.contains('task-description')) {
+            tarea.descripcion = e.target.textContent.trim();
         }
 
-        saveTasks(tasks);
+        saveTareas();
     });
 
-    // Abrir y cerrar el panel
-    openBtn.addEventListener("click", () => {
-        renderAllTasks(loadTasks());
-        dialog.showModal();
-    });
-
-    closeBtn.addEventListener("click", () => {
-        dialog.classList.add("closing");
-    });
-
-    // Cerrar con animación
-    dialog.addEventListener("transitionend", (event) => {
-        if (event.propertyName === 'transform' && dialog.classList.contains("closing")) {
-            dialog.classList.remove("closing");
-            dialog.close();
+    newTaskInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addTarea();
         }
     });
 
-    // Atajo de teclado Ctrl+B
-    window.addEventListener("keydown", (event) => {
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filtroActual = btn.id.replace('filter-', '');
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            saveTareas();
+            renderTareas();
+        });
+    });
+
+    clearAllTasksBtn.addEventListener('click', () => {
+        tareas = [];
+        saveTareas();
+        renderTareas();
+        mostrarToast("⚠️ Todas las tareas han sido eliminadas.");
+    });
+
+    openTodoBtn.addEventListener('click', () => {
+        renderTareas();
+        todoDialog.showModal();
+    });
+
+    closeTodoBtn.addEventListener('click', () => {
+        cerrarDialogConAnimacion(todoDialog);
+    });
+
+    // Ctrl + B → abrir to-do
+    window.addEventListener('keydown', (event) => {
         const isCtrlCmd = event.ctrlKey || event.metaKey;
         const isB = event.key.toLowerCase() === 'b';
 
         if (isCtrlCmd && isB) {
             event.preventDefault();
-            if (!dialog.open) {
-                renderAllTasks(loadTasks());
-                dialog.showModal();
+            if (!todoDialog.open) {
+                renderTareas();
+                todoDialog.showModal();
             }
         }
     });
+
+    document.addEventListener('paste', function (e) {
+        if (!e.target.classList.contains('task-title')) return;
+
+        e.preventDefault(); // Evita el pegado por defecto con estilos
+
+        const plainText = e.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, plainText);
+    });
+
+    // Render al cargar
+    renderTareas();
 
 
     //Termina TODO
@@ -444,6 +490,32 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".mes").forEach(el => el.textContent = mes);
     document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
     document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
+
+    downloadTasksBtn.addEventListener('click', () => {
+        if (tareas.length === 0) {
+            alert("No hay tareas para descargar.");
+            return;
+        }
+
+        let contenido = "LISTA DE PLANTILLAS\n====================\n\n";
+
+        tareas.forEach((t, i) => {
+            const estado = t.completada ? "✅ Completada" : "⏳ Pendiente";
+            contenido += `Plantilla ${i + 1}\nTítulo: ${t.titulo}\n${t.descripcion || "(Sin descripción)"}\nEstado: ${estado}\n\n`;
+        });
+
+        const blob = new Blob([contenido], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tareas-${new Date().toLocaleDateString('es-PE')}.txt`;
+        a.click();
+
+        URL.revokeObjectURL(url);
+        mostrarToast("Plantillas descargadas");
+    });
+
 });
 
 function verificarFechaUsuario() {
@@ -482,6 +554,9 @@ function toggleElementVisibility(element, visible, displayMode = "flex") {
         element.style.display = "none"; // oculta inmediatamente sin animación
     }
 }
+
+
+
 
 
 

@@ -1553,8 +1553,7 @@
                                     style="padding: 8px; width: 100%; margin-bottom: 10px;" />
                                 <button class="button" onclick="convertirMAC()">Convertir MAC</button>
 
-                                <div class="mac-resultado"
-                                    style="display: flex; align-items: center; gap: 4px;">
+                                <div class="mac-resultado" style="display: flex; align-items: center; gap: 4px;">
                                     <span id="mac-generada" style="font-family: 'Consolas', monospace;"></span>
                                     <span class="copy-icon" onclick="copiarPlantillaMAC(this)">
                                         <span class="material-symbols-outlined"
@@ -4445,19 +4444,28 @@
     <!-- El dialog ahora es el panel de la lista de tareas -->
     <dialog id="todo-dialog" class="todo-dialog" closedby="any">
         <div class="todo-header">
-            <h3>Lista de Plantillas</h3>
-            <button id="close-todo-btn" class="close-btn" type="button">✖</button>
+            <h3>Lista de Tareas</h3>
+            <button id="download-tasks-btn" class="download-btn">Descargar plantillas</button>
+            <button id="close-todo-btn" class="close-notes-btn" title="Cerrar">
+                <span class="material-symbols-outlined">close</span>
+            </button>
         </div>
-        <div id="task-list" class="task-list">
-            <!-- Las tareas se renderizarán aquí -->
+        <div class="todo-content">
+            <div class="todo-input-container">
+                <input type="text" id="new-task-input" placeholder="Añadir nueva tarea...">
+                <!-- El botón de añadir tarea está implícito en la pulsación de Enter -->
+            </div>
+            <ul id="task-list" class="task-list"></ul>
+
         </div>
-        <button id="add-task-btn" class="add-task-btn" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
-                <path
-                    d="M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440-240v-200Z" />
-            </svg>
-            Añadir Nueva Tarea
-        </button>
+        <div class="todo-footer">
+            <div class="task-filters">
+                <button class="filter-btn active" id="filter-all">Todas</button>
+                <button class="filter-btn" id="filter-pending">Pendientes</button>
+                <button class="filter-btn" id="filter-completed">Regularizadas</button>
+            </div>
+            <button id="clear-all-tasks-btn" class="clear-all-btn">Limpiar todo</button>
+        </div>
     </dialog>
 
 

@@ -60,23 +60,7 @@ function copiarPlantillaMAC(boton) {
     });
 }
 
-function copiarPlantillaMAC(boton) {
-    const plantilla = boton.closest(".mac-resultado");
-    const span = plantilla.querySelector("span");
-    const texto = span.innerText || span.textContent;
 
-    if (!texto || texto.includes("⚠️")) {
-        mostrarToast("⚠️ No hay una MAC válida para copiar");
-        return;
-    }
-
-    navigator.clipboard.writeText(texto).then(() => {
-        mostrarToast("MAC copiada");
-    }).catch(err => {
-        console.error("Error al copiar:", err);
-        mostrarToast("Error al copiar");
-    });
-}
 
 function mostrarDialogoCopia() {
     if (colaMensajes === 0) return;
