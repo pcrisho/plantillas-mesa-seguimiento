@@ -1,3 +1,35 @@
+function mostrarToast(mensaje = "Plantilla copiada") {
+    const toast = document.getElementById("toast");
+
+    if (toastVisible) {
+        toastQueue.push(mensaje);
+        return;
+    }
+
+    toast.textContent = mensaje;
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+    toast.show();
+    toastVisible = true;
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+
+        setTimeout(() => {
+            toast.close();
+            toastVisible = false;
+
+            // Verificamos si hay más mensajes en la cola
+            if (toastQueue.length > 0) {
+                const siguienteMensaje = toastQueue.shift();
+                mostrarToast(siguienteMensaje);
+            }
+        }, 300); // espera a que termine la animación de salida
+    }, 2000);
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = document.querySelector("#modal");
@@ -264,6 +296,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const taskList = document.getElementById('task-list');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const clearAllTasksBtn = document.getElementById('clear-all-tasks-btn');
+    const downloadTasksBtn = document.getElementById('download-tasks-btn');
+
 
     const adp = localStorage.getItem("adpUsuario") || "anonimo";
     const KEY_TODOS = `tareas_${adp}`;
@@ -317,6 +351,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function addTarea() {
         const texto = newTaskInput.value.trim();
         if (!texto) return;
+
+        let tareasPorAtender = 6;
+
+        // ✅ Validación: máximo 6 tareas pendientes
+        const pendientes = tareas.filter(t => !t.completada);
+        if (pendientes.length >= tareasPorAtender) {
+            mostrarToast("Regulariza tus plantillas antes de agregar más");
+            return;
+        }
 
         const nueva = {
             id: Date.now(),
@@ -392,6 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tareas = [];
         saveTareas();
         renderTareas();
+        mostrarToast("⚠️ Todas las tareas han sido eliminadas.");
     });
 
     openTodoBtn.addEventListener('click', () => {
@@ -446,6 +490,32 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".mes").forEach(el => el.textContent = mes);
     document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
     document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
+
+    downloadTasksBtn.addEventListener('click', () => {
+        if (tareas.length === 0) {
+            alert("No hay tareas para descargar.");
+            return;
+        }
+
+        let contenido = "LISTA DE PLANTILLAS\n====================\n\n";
+
+        tareas.forEach((t, i) => {
+            const estado = t.completada ? "✅ Completada" : "⏳ Pendiente";
+            contenido += `Plantilla ${i + 1}\nTítulo: ${t.titulo}\n${t.descripcion || "(Sin descripción)"}\nEstado: ${estado}\n\n`;
+        });
+
+        const blob = new Blob([contenido], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tareas-${new Date().toLocaleDateString('es-PE')}.txt`;
+        a.click();
+
+        URL.revokeObjectURL(url);
+        mostrarToast("Plantillas descargadas");
+    });
+
 });
 
 function verificarFechaUsuario() {
@@ -484,6 +554,7 @@ function toggleElementVisibility(element, visible, displayMode = "flex") {
         element.style.display = "none"; // oculta inmediatamente sin animación
     }
 }
+
 
 
 
