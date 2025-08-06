@@ -957,6 +957,61 @@ tbody tr:last-child td {
     align-items: stretch;
 }
 
+#reagendados .container__grid__item__dinamic {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.two-rows {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Para 2 columnas */
+    gap: 16px;
+    width: 100%;
+}
+
+
+
+#reagendados .container__grid__item__dinamic label {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+#reagendados .container__grid__item__dinamic input {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
+.container__grid__item__dinamic select {
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    display: flex;
+    font-weight: 500;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: justify;
+    margin: 0;
+    align-items: stretch;
+}
+
 #reagendados .plantilla {
     flex: 1;
     background-color: #ebebeb;

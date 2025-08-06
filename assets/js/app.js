@@ -476,6 +476,137 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Termina TODO
 
+    // REAGENDAMIENTO
+    const datosReagendamiento = {
+        CLARO: {
+            "Errores en la generación de la SOT": [
+                "Pérdida de fecha de agendamiento",
+                "Caída masiva en sistemas Claro"
+            ],
+            "Inconvenientes con la contratista": [
+                "Inasistencia de cuadrillas de la contratista",
+                "Retraso de técnicos de la contratista",
+                "Incidencias en el campo durante la instalación",
+                "Falta de materiales: Detallar material",
+                "Retiro anticipado de cuadrillas en campo",
+                "Falta de herramientas"
+            ],
+            "Configuraciones de TOA (OFSC)": [
+                "Sobreegandamiento de cuotas",
+                "Problemas con las configuraciones de zonas de trabajo",
+                "Cuota configurada incorrectamente"
+            ]
+        },
+        CLIENTE: {
+            "A solicitud del Cliente": [
+                "Cambios en las fechas y franjas solicitadas",
+                "Cliente se encuentra de viaje",
+                "Solo puede domingos, horarios especiales, noche.",
+                "Cliente desconoce su fecha de agendamiento"
+            ],
+            "Facilidades del cliente": [
+                "Cliente no cuenta con equipos en nuevo domicilio",
+                "No brinda facilidades técnicas (ductos, permisos, etc.)",
+                "Factores climatológicos"
+            ],
+            "Falta de contacto": ["Cliente no responde los 4 intentos de llamada"],
+            "Ausente": ["Cliente Ausente en Campo"]
+        }
+    };
+
+    function cargarEscenarios() {
+        const tipo = document.getElementById("tipo-reagendado").value;
+        const escenarioSelect = document.getElementById("escenario");
+        escenarioSelect.innerHTML = "";
+
+        for (const esc in datosReagendamiento[tipo]) {
+            const opt = document.createElement("option");
+            opt.value = esc;
+            opt.textContent = esc;
+            escenarioSelect.appendChild(opt);
+        }
+
+        cargarMotivos(); // actualiza los motivos del primer escenario
+    }
+
+    function cargarMotivos() {
+        const tipo = document.getElementById("tipo-reagendado").value;
+        const escenario = document.getElementById("escenario").value;
+        const motivoSelect = document.getElementById("motivo");
+        motivoSelect.innerHTML = "";
+
+        datosReagendamiento[tipo][escenario].forEach(motivo => {
+            const opt = document.createElement("option");
+            opt.value = motivo;
+            opt.textContent = motivo;
+            motivoSelect.appendChild(opt);
+        });
+
+        actualizarPlantilla(); // actualiza la vista
+    }
+
+    function actualizarPlantilla() {
+        const tipoRepro = document.getElementById("tipo-reprogramado").value;
+        const tipoReagen = document.getElementById("tipo-reagendado").value;
+        const motivo = document.getElementById("motivo").value;
+        const idLlamada = document.getElementById("id-llamada").value;
+        const observacion = document.getElementById("observacion").value;
+        const fechaVisita = document.getElementById("fecha-visita").value;
+        const franjaVisita = document.getElementById("franja-visita").value;
+
+        const nombreCliente = document.getElementById("nombre-cliente").value.trim() || "";
+        const numeroCliente = document.getElementById("numero-cliente").value.trim() || "";
+
+        // Formatear la fecha a dd/mm
+        let fechaFormateada = "";
+        if (fechaVisita) {
+            const [año, mes, dia] = fechaVisita.split('-');
+            fechaFormateada = `${dia}/${mes}`;
+        }
+
+        const plantillaTexto = `MESA DE PROGRAMACIONES HITSS<br>
+REPROGRAMADO EN ${tipoRepro} / REAGENDADO POR ${tipoReagen}<br>
+CLIENTE:&nbsp;${nombreCliente}<br>
+NÚMERO:&nbsp;${numeroCliente}<br>
+NUEVA FECHA Y FRANJA DE VISITA:&nbsp;${fechaFormateada} - ${franjaVisita}<br>
+MOTIVO DE REPROGRAMACIÓN: ${tipoReagen} # ${motivo}<br>
+CONTRATA:&nbsp;<br>
+ID DE LLAMADA:&nbsp;${idLlamada}<br>
+OBSERVACIÓN:&nbsp;${observacion}<br>
+REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
+
+        document.getElementById("texto-plantilla-dinamica").innerHTML = plantillaTexto;
+    }
+
+    // Inicializar cuando el DOM esté listo
+    cargarEscenarios();
+
+    document.getElementById("tipo-reprogramado").addEventListener("change", actualizarPlantilla);
+    document.getElementById("tipo-reagendado").addEventListener("change", () => {
+        cargarEscenarios();
+        actualizarPlantilla();
+    });
+    document.getElementById("escenario").addEventListener("change", () => {
+        cargarMotivos();
+        actualizarPlantilla();
+    });
+    document.getElementById("motivo").addEventListener("change", actualizarPlantilla);
+
+    // Nuevos event listeners para los campos añadidos
+    document.getElementById("id-llamada").addEventListener("input", actualizarPlantilla);
+    document.getElementById("observacion").addEventListener("input", actualizarPlantilla);
+    document.getElementById("fecha-visita").addEventListener("change", actualizarPlantilla);
+    document.getElementById("franja-visita").addEventListener("change", actualizarPlantilla);
+    document.getElementById("nombre-cliente").addEventListener("input", actualizarPlantilla);
+    document.getElementById("numero-cliente").addEventListener("input", actualizarPlantilla);
+
+
+    //
+
+
+
+
+
     const fecha = new Date();
 
     const dia = fecha.getDate();

@@ -365,26 +365,15 @@
                         </div>
 
                         <ul class="list__show">
+
                             <li class="list__inside">
-                                <a href="#repro-mesa-claro" class="nav__link nav__link--inside">Repro. en Mesa -
-                                    Claro</a>
+                                <a href="#repro-escenarios" class="nav__link nav__link--inside">Escenarios</a>
                             </li>
 
                             <li class="list__inside">
-                                <a href="#repro-mesa-cliente" class="nav__link nav__link--inside">Repro. en Mesa -
-                                    Cliente</a>
+                                <a href="#repro-plantillas" class="nav__link nav__link--inside">Plantilla de
+                                    Reprogramación</a>
                             </li>
-
-                            <li class="list__inside">
-                                <a href="#repro-campo-claro" class="nav__link nav__link--inside">Repro. en Campo -
-                                    Claro</a>
-                            </li>
-
-                            <li class="list__inside">
-                                <a href="#repro-campo-cliente" class="nav__link nav__link--inside">Repro. en Campo -
-                                    Cliente</a>
-                            </li>
-
 
                         </ul>
 
@@ -2711,7 +2700,7 @@
 
             <section id="reagendados">
 
-                <div class="container">
+                <div id="#repro-escenarios" class="container">
                     <h2>Reagendados</h2>
                     <p>Estas son las flags que se utilizan para el reagendamiento de los casos que se encuentran en la
                         mesa de seguimiento fija. Recuerda: debemos copiar el # correcto para la reprogramación según
@@ -2725,143 +2714,125 @@
                             REPROGRAMAR POR TOA PRIMERO Y EN LA FRANJA PM4: 20:00 - 22:00 Y SGA</b>
                     </p>
                     <!-- REAGENDADO POR CLARO -->
-                    <table class="tabla">
-                        <thead class="claro">
-                            <tr>
-                                <th colspan="2">REAGENDADO POR CLARO</th>
-                            </tr>
-                            <tr>
-                                <th>ESCENARIO</th>
-                                <th>MOTIVO DEL REAGENDAMIENTO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Errores en la generación de la SOT</td>
-                                <td>
-                                    <ul>
-                                        <li># Pérdida de fecha de agendamiento</li>
-                                        <li># Caída masiva en sistemas Claro</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Inconvenientes con la contratista</td>
-                                <td>
-                                    <ul>
-                                        <li># Inasistencia de cuadrillas de la contratista</li>
-                                        <li># Retraso de técnicos de la contratista</li>
-                                        <li># Incidencias en el campo durante la instalación</li>
-                                        <li># Falta de materiales: Detallar material</li>
-                                        <li># Retiro anticipado de cuadrillas en campo</li>
-                                        <li># Falta de herramientas</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Configuraciones de TOA (OFSC)</td>
-                                <td>
-                                    <ul>
-                                        <li># Sobreegandamiento de cuotas</li>
-                                        <li># Problemas con las configuraciones de zonas de trabajo</li>
-                                        <li># Cuota configurada incorrectamente</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
 
-                    <!-- REAGENDADO POR CLIENTE -->
-                    <table class="tabla">
-                        <thead class="cliente">
-                            <tr>
-                                <th colspan="2">REAGENDADO POR CLIENTE</th>
-                            </tr>
-                            <tr>
-                                <th>ESCENARIO</th>
-                                <th>MOTIVO DEL REAGENDAMIENTO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>A solicitud del Cliente</td>
-                                <td>
-                                    <ul>
-                                        <li># Cambios en las fechas y franjas solicitadas</li>
-                                        <li># Cliente se encuentra de viaje</li>
-                                        <li># Solo puede domingos, horarios especiales, noche.</li>
-                                        <li># Cliente desconoce su fecha de agendamiento</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Facilidades del cliente</td>
-                                <td>
-                                    <ul>
-                                        <li># Cliente no cuenta con equipos en nuevo domicilio</li>
-                                        <li># No brinda facilidades técnicas (ductos, permisos, etc.)</li>
-                                        <li># Factores climatológicos</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Falta de contacto</td>
-                                <td>
-                                    <ul>
-                                        <li># Cliente no responde los 4 intentos de llamada</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ausente</td>
-                                <td>
-                                    <ul>
-                                        <li># Cliente Ausente en Campo</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div id="repro-escenarios">
 
-                    <div class="container__grid">
-                        <div class="container__grid__item">
-                            <div id="repro-mesa-claro">
-                                <h3>Reprogramación en Mesa - Claro</h3>
-                                <div class="plantilla">
-                                    <p id="texto-plantilla">
-                                        <b>MESA DE PROGRAMACIONES HITSS<br>
-                                            REPROGRAMADO EN MESA / REAGENDADO POR CLARO</b><br>
-                                        CLIENTE:&nbsp;<br>
-                                        NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
-                                        MOTIVO DE REPROGRAMACIÓN: CLARO #&nbsp;<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID DE LLAMADA:&nbsp;<br>
-                                        OBSERVACIÓN:&nbsp;<br>
-                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
-                                    </p>
-                                    <div class="copiar-contenedor">
-                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
-                                            <span class="material-symbols-outlined"
-                                                style="color: rgb(101, 101, 101);">content_copy</span>
-                                        </span>
-                                        <span class="copiado hidden">Copiado!</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <table class="tabla">
+                            <thead class="claro">
+                                <tr>
+                                    <th colspan="2">REAGENDADO POR CLARO</th>
+                                </tr>
+                                <tr>
+                                    <th>ESCENARIO</th>
+                                    <th>MOTIVO DEL REAGENDAMIENTO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Errores en la generación de la SOT</td>
+                                    <td>
+                                        <ul>
+                                            <li># Pérdida de fecha de agendamiento</li>
+                                            <li># Caída masiva en sistemas Claro</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Inconvenientes con la contratista</td>
+                                    <td>
+                                        <ul>
+                                            <li># Inasistencia de cuadrillas de la contratista</li>
+                                            <li># Retraso de técnicos de la contratista</li>
+                                            <li># Incidencias en el campo durante la instalación</li>
+                                            <li># Falta de materiales: Detallar material</li>
+                                            <li># Retiro anticipado de cuadrillas en campo</li>
+                                            <li># Falta de herramientas</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Configuraciones de TOA (OFSC)</td>
+                                    <td>
+                                        <ul>
+                                            <li># Sobreegandamiento de cuotas</li>
+                                            <li># Problemas con las configuraciones de zonas de trabajo</li>
+                                            <li># Cuota configurada incorrectamente</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- REAGENDADO POR CLIENTE -->
+                        <table class="tabla">
+                            <thead class="cliente">
+                                <tr>
+                                    <th colspan="2">REAGENDADO POR CLIENTE</th>
+                                </tr>
+                                <tr>
+                                    <th>ESCENARIO</th>
+                                    <th>MOTIVO DEL REAGENDAMIENTO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A solicitud del Cliente</td>
+                                    <td>
+                                        <ul>
+                                            <li># Cambios en las fechas y franjas solicitadas</li>
+                                            <li># Cliente se encuentra de viaje</li>
+                                            <li># Solo puede domingos, horarios especiales, noche.</li>
+                                            <li># Cliente desconoce su fecha de agendamiento</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Facilidades del cliente</td>
+                                    <td>
+                                        <ul>
+                                            <li># Cliente no cuenta con equipos en nuevo domicilio</li>
+                                            <li># No brinda facilidades técnicas (ductos, permisos, etc.)</li>
+                                            <li># Factores climatológicos</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Falta de contacto</td>
+                                    <td>
+                                        <ul>
+                                            <li># Cliente no responde los 4 intentos de llamada</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ausente</td>
+                                    <td>
+                                        <ul>
+                                            <li># Cliente Ausente en Campo</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div id="repro-plantillas" class="container__grid">
 
                         <div class="container__grid__item">
                             <div id="repro-mesa-cliente">
-                                <h3>Reprogramación en Mesa - Cliente</h3>
-                                <div class="plantilla">
-                                    <p id="texto-plantilla">
-                                        <b>MESA DE PROGRAMACIONES HITSS<br>
-                                            REPROGRAMADO EN MESA / REAGENDADO POR CLIENTE</b><br>
+                                <h3>Plantilla Dinámica de Reprogramaciones</h3>
+                                <div class="plantilla" style="margin-top: 16px;">
+                                    <p id="texto-plantilla-dinamica">
+                                        MESA DE PROGRAMACIONES HITSS<br>
+                                        REPROGRAMADO EN <span id="val-reprogramado">MESA</span> / REAGENDADO POR <span
+                                            id="val-reagendado">CLARO</span><br>
                                         CLIENTE:&nbsp;<br>
                                         NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
-                                        MOTIVO DE REPROGRAMACIÓN: CLIENTE #&nbsp;<br>
+                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span
+                                            class="fecha-dinamica">23/07</span><br>
+                                        MOTIVO DE REPROGRAMACIÓN: <span id="val-reagendado2">CLARO</span> # <span
+                                            id="val-motivo"></span><br>
                                         CONTRATA:&nbsp;<br>
                                         ID DE LLAMADA:&nbsp;<br>
                                         OBSERVACIÓN:&nbsp;<br>
@@ -2872,64 +2843,86 @@
                                             <span class="material-symbols-outlined"
                                                 style="color: rgb(101, 101, 101);">content_copy</span>
                                         </span>
-                                        <span class="copiado hidden">Copiado!</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="container__grid__item">
-                            <div id="repro-campo-claro">
-                                <h3>Reprogramación en Campo - Claro</h3>
-                                <div class="plantilla">
-                                    <p id="texto-plantilla">
-                                        <b>MESA DE PROGRAMACIONES HITSS<br>
-                                            REPROGRAMADO EN CAMPO / REAGENDADO POR CLARO</b><br>
-                                        CLIENTE:&nbsp;<br>
-                                        NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
-                                        MOTIVO DE REPROGRAMACIÓN: CLARO #&nbsp;<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID DE LLAMADA:&nbsp;<br>
-                                        OBSERVACIÓN:&nbsp;<br>
-                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
-                                    </p>
-                                    <div class="copiar-contenedor">
-                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
-                                            <span class="material-symbols-outlined"
-                                                style="color: rgb(101, 101, 101);">content_copy</span>
-                                        </span>
-                                        <span class="copiado hidden">Copiado!</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="container__grid__item__dinamic">
 
-                        <div class="container__grid__item">
-                            <div id="repro-campo-cliente">
-                                <h3>Reprogramación en Campo - Cliente</h3>
-                                <div class="plantilla">
-                                    <p id="texto-plantilla">
-                                        <b>MESA DE PROGRAMACIONES HITSS<br>
-                                            REPROGRAMADO EN CAMPO / REAGENDADO POR CLIENTE</b><br>
-                                        CLIENTE:&nbsp;<br>
-                                        NÚMERO:&nbsp;<br>
-                                        NUEVA FECHA Y FRANJA DE VISITA:&nbsp;<span class="fecha-dinamica"></span><br>
-                                        MOTIVO DE REPROGRAMACIÓN: CLIENTE #&nbsp;<br>
-                                        CONTRATA:&nbsp;<br>
-                                        ID DE LLAMADA:&nbsp;<br>
-                                        OBSERVACIÓN:&nbsp;<br>
-                                        REALIZADO POR: <span class="adp"></span> - ADP MULTISKILL HITSS
-                                    </p>
-                                    <div class="copiar-contenedor">
-                                        <span class="copy-icon" onclick="copiarPlantilla(this)">
-                                            <span class="material-symbols-outlined"
-                                                style="color: rgb(101, 101, 101);">content_copy</span>
-                                        </span>
-                                        <span class="copiado hidden">Copiado!</span>
-                                    </div>
+                            <div class="two-rows">
+                                <div><label for="tipo-reprogramado">Reprogramado en:</label>
+                                    <select id="tipo-reprogramado">
+                                        <option value="MESA">MESA</option>
+                                        <option value="CAMPO">CAMPO</option>
+                                    </select>
+                                </div>
+                                <div><label for="tipo-reagendado">Reagendado por:</label>
+                                    <select id="tipo-reagendado" onchange="cargarEscenarios()">
+                                        <option value="CLARO">CLARO</option>
+                                        <option value="CLIENTE">CLIENTE</option>
+                                    </select>
                                 </div>
                             </div>
+
+                            <div class="two-rows">
+
+                                <div><label for="nombre-cliente">Nombre del Cliente:</label>
+                                    <input type="text" id="nombre-cliente" placeholder="Ej. Juan Pérez">
+                                </div>
+                                <div><label for="numero-cliente">Número del Cliente:</label>
+                                    <input type="text" id="numero-cliente" placeholder="Ej. 987654321">
+                                </div>
+
+                            </div>
+
+                            <div class="two-rows">
+
+                                <div>
+                                    <label for="escenario">Escenario:</label>
+                                    <select id="escenario" onchange="cargarMotivos()"></select>
+                                </div>
+                                <div>
+                                    <label for="motivo">Motivo del Reagendamiento:</label>
+                                    <select id="motivo" onchange="actualizarPlantilla()"></select>
+                                </div>
+
+                            </div>
+
+                            <div class="two-rows">
+                                <div style="display: flex; flex-direction: column   ;gap: 8px;">
+
+                                    <label for="id-llamada">ID de Llamada:</label>
+                                    <input type="text" id="id-llamada" placeholder="Ingresar ID de llamada">
+
+
+
+                                    <label for="fecha-visita">Fecha de Visita:</label>
+                                    <input type="date" id="fecha-visita">
+
+                                    <label for="franja-visita">Franja de Visita:</label>
+                                    <select id="franja-visita">
+                                        <option value="AM1">AM1</option>
+                                        <option value="AM2">AM2</option>
+                                        <option value="PM1">PM1</option>
+                                        <option value="PM2">PM2</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="observacion">Observación:</label>
+                                    <textarea id="observacion" placeholder="Ingresar observación" rows="6"
+                                        style="width: 100%; resize: vertical; font-family: 'Montserrat', Helvetica, Arial, sans-serif;" ></textarea>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
                         </div>
                     </div>
 
