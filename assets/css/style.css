@@ -708,7 +708,6 @@ tbody tr:last-child td {
     align-items: center;
     justify-content: space-between;
     padding: 8px 16px;
-    border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #ebebeb;
     backdrop-filter: blur(10px);
@@ -730,7 +729,6 @@ tbody tr:last-child td {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
     border-radius: 6px;
     padding: 4px;
     transition: background-color 0.2s ease;
@@ -774,17 +772,18 @@ tbody tr:last-child td {
 
 .codigos-aut {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 16px;
 }
 
 /* LISTA DE CÓDIGOS */
 #historial-codigos {
     background-color: #f9f9f9;
-    padding: 12px;
+    padding: 8px;
+    font-family: consolas, monospace;
     border-radius: 8px;
-    min-height: 150px;
-    max-height: 150px;
+    height: 100%;
+    max-height: 88px;
     overflow-y: auto;
     border: 1px solid #ccc;
 }
@@ -851,7 +850,6 @@ tbody tr:last-child td {
 #a-cod-autorizacion-cambio-equipo {
     display: flex;
     gap: 8px;
-    margin-top: 16px;
 }
 
 #a-cod-autorizacion-cambio-equipo .button {

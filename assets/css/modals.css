@@ -463,10 +463,35 @@ dialog.closing::backdrop {
 }
 
 #new-task-input {
-  border: none;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  font-weight: 500;
   padding: 0.75rem;
   flex-grow: 1;
+  border: none;
   outline: none;
+}
+
+#new-task-input:focus {
+  
+  animation: inputGradeAnim 1s ease;
+  border-bottom: solid 1px var(--color-primary);
+}
+
+@keyframes inputGradeAnim {
+  0% {
+    box-shadow: 0 0 0 0 rgba(15,98,254,0.5);
+    background-color: #e3f0ff;
+    border-bottom: solid 1px #0f63fe00;
+  }
+  60% {
+    box-shadow: 0 0 0 8px rgba(15,98,254,0.15);
+    background-color: #f2f8ff;
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(15,98,254,0);
+    background-color: #fff;
+    border-bottom: solid 1px var(--color-primary);
+  }
 }
 
 .task-list {
@@ -517,7 +542,7 @@ dialog.closing::backdrop {
   font-weight: bold;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  background-color: #ffffff; /* amarillo suave por defecto (pendiente) */
+  background-color: #ffffff; 
 }
 
 .task-description {
@@ -532,7 +557,7 @@ dialog.closing::backdrop {
 }
 
 .task-title:focus, .task-description:focus {
-  background-color: #fffbe6;
+  background-color: rgba(255, 255, 255, 0.5);
   outline: none;
 }
 
@@ -606,6 +631,17 @@ dialog.closing::backdrop {
   color: #fff;
 }
 
+.filter-btn.active#filter-pending {
+  background-color: var(--color-in-attention);
+  color: #fff;
+}
+
+.filter-btn.active#filter-completed {
+  background-color: var(--color-attended);
+  color: #fff;
+}
+
+
 .clear-all-btn {
   background-color: transparent;
   border: none;
@@ -623,12 +659,10 @@ dialog.closing::backdrop {
 
   @keyframes slideInRight {
     from {
-      opacity: 0;
-      transform: translateX(1px);
+      opacity: 0.7;
     }
     to {
       opacity: 1;
-      transform: translateX(0);
     }
 }
 
@@ -640,8 +674,10 @@ dialog.closing::backdrop {
 
   @keyframes slideInLeft {
     from {
-      opacity: 0;
-      transform: translateX(-1px);
+      opacity: 0.7;
+      transform: translateX(0px);
+      overflow-x: hidden;
+      scrollbar-color: none;
     }
     to {
       opacity: 1;
@@ -672,7 +708,6 @@ dialog.closing::backdrop {
 .task-title:focus,
 .task-description:focus {
   border: solid 1px var(--color-primary);
-  animation: fadeInSlide 0.3s ease;
 }
 
 .download-btn {
@@ -689,4 +724,24 @@ dialog.closing::backdrop {
 
 .download-btn:hover {
   background-color: #c9c9c9;
+}
+
+
+.close-notes-btn {
+  background: none; /* Elimina el fondo */
+  border: none; /* Elimina el borde */
+  cursor: pointer;
+  padding: 0.5rem; /* Ajusta el padding si es necesario para el tamaño del clic */
+  border-radius: 50%; /* Opcional: para que tenga forma circular al hacer hover */
+  transition: background-color 0.2s ease-in-out; /* Transición suave al hacer hover */
+}
+
+.close-notes-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* Un ligero fondo al hacer hover */
+
+}
+
+.close-notes-btn .material-symbols-outlined {
+  font-size: 1.5rem; /* Ajusta el tamaño del icono */
+  color: var(--color-text); /* Color del icono, puedes usar una variable o un color fijo */
 }
