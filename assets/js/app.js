@@ -237,7 +237,8 @@ async function addTarea() {
         titulo: texto,
         descripcion: '',
         completada: false,
-        fechaCreacion: new Date().toISOString()
+        // *** CAMBIO AQUÍ ***
+        fechaCreacion: new Date().toISOString() // Guarda la fecha y hora completas
     };
 
     // Agregamos la nueva tarea a la lista local

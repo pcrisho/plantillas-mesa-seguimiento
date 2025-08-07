@@ -1,7 +1,7 @@
 // indexeddb.js
 
 const DB_NAME = "TodoAppDB";
-const DB_VERSION = 2; // INCREMENTAMOS LA VERSIÓN DE LA BASE DE DATOS
+const DB_VERSION = 3; // INCREMENTAMOS LA VERSIÓN DE LA BASE DE DATOS
 const STORE_NAME = "tareas";
 
 let db = null;
@@ -57,14 +57,21 @@ export function eliminarTareaIndexedDB(id) {
 // NUEVA FUNCIÓN para obtener tareas por fecha
 export function obtenerTareasPorFecha(fechaISO) {
   return new Promise((resolve, reject) => {
+    if (!db) { reject("IndexedDB no está abierto."); return; }
     const tx = db.transaction(STORE_NAME, "readonly");
     const store = tx.objectStore(STORE_NAME);
     const index = store.index('fechaCreacionIndex');
 
-    const lowerBound = fechaISO;
-    const upperBound = fechaISO.split('T')[0] + 'T23:59:59.999Z';
+    // Construimos los límites del rango de manera precisa
+    // para que coincidan con el formato ISO guardado, incluyendo la hora.
+    const lowerBound = fechaISO + 'T00:00:00.000Z'; // Inicio del día seleccionado
+    const fechaSiguiente = new Date(fechaISO);
+    fechaSiguiente.setDate(fechaSiguiente.getDate() + 1);
+    const upperBound = fechaSiguiente.toISOString(); // Inicio del día siguiente
 
-    const range = IDBKeyRange.bound(lowerBound, upperBound);
+    // El rango se establece desde `lowerBound` (inclusive) hasta `upperBound` (exclusive)
+    const range = IDBKeyRange.bound(lowerBound, upperBound, false, true);
+
     const request = index.getAll(range);
 
     request.onsuccess = () => resolve(request.result);
