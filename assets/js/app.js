@@ -247,9 +247,7 @@ async function addTarea() {
     if (fechaSeleccionada !== fechaHoy) {
         fechaSeleccionada = fechaHoy;
         const dateInput = document.getElementById('date-input');
-        const fechaDisplay = document.getElementById('fecha-display');
         if (dateInput) dateInput.value = fechaHoy;
-        if (fechaDisplay) fechaDisplay.textContent = "Hoy";
         await actualizarVistaTareas(fechaSeleccionada);
     } else {
         renderTareas();
@@ -293,30 +291,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     const clearAllTasksBtn = document.getElementById('clear-all-tasks-btn');
     const downloadTasksBtn = document.getElementById('download-tasks-btn');
 
-    // --- NUEVOS ELEMENTOS PARA EL FILTRO POR FECHA ---
-    const dateFilterContainer = document.getElementById('date-filter-container');
+    // --- ELEMENTO PARA EL FILTRO POR FECHA ---
     const dateInput = document.getElementById('date-input');
-    const fechaDisplay = document.getElementById('fecha-display');
-
-    if (dateFilterContainer && dateInput) {
-        // Escucha el clic en el contenedor completo
-        dateFilterContainer.addEventListener('click', () => {
-            dateInput.click(); // Dispara un clic en el input de fecha invisible
-        });
-    }
 
     if (dateInput) {
+        // Configurar el valor inicial
         dateInput.value = fechaHoy;
-
-        // Este listener sigue siendo necesario para detectar el cambio de fecha
-        dateInput.addEventListener('change', (event) => {
-            const nuevaFecha = event.target.value;
+        
+        // Manejar el cambio de fecha
+        dateInput.addEventListener('change', (e) => {
+            const nuevaFecha = e.target.value;
             fechaSeleccionada = nuevaFecha;
-            const fechaTitulo = new Date(nuevaFecha + 'T00:00:00').toLocaleDateString();
-            if (fechaDisplay) fechaDisplay.textContent = nuevaFecha === fechaHoy ? "Hoy" : fechaTitulo;
+            
+            // Actualizar la vista de tareas
             actualizarVistaTareas(fechaSeleccionada);
         });
     }
+
+
 
 
     try {
@@ -328,7 +320,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (dateInput) dateInput.value = fechaHoy;
-    if (fechaDisplay) fechaDisplay.textContent = "Hoy";
 
     // === Lógica inicial de carga de sesión ===
     function cargarCredenciales() {
@@ -424,7 +415,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (todoDialog) {
                 fechaSeleccionada = fechaHoy;
                 if (dateInput) dateInput.value = fechaHoy;
-                if (fechaDisplay) fechaDisplay.textContent = "Hoy";
                 actualizarVistaTareas(fechaSeleccionada);
                 todoDialog.showModal();
             }
@@ -518,21 +508,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (dateFilterContainer && dateInput) {
-        // Escucha el clic en el contenedor completo
-        dateFilterContainer.addEventListener('click', () => {
-            dateInput.click();
-        });
 
-        // Este listener sigue siendo necesario para detectar el cambio de fecha
-        dateInput.addEventListener('change', (event) => {
-            const nuevaFecha = event.target.value;
-            fechaSeleccionada = nuevaFecha;
-            const fechaTitulo = new Date(nuevaFecha + 'T00:00:00').toLocaleDateString();
-            if (fechaDisplay) fechaDisplay.textContent = nuevaFecha === fechaHoy ? "Hoy" : fechaTitulo;
-            actualizarVistaTareas(fechaSeleccionada);
-        });
-    }
 
     // === Lógica de reagendamiento ===
     const datosReagendamiento = {
