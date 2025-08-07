@@ -1,4 +1,5 @@
 // app.js
+
 import {
     abrirIndexedDB,
     guardarTareaIndexedDB,
@@ -19,9 +20,10 @@ let codigosGenerados = [];
 let tareas = [];
 let filtroActual = 'all';
 
-// --- NUEVAS VARIABLES PARA EL FILTRO POR FECHA ---
-let fechaSeleccionada = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
-const fechaHoy = fechaSeleccionada; // Guarda la fecha actual para comparar
+// --- VARIABLES PARA EL FILTRO POR FECHA ---
+// Usamos el formato YYYY-MM-DD para compatibilidad
+const fechaHoy = new Date().toISOString().split('T')[0];
+let fechaSeleccionada = fechaHoy;
 
 // === FUNCIONES DE UTILIDAD ===
 function mostrarToast(mensaje = "Plantilla copiada") {
@@ -53,7 +55,6 @@ function mostrarToast(mensaje = "Plantilla copiada") {
     }, 2000);
 }
 
-// Función copiarEnlace fusionada de copy.js
 function copiarEnlace(event) {
     event.preventDefault();
     const url = event.currentTarget.getAttribute("data-url");
@@ -218,7 +219,6 @@ function renderTareas() {
     });
 }
 
-// MODIFICADA: Si estás filtrando por otra fecha, al añadir una nueva tarea, vuelve al día de hoy.
 async function addTarea() {
     const newTaskInput = document.getElementById('new-task-input');
     if (!newTaskInput) return;
@@ -242,24 +242,22 @@ async function addTarea() {
     tareas.push(nueva);
     await guardarTareaIndexedDB(nueva);
     newTaskInput.value = '';
-    
+
     // Si la fecha seleccionada no es hoy, vuelve a la fecha de hoy al agregar una nueva tarea
     if (fechaSeleccionada !== fechaHoy) {
-      fechaSeleccionada = fechaHoy;
-      const dateInput = document.getElementById('date-input');
-      const fechaDisplay = document.getElementById('fecha-display');
-      if (dateInput) dateInput.value = fechaHoy;
-      if (fechaDisplay) fechaDisplay.textContent = "Hoy";
-      await actualizarVistaTareas(fechaSeleccionada);
+        fechaSeleccionada = fechaHoy;
+        const dateInput = document.getElementById('date-input');
+        const fechaDisplay = document.getElementById('fecha-display');
+        if (dateInput) dateInput.value = fechaHoy;
+        if (fechaDisplay) fechaDisplay.textContent = "Hoy";
+        await actualizarVistaTareas(fechaSeleccionada);
     } else {
-      renderTareas();
+        renderTareas();
     }
 }
 
-// === FUNCIÓN CORREGIDA ===
 async function actualizarVistaTareas(fecha) {
     try {
-        // La función obtenerTareasPorFecha espera la fecha en formato 'YYYY-MM-DD'
         tareas = await obtenerTareasPorFecha(fecha);
         renderTareas();
     } catch (error) {
@@ -294,28 +292,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const clearAllTasksBtn = document.getElementById('clear-all-tasks-btn');
     const downloadTasksBtn = document.getElementById('download-tasks-btn');
-    
+
     // --- NUEVOS ELEMENTOS PARA EL FILTRO POR FECHA ---
-    const dateSelectorBtn = document.getElementById('date-selector-btn');
-    const dateInputContainer = document.getElementById('date-input-container');
+    const dateFilterContainer = document.getElementById('date-filter-container');
     const dateInput = document.getElementById('date-input');
     const fechaDisplay = document.getElementById('fecha-display');
 
+    if (dateFilterContainer && dateInput) {
+        // Escucha el clic en el contenedor completo
+        dateFilterContainer.addEventListener('click', () => {
+            dateInput.click(); // Dispara un clic en el input de fecha invisible
+        });
+    }
+
+    if (dateInput) {
+        dateInput.value = fechaHoy;
+
+        // Este listener sigue siendo necesario para detectar el cambio de fecha
+        dateInput.addEventListener('change', (event) => {
+            const nuevaFecha = event.target.value;
+            fechaSeleccionada = nuevaFecha;
+            const fechaTitulo = new Date(nuevaFecha + 'T00:00:00').toLocaleDateString();
+            if (fechaDisplay) fechaDisplay.textContent = nuevaFecha === fechaHoy ? "Hoy" : fechaTitulo;
+            actualizarVistaTareas(fechaSeleccionada);
+        });
+    }
+
+
     try {
         await abrirIndexedDB();
-        // Inicializamos la vista con las tareas de hoy por defecto
         await actualizarVistaTareas(fechaHoy);
     } catch (error) {
         console.error("Error al inicializar la To-Do List:", error);
         mostrarToast("❌ Error al cargar las tareas iniciales.");
     }
-    
-    // Inicializar el input de fecha con la fecha de hoy
+
     if (dateInput) dateInput.value = fechaHoy;
     if (fechaDisplay) fechaDisplay.textContent = "Hoy";
 
     // === Lógica inicial de carga de sesión ===
-    function cargarCredenciales() { // Movida aquí para que tenga acceso a los elementos del DOM
+    function cargarCredenciales() {
         const adpGuardado = localStorage.getItem("adpNombre");
         const usuarioGuardado = localStorage.getItem("adpUsuario");
         if (adpGuardado && usuarioGuardado) {
@@ -333,7 +349,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (modal) modal.showModal();
         }
     }
-    cargarCredenciales(); // Llamada a la función
+    cargarCredenciales();
 
     // === Event listeners para la sesión ===
     if (btnAbrirModal) {
@@ -406,7 +422,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (openTodoBtn) {
         openTodoBtn.addEventListener('click', () => {
             if (todoDialog) {
-                // Siempre que se abre el modal, cargamos las tareas de hoy
                 fechaSeleccionada = fechaHoy;
                 if (dateInput) dateInput.value = fechaHoy;
                 if (fechaDisplay) fechaDisplay.textContent = "Hoy";
@@ -503,12 +518,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // === NUEVOS EVENT LISTENERS PARA EL FILTRO POR FECHA ===
-    if (dateSelectorBtn && dateInputContainer && dateInput) {
-        dateSelectorBtn.addEventListener('click', () => {
+    if (dateFilterContainer && dateInput) {
+        // Escucha el clic en el contenedor completo
+        dateFilterContainer.addEventListener('click', () => {
             dateInput.click();
         });
 
+        // Este listener sigue siendo necesario para detectar el cambio de fecha
         dateInput.addEventListener('change', (event) => {
             const nuevaFecha = event.target.value;
             fechaSeleccionada = nuevaFecha;
@@ -517,7 +533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             actualizarVistaTareas(fechaSeleccionada);
         });
     }
-    
+
     // === Lógica de reagendamiento ===
     const datosReagendamiento = {
         CLARO: {
@@ -581,7 +597,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const tipo = tipoSelect.value;
         const escenario = escenarioSelect.value;
-        
+
         if (!datosReagendamiento[tipo] || !datosReagendamiento[tipo][escenario]) return;
 
         motivoSelect.innerHTML = "";
@@ -638,7 +654,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     document.getElementById("franja-visita")?.addEventListener("change", actualizarPlantilla);
     document.getElementById("nombre-cliente")?.addEventListener("input", actualizarPlantilla);
     document.getElementById("numero-cliente")?.addEventListener("input", actualizarPlantilla);
-    
+
     // Actualización de fecha y hora en el DOM
     const fecha = new Date();
     const dia = fecha.getDate();
@@ -653,8 +669,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
     const copiarBtns = document.querySelectorAll(".copiar-enlace-btn");
     copiarBtns.forEach(btn => btn.addEventListener("click", copiarEnlace));
-    
-    // Funciones globales (window.generarCodigo, etc.)
+
     window.generarCodigo = generarCodigo;
     window.eliminarUltimoCodigo = eliminarUltimoCodigo;
     window.descargarCodigos = function () {
@@ -671,8 +686,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         enlace.click();
         URL.revokeObjectURL(url);
     }
-    
-    // Atajo de teclado para abrir la To-Do List
+
     window.addEventListener('keydown', (event) => {
         const isCtrlCmd = event.ctrlKey || event.metaKey;
         const isB = event.key.toLowerCase() === 'b';
@@ -685,8 +699,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
             }
         }
     });
-    
-    // Manejo de pegado en campos editables
+
     document.addEventListener('paste', function (e) {
         if (!e.target.classList.contains('task-title')) return;
         e.preventDefault();

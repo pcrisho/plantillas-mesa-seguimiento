@@ -426,7 +426,7 @@ dialog.closing::backdrop {
   position: sticky;
   top: 0;
   z-index: 10000;
-  
+
 
 }
 
@@ -437,21 +437,23 @@ dialog.closing::backdrop {
 }
 
 .todo-content {
-    /* Este es el contenedor que debe tener scroll */
-    flex-grow: 1; /* Ocupa todo el espacio restante */
-    overflow-y: auto; /* Permite el scroll vertical */
-    padding: 16px;
+  /* Este es el contenedor que debe tener scroll */
+  flex-grow: 1;
+  /* Ocupa todo el espacio restante */
+  overflow-y: auto;
+  /* Permite el scroll vertical */
+  padding: 16px;
 }
 
 
 .todo-content::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 .todo-content::-webkit-scrollbar-thumb {
-    background-color: rgb(215, 215, 215);
-    /* un blanco tenue */
-    border-radius: 4px;
+  background-color: rgb(215, 215, 215);
+  /* un blanco tenue */
+  border-radius: 4px;
 }
 
 .todo-input-container {
@@ -472,23 +474,25 @@ dialog.closing::backdrop {
 }
 
 #new-task-input:focus {
-  
+
   animation: inputGradeAnim 1s ease;
   border-bottom: solid 1px var(--color-primary);
 }
 
 @keyframes inputGradeAnim {
   0% {
-    box-shadow: 0 0 0 0 rgba(15,98,254,0.5);
+    box-shadow: 0 0 0 0 rgba(15, 98, 254, 0.5);
     background-color: #e3f0ff;
     border-bottom: solid 1px #0f63fe00;
   }
+
   60% {
-    box-shadow: 0 0 0 8px rgba(15,98,254,0.15);
+    box-shadow: 0 0 0 8px rgba(15, 98, 254, 0.15);
     background-color: #f2f8ff;
   }
+
   100% {
-    box-shadow: 0 0 0 0 rgba(15,98,254,0);
+    box-shadow: 0 0 0 0 rgba(15, 98, 254, 0);
     background-color: #fff;
     border-bottom: solid 1px var(--color-primary);
   }
@@ -530,6 +534,7 @@ dialog.closing::backdrop {
   font-size: 1rem;
   transition: text-decoration 0.3s;
 }
+
 .task-text-container {
   width: 100%;
   display: flex;
@@ -542,7 +547,7 @@ dialog.closing::backdrop {
   font-weight: bold;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  background-color: #ffffff; 
+  background-color: #ffffff;
 }
 
 .task-description {
@@ -556,7 +561,8 @@ dialog.closing::backdrop {
   min-height: 100px;
 }
 
-.task-title:focus, .task-description:focus {
+.task-title:focus,
+.task-description:focus {
   background-color: rgba(255, 255, 255, 0.5);
   outline: none;
 }
@@ -592,18 +598,18 @@ dialog.closing::backdrop {
 }
 
 .todo-footer {
-    /* IMPORTANTE: position: sticky funciona correctamente aquí */
-    /* con la configuración flexbox en el contenedor padre */
-    position: sticky;
-    bottom: 0;
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #eee;
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(20px);
-    border-radius: 0 0 12px 12px;
+  /* IMPORTANTE: position: sticky funciona correctamente aquí */
+  /* con la configuración flexbox en el contenedor padre */
+  position: sticky;
+  bottom: 0;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  border-radius: 0 0 12px 12px;
 }
 
 .task-filters {
@@ -652,37 +658,41 @@ dialog.closing::backdrop {
 }
 
 .task-item.in-attention {
-  border-left: 5px solid #ffcc00; /* Amarillo */
+  border-left: 5px solid #ffcc00;
+  /* Amarillo */
   background-color: #fff8e1;
   animation: slideInRight 0.5s ease forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0.7;
   }
 
-  @keyframes slideInRight {
-    from {
-      opacity: 0.7;
-    }
-    to {
-      opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
 
 .task-item.attended {
-  border-left: 5px solid #4caf50; /* Verde */
+  border-left: 5px solid #4caf50;
+  /* Verde */
   background-color: #e8f5e9;
   animation: slideInLeft 0.5s ease forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0.7;
+    transform: translateX(0px);
+    overflow-x: hidden;
+    scrollbar-color: none;
   }
 
-  @keyframes slideInLeft {
-    from {
-      opacity: 0.7;
-      transform: translateX(0px);
-      overflow-x: hidden;
-      scrollbar-color: none;
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .task-title {
@@ -728,22 +738,30 @@ dialog.closing::backdrop {
 
 
 .close-notes-btn {
-  background: none; /* Elimina el fondo */
-  border: none; /* Elimina el borde */
+  background: none;
+  /* Elimina el fondo */
+  border: none;
+  /* Elimina el borde */
   cursor: pointer;
-  padding: 0.5rem; /* Ajusta el padding si es necesario para el tamaño del clic */
-  border-radius: 50%; /* Opcional: para que tenga forma circular al hacer hover */
-  transition: background-color 0.2s ease-in-out; /* Transición suave al hacer hover */
+  padding: 0.5rem;
+  /* Ajusta el padding si es necesario para el tamaño del clic */
+  border-radius: 50%;
+  /* Opcional: para que tenga forma circular al hacer hover */
+  transition: background-color 0.2s ease-in-out;
+  /* Transición suave al hacer hover */
 }
 
 .close-notes-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05); /* Un ligero fondo al hacer hover */
+  background-color: rgba(0, 0, 0, 0.05);
+  /* Un ligero fondo al hacer hover */
 
 }
 
 .close-notes-btn .material-symbols-outlined {
-  font-size: 1.5rem; /* Ajusta el tamaño del icono */
-  color: var(--color-text); /* Color del icono, puedes usar una variable o un color fijo */
+  font-size: 1.5rem;
+  /* Ajusta el tamaño del icono */
+  color: var(--color-text);
+  /* Color del icono, puedes usar una variable o un color fijo */
 }
 
 /*
@@ -751,48 +769,70 @@ dialog.closing::backdrop {
  */
 
 .date-filter-container {
-    position: relative;
+  position: relative;
+  /* Permite posicionar el input de fecha */
+  display: inline-block;
 }
 
 .date-selector-btn {
-    background-color: #9933ff;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
+  background-color: #9933ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+/* --- Estilo del "botón" selector de fecha --- */
+.date-selector-btn {
+  background-color: #9933ff;
+  color: #fff;
+  /* Texto blanco */
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  /* Bordes redondeados */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'montserrat', Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  user-select: none;
+  /* Evita la selección de texto */
 }
 
 .date-selector-btn:hover {
-    background-color: #7b26cc;
+  background-color: #7b26cc;
 }
 
 .date-input-container {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    z-index: 10;
-    margin-top: 5px;
-    visibility: hidden; /* Oculto por defecto */
-    opacity: 0;
-    transition: all 0.2s ease;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  margin-top: 5px;
+  visibility: hidden;
+  /* Oculto por defecto */
+  opacity: 0;
+  transition: all 0.2s ease;
 }
 
 .date-input-container.active {
-    visibility: visible;
-    opacity: 1;
+  visibility: visible;
+  opacity: 1;
 }
 
 #date-input {
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
+  font-family: 'montserrat', Helvetica, Arial, sans-serif;
+  padding: 8px 16px;
+  border-radius: 32px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
 /* Este es solo un ejemplo. Tendrás que adaptarlo a tu archivo CSS */
@@ -802,6 +842,54 @@ dialog.closing::backdrop {
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0; /* Oculta el input pero mantiene su funcionalidad */
+  opacity: 1;
+  /* Oculta el input pero mantiene su funcionalidad */
   cursor: pointer;
+}
+
+.date-selector-btn .material-symbols-outlined {
+  font-size: 16px;
+  /* Ajusta el tamaño del icono */
+
+}
+
+/* --- Contenedor principal del filtro de fecha --- */
+#date-filter-container {
+  position: relative;
+  /* Para poder posicionar el input */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: rgb(255, 50, 50);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  user-select: none;
+  z-index: 10;
+  /* Asegura que esté por encima de otros elementos */
+}
+
+#date-filter-container:hover {
+  background-color: rgba(50, 111, 0, 0.889);
+}
+
+#date-filter-container .arrow {
+  font-size: 1.5rem;
+}
+
+#date-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  /* Lo hacemos invisible */
+  cursor: pointer;
+  /* Mantenemos el cursor de puntero */
+  z-index: 11;
+  /* Asegura que el input invisible reciba el clic */
 }

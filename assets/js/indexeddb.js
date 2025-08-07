@@ -1,14 +1,13 @@
 // indexeddb.js
 
 const DB_NAME = "TodoAppDB";
-const DB_VERSION = 5; // INCREMENTAMOS LA VERSIÓN DE LA BASE DE DATOS
+const DB_VERSION = 7; // ¡Importante! Incrementamos la versión para forzar la actualización
 const STORE_NAME = "tareas";
 
 let db = null;
 
 export function abrirIndexedDB() {
   return new Promise((resolve, reject) => {
-    // Es CRUCIAL usar una versión más alta para que onupgradeneeded se ejecute
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onerror = (event) => {
@@ -23,11 +22,16 @@ export function abrirIndexedDB() {
 
     request.onupgradeneeded = (event) => {
       const dbUpgrade = event.target.result;
+      
+      // La forma correcta de crear el store en onupgradeneeded
+      let store;
       if (!dbUpgrade.objectStoreNames.contains(STORE_NAME)) {
         console.log("Creando object store 'tareas'...");
-        dbUpgrade.createObjectStore(STORE_NAME, { keyPath: "id" });
+        store = dbUpgrade.createObjectStore(STORE_NAME, { keyPath: "id" });
+      } else {
+        store = event.target.transaction.objectStore(STORE_NAME);
       }
-      const store = event.target.transaction.objectStore(STORE_NAME);
+      
       if (!store.indexNames.contains('fechaCreacionIndex')) {
         console.log("Creando índice 'fechaCreacionIndex'...");
         store.createIndex('fechaCreacionIndex', 'fechaCreacion', { unique: false });
@@ -60,7 +64,6 @@ export function eliminarTareaIndexedDB(id) {
   });
 }
 
-// === FUNCIÓN CORREGIDA ===
 export function obtenerTareasPorFecha(fecha) {
   return new Promise((resolve, reject) => {
     if (!db) { reject("IndexedDB no está abierto."); return; }
@@ -68,16 +71,16 @@ export function obtenerTareasPorFecha(fecha) {
     const store = tx.objectStore(STORE_NAME);
     const index = store.index('fechaCreacionIndex');
 
-    // Construimos los límites del rango de manera precisa como strings
-    const lowerBound = fecha + 'T00:00:00.000Z'; // Inicio del día
-    const upperBound = fecha + 'T23:59:59.999Z'; // Fin del día
-    
-    // Usamos el IDBKeyRange.bound() para crear un rango inclusivo
+    const lowerBound = fecha + 'T00:00:00.000Z';
+    const upperBound = fecha + 'T23:59:59.999Z';
     const range = IDBKeyRange.bound(lowerBound, upperBound);
     const request = index.getAll(range);
 
     request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject("Error leyendo tareas por fecha");
+    request.onerror = (e) => {
+      console.error("Error al obtener tareas por fecha:", e.target.error);
+      reject("Error leyendo tareas por fecha");
+    };
   });
 }
 
