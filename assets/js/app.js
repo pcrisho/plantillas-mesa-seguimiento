@@ -1,9 +1,10 @@
+// app.js
 import {
     abrirIndexedDB,
     guardarTareaIndexedDB,
     eliminarTareaIndexedDB,
     obtenerTodasTareasIndexedDB,
-    obtenerTareasPorFecha, // Asegúrate de que esta función esté exportada en indexeddb.js
+    obtenerTareasPorFecha,
     eliminarTodasLasTareasIndexedDB
 } from './indexeddb.js';
 
@@ -132,7 +133,7 @@ function cargarDatosGuardados() {
 }
 function generarCodigo() {
     if (!usuarioAdp || usuarioAdp.length !== 7) {
-        mostrarToast("⚠️ Primero guarda tu usuario correctamente."); // Usar toast
+        mostrarToast("⚠️ Primero guarda tu usuario correctamente.");
         return;
     }
     const fecha = new Date();
@@ -153,7 +154,7 @@ function generarCodigo() {
 }
 function eliminarUltimoCodigo() {
     if (codigosGenerados.length === 0) {
-        mostrarToast("⚠️ No hay códigos para eliminar."); // Usar toast
+        mostrarToast("⚠️ No hay códigos para eliminar.");
         return;
     }
     codigosGenerados.pop();
@@ -178,26 +179,24 @@ function saveTareas() {
     localStorage.setItem(`filtro_tareas_${usuarioAdp || 'anonimo'}`, filtroActual);
 }
 
-// MODIFICADA: La función ahora usa la variable global 'tareas' que es cargada por actualizarVistaTareas()
 function renderTareas() {
     const taskList = document.getElementById('task-list');
     if (!taskList) return;
 
     taskList.innerHTML = '';
 
-    // FIX: Cambiado 'filtradas' a 'tareasFiltradas' para corregir ReferenceError
     const tareasFiltradas = tareas.filter(task => {
         if (filtroActual === 'all') return true;
         if (filtroActual === 'pending') return !task.completada;
         if (filtroActual === 'completed') return task.completada;
     });
 
-    if (tareasFiltradas.length === 0) { // FIX: Usar tareasFiltradas
+    if (tareasFiltradas.length === 0) {
         taskList.innerHTML = `<p class="empty-state-message">No hay tareas para mostrar en esta fecha.</p>`;
         return;
     }
 
-    tareasFiltradas.forEach(task => { // FIX: Usar tareasFiltradas
+    tareasFiltradas.forEach(task => {
         const li = document.createElement('li');
         li.className = 'task-item';
         li.classList.add(task.completada ? 'attended' : 'in-attention');
@@ -219,7 +218,7 @@ function renderTareas() {
     });
 }
 
-// MODIFICADA: La función ahora refresca la vista si se crea una tarea en un día pasado
+// MODIFICADA: Si estás filtrando por otra fecha, al añadir una nueva tarea, vuelve al día de hoy.
 async function addTarea() {
     const newTaskInput = document.getElementById('new-task-input');
     if (!newTaskInput) return;
@@ -237,36 +236,31 @@ async function addTarea() {
         titulo: texto,
         descripcion: '',
         completada: false,
-        // *** CAMBIO AQUÍ ***
-        fechaCreacion: new Date().toISOString() // Guarda la fecha y hora completas
+        fechaCreacion: new Date().toISOString()
     };
 
-    // Agregamos la nueva tarea a la lista local
     tareas.push(nueva);
-    // Guardamos en IndexedDB
     await guardarTareaIndexedDB(nueva);
     newTaskInput.value = '';
     
-    // Si la fecha seleccionada no es hoy, cambiamos a hoy y recargamos
+    // Si la fecha seleccionada no es hoy, vuelve a la fecha de hoy al agregar una nueva tarea
     if (fechaSeleccionada !== fechaHoy) {
       fechaSeleccionada = fechaHoy;
-      // Actualizamos el display y el input de fecha
       const dateInput = document.getElementById('date-input');
       const fechaDisplay = document.getElementById('fecha-display');
       if (dateInput) dateInput.value = fechaHoy;
       if (fechaDisplay) fechaDisplay.textContent = "Hoy";
       await actualizarVistaTareas(fechaSeleccionada);
     } else {
-      renderTareas(); // Si ya estamos en hoy, solo renderizamos
+      renderTareas();
     }
 }
 
-// === NUEVA FUNCIÓN PARA ACTUALIZAR LA VISTA DE TAREAS ===
+// === FUNCIÓN CORREGIDA ===
 async function actualizarVistaTareas(fecha) {
     try {
-        // Aseguramos que la fecha ISO sea del inicio del día para el rango de búsqueda
-        const fechaISO = fecha + 'T00:00:00.000Z'; 
-        tareas = await obtenerTareasPorFecha(fechaISO);
+        // La función obtenerTareasPorFecha espera la fecha en formato 'YYYY-MM-DD'
+        tareas = await obtenerTareasPorFecha(fecha);
         renderTareas();
     } catch (error) {
         console.error("Error al cargar las tareas para la fecha seleccionada:", error);
@@ -512,7 +506,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // === NUEVOS EVENT LISTENERS PARA EL FILTRO POR FECHA ===
     if (dateSelectorBtn && dateInputContainer && dateInput) {
         dateSelectorBtn.addEventListener('click', () => {
-            dateInput.click(); // Abre el selector de fecha del navegador
+            dateInput.click();
         });
 
         dateInput.addEventListener('change', (event) => {
