@@ -29,6 +29,19 @@ function mostrarToast(mensaje = "Plantilla copiada") {
     }, 2000);
 }
 
+function copiarEnlace(event) {
+    event.preventDefault(); // Evita que el enlace se abra
+
+    const url = event.currentTarget.getAttribute("data-url");
+
+    navigator.clipboard.writeText(url).then(() => {
+        mostrarToast("🔗 Enlace copiado al portapapeles");
+    }).catch(err => {
+        console.error("Error al copiar el enlace:", err);
+        mostrarToast("❌ No se pudo copiar el enlace");
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
