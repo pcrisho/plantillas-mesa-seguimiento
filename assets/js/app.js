@@ -660,6 +660,37 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         mostrarToast("Plantillas descargadas");
     });
 
+
+    //######################################################
+    // Descarga de tareas al cerrar la ventana
+    //######################################################
+
+
+    window.addEventListener("beforeunload", () => {
+        if (tareas.length === 0) {
+            alert("No hay tareas para descargar.");
+            return;
+        }
+
+        let contenido = "LISTA DE PLANTILLAS\n====================\n\n";
+
+        tareas.forEach((t, i) => {
+            const estado = t.completada ? "✅ Completada" : "⏳ Pendiente";
+            contenido += `Plantilla ${i + 1}\nTítulo: ${t.titulo}\n${t.descripcion || "(Sin descripción)"}\nEstado: ${estado}\n\n`;
+        });
+
+        const blob = new Blob([contenido], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tareas-${new Date().toLocaleDateString('es-PE')}.txt`;
+        a.click();
+
+        URL.revokeObjectURL(url);
+    });
+
+
 });
 
 function verificarFechaUsuario() {
