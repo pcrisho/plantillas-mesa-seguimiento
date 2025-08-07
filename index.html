@@ -4417,11 +4417,7 @@
         </aside>
     </main>
 
-    <script src="./assets/js/app.js"></script>
-    <script src="./assets/js/datetime.js"></script>
-    <script src="./assets/js/nav.js"></script>
-    <script src="./assets/js/copy.js"></script>
-    <script src="./assets/js/mac-converter.js"></script>
+
 
     <dialog id="confirmar-cierre-sesion">
         <div class="confirm-dialog-content">
@@ -4444,12 +4440,25 @@
     <!-- El dialog ahora es el panel de la lista de tareas -->
     <dialog id="todo-dialog" class="todo-dialog" closedby="any">
         <div class="todo-header">
-            <h3>Lista de Tareas</h3>
-            <button id="download-tasks-btn" class="download-btn">Descargar plantillas</button>
-            <button id="close-todo-btn" class="close-notes-btn" title="Cerrar">
-                <span class="material-symbols-outlined">arrow_forward_ios</span>
-            </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <h3>Lista de Tareas</h3>
+                <button id="close-todo-btn" class="close-notes-btn" title="Cerrar">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+
+            <div style="display: flex; justify-content:end; align-items: center; gap: 10px; width: 100%;">
+                <button id="download-tasks-btn" class="download-btn">Descargar plantillas</button>
+                <div class="date-filter-container">
+                    <label id="date-selector-btn" class="date-selector-btn">
+                        <span id="fecha-display">Hoy</span>
+                        <span class="material-symbols-outlined arrow">arrow_drop_down</span>
+                        <input type="date" id="date-input">
+                    </label>
+                </div>
+            </div>
         </div>
+
         <div class="todo-content">
             <div class="todo-input-container">
                 <input type="text" id="new-task-input" placeholder="Añadir nueva tarea...">
@@ -4470,6 +4479,16 @@
 
 
     <dialog id="toast" class="dialog-toast">Plantilla copiada</dialog>
+
+    <!-- ESTE ES EL ÚNICO SCRIPT QUE DEBE TENER type="module" -->
+    <script type="module" src="./assets/js/app.js"></script>
+
+    <!-- ELIMINA TODAS ESTAS LÍNEAS SI LAS TIENES: -->
+    <!-- <script src="./assets/js/indexeddb.js"></script> -->
+    <!-- <script src="./assets/js/datetime.js"></script> -->
+    <!-- <script src="./assets/js/nav.js"></script> -->
+    <!-- <script src="./assets/js/copy.js"></script> -->
+    <!-- <script src="./assets/js/mac-converter.js"></script> -->
 
 </body>
 
