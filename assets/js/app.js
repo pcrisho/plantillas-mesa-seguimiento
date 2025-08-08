@@ -22,8 +22,13 @@ let filtroActual = 'all';
 
 // --- VARIABLES PARA EL FILTRO POR FECHA ---
 // Usamos el formato YYYY-MM-DD para compatibilidad
-const fechaHoy = new Date().toISOString().split('T')[0];
-let fechaSeleccionada = fechaHoy;
+const hoy = new Date();
+const anio = hoy.getFullYear();
+const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+const dia = String(hoy.getDate()).padStart(2, '0');
+const fechaHoy = `${anio}-${mes}-${dia}`;
+
+let fechaSeleccionada = fechaHoy; // Guarda la fecha actual para comparar
 
 // === FUNCIONES DE UTILIDAD ===
 function mostrarToast(mensaje = "Plantilla copiada") {
@@ -236,7 +241,7 @@ async function addTarea() {
         titulo: texto,
         descripcion: '',
         completada: false,
-        fechaCreacion: new Date().toISOString()
+        fechaCreacion: new Date(fechaHoy + 'T00:00:00').toISOString()
     };
 
     tareas.push(nueva);
