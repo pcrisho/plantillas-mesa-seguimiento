@@ -71,9 +71,18 @@ export function obtenerTareasPorFecha(fecha) {
     const store = tx.objectStore(STORE_NAME);
     const index = store.index('fechaCreacionIndex');
 
-    const lowerBound = fecha + 'T00:00:00.000Z';
-    const upperBound = fecha + 'T23:59:59.999Z';
-    const range = IDBKeyRange.bound(lowerBound, upperBound);
+    // Creamos los límites del rango usando objetos Date para manejar la zona horaria
+    const fechaInicio = new Date(fecha + 'T00:00:00'); // Inicio del día local
+    const fechaFin = new Date(fechaInicio); // Creamos un nuevo objeto para el final del día
+    fechaFin.setDate(fechaFin.getDate() + 1); // Lo movemos al inicio del día siguiente
+
+    // Convertimos las fechas a formato ISO de UTC para la búsqueda
+    const lowerBound = fechaInicio.toISOString();
+    const upperBound = fechaFin.toISOString();
+
+    // Usamos el IDBKeyRange para buscar tareas en ese rango de 24 horas
+    const range = IDBKeyRange.bound(lowerBound, upperBound, false, true);
+
     const request = index.getAll(range);
 
     request.onsuccess = () => resolve(request.result);

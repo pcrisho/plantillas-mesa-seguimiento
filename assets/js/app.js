@@ -229,26 +229,21 @@ async function addTarea() {
     if (!newTaskInput) return;
     const texto = newTaskInput.value.trim();
     if (!texto) return;
-
     const pendientes = tareas.filter(t => !t.completada);
     if (pendientes.length >= 6) {
         mostrarToast("Regulariza tus plantillas antes de agregar más");
         return;
     }
-
     const nueva = {
         id: Date.now(),
         titulo: texto,
         descripcion: '',
         completada: false,
-        fechaCreacion: new Date(fechaHoy + 'T00:00:00').toISOString()
+        fechaCreacion: new Date().toISOString() // Debe guardar la hora exacta
     };
-
     tareas.push(nueva);
     await guardarTareaIndexedDB(nueva);
     newTaskInput.value = '';
-
-    // Si la fecha seleccionada no es hoy, vuelve a la fecha de hoy al agregar una nueva tarea
     if (fechaSeleccionada !== fechaHoy) {
         fechaSeleccionada = fechaHoy;
         const dateInput = document.getElementById('date-input');
