@@ -643,12 +643,11 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     document.querySelectorAll(".mes").forEach(el => el.textContent = mes);
     document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
     document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
-    const copiarBtns = document.querySelectorAll(".copiar-enlace-btn");
-    copiarBtns.forEach(btn => btn.addEventListener("click", copiarEnlace));
 
     window.generarCodigo = generarCodigo;
     window.eliminarUltimoCodigo = eliminarUltimoCodigo;
-    window.descargarCodigos = function () {
+    window.copiarEnlace = copiarEnlace; // Agregar esta línea
+    window.descardarCodigos = function () {
         if (codigosGenerados.length === 0) {
             mostrarToast("No hay códigos generados aún.");
             return;
