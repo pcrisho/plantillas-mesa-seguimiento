@@ -212,7 +212,7 @@ function renderTareas() {
             <input type="checkbox" ${task.completada ? 'checked' : ''}>
             <div class="task-text-container" style="width: 100%;">
                 <div class="task-title" contenteditable="true">${task.titulo}</div>
-                <div class="task-description" contenteditable="true">${task.descripcion}</div>
+                <div class="task-description" contenteditable="true"></div>
             </div>
             <button class="delete-task-btn" title="Eliminar">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323">
@@ -220,8 +220,293 @@ function renderTareas() {
                 </svg>
             </button>
         `;
+        
+        // Configurar la descripción preservando saltos de línea
+        const descripcionElement = li.querySelector('.task-description');
+        
+        if (descripcionElement && task.descripcion) {
+            // Usar directamente la descripción sin necesidad de limpiar
+            descripcionElement.textContent = task.descripcion;
+        }
+        
         taskList.appendChild(li);
     });
+    
+    // Configurar event listeners usando delegation (solo una vez)
+    setupTaskEditingListeners();
+}
+
+// Configurar event listeners para edición de tareas usando delegation
+function setupTaskEditingListeners() {
+    // Solo configurar una vez, no en cada render
+    if (setupTaskEditingListeners.configured) return;
+    setupTaskEditingListeners.configured = true;
+    
+    // Event listener para pegado en descripciones
+    document.addEventListener('paste', function(event) {
+        if (event.target.classList.contains('task-description')) {
+            manejarPegadoDescripcion(event);
+        } else if (event.target.classList.contains('task-title')) {
+            manejarPegadoTitulo(event);
+        }
+    });
+    
+    // Event listener para guardado al perder foco
+    document.addEventListener('blur', function(event) {
+        if (event.target.classList.contains('task-description')) {
+            const taskId = event.target.closest('.task-item').dataset.id;
+            if (taskId) {
+                actualizarTareaDescripcion(taskId, event.target.textContent);
+            }
+        } else if (event.target.classList.contains('task-title')) {
+            const taskId = event.target.closest('.task-item').dataset.id;
+            const tarea = tareas.find(t => t.id == taskId);
+            if (tarea) {
+                tarea.titulo = event.target.textContent;
+                guardarTareaIndexedDB(tarea);
+            }
+        }
+    }, true);
+}
+
+// Función para manejar pegado en títulos
+function manejarPegadoTitulo(event) {
+    event.preventDefault();
+    const pasteData = (event.clipboardData || window.clipboardData).getData('text');
+    if (pasteData) {
+        // Limpiar saltos de línea del texto pegado para el título
+        const textoLimpio = pasteData.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        // Insertar texto plano sin formato
+        if (document.execCommand) {
+            document.execCommand('insertText', false, textoLimpio);
+        } else {
+            // Fallback
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(document.createTextNode(textoLimpio));
+                range.collapse(false);
+            }
+        }
+    }
+}
+
+// Función para inicializar el sistema de tareas en todas las plantillas
+function inicializarSistemaTareas() {
+    const copiadores = document.querySelectorAll('.copiar-contenedor');
+    
+    copiadores.forEach(contenedor => {
+        // Verificar si ya tiene el sistema de add-task
+        const existeAddTask = contenedor.querySelector('.add-task');
+        
+        if (!existeAddTask) {
+            // Crear el sistema de add-task
+            const addTaskDiv = document.createElement('div');
+            addTaskDiv.className = 'add-task';
+            addTaskDiv.innerHTML = `
+                <input type="text" class="input-task" placeholder="Agregar tarea">
+                <span class="material-symbols-outlined add-task-btn" style="color: rgb(101, 101, 101); cursor: pointer;">add</span>
+            `;
+            
+            // Insertar antes del copy-icon
+            const copyIcon = contenedor.querySelector('.copy-icon');
+            if (copyIcon) {
+                contenedor.insertBefore(addTaskDiv, copyIcon);
+            } else {
+                contenedor.appendChild(addTaskDiv);
+            }
+        }
+    });
+    
+    // Event delegation para manejar todos los inputs y botones de tareas
+    setupTaskEventListeners();
+}
+
+// Configurar event listeners usando delegation
+function setupTaskEventListeners() {
+    // Event listener para inputs de tareas (Enter key)
+    document.addEventListener('keypress', function(event) {
+        if (event.target.classList.contains('input-task') && event.key === 'Enter') {
+            agregarTarea(event.target);
+        }
+    });
+    
+    // Event listener para botones de agregar tarea
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('add-task-btn')) {
+            const input = event.target.parentElement.querySelector('.input-task');
+            if (input) {
+                agregarTarea(input);
+            }
+        }
+    });
+}
+
+// Función para agregar tarea desde plantilla
+async function agregarTarea(inputElement) {
+    if (!inputElement) return;
+    
+    const texto = inputElement.value.trim();
+    if (!texto) {
+        mostrarToast("Por favor ingresa un título para la tarea");
+        return;
+    }
+    
+    // Verificar límite de tareas pendientes
+    const pendientes = tareas.filter(t => !t.completada);
+    if (pendientes.length >= 6) {
+        mostrarToast("Regulariza tus plantillas antes de agregar más");
+        return;
+    }
+    
+    // Buscar la plantilla asociada al input
+    const plantillaContainer = inputElement.closest('.plantilla');
+    if (!plantillaContainer) {
+        mostrarToast("No se pudo encontrar la plantilla asociada");
+        return;
+    }
+    
+    // Buscar el texto de la plantilla de manera más flexible
+    let plantillaTexto = plantillaContainer.querySelector('#texto-plantilla');
+    if (!plantillaTexto) {
+        // Buscar cualquier párrafo que contenga contenido de plantilla
+        const paragrafos = plantillaContainer.querySelectorAll('p');
+        plantillaTexto = Array.from(paragrafos).find(p => 
+            p.innerHTML.length > 50 && // Debe tener contenido sustancial
+            !p.closest('.copiar-contenedor') // No debe estar en el contenedor de copia
+        );
+    }
+    
+    if (!plantillaTexto) {
+        mostrarToast("No se pudo encontrar el texto de la plantilla");
+        return;
+    }
+    
+    // Obtener el texto de la plantilla usando la misma lógica que copiarPlantilla()
+    let descripcionPlantilla = plantillaTexto.innerText || plantillaTexto.textContent;
+    
+    // Reemplazar placeholders dinámicos DESPUÉS de obtener el texto limpio
+    if (nombreAsesor) {
+        descripcionPlantilla = descripcionPlantilla.replace(/ADP MULTISKILL HITSS/g, `${nombreAsesor} - ADP MULTISKILL HITSS`);
+    }
+    
+    // Reemplazar fechas dinámicas en el texto limpio
+    const fecha = new Date();
+    const dia = fecha.getDate();
+    const mes = fecha.toLocaleString("es-PE", { month: "long" });
+    const anio = fecha.getFullYear();
+    const horas = fecha.getHours().toString().padStart(2, "0");
+    const minutos = fecha.getMinutes().toString().padStart(2, "0");
+    const hora = `${horas}:${minutos}`;
+    
+    // Generar saludo dinámico
+    const saludoDinamico = obtenerSaludoDinamico();
+    
+    // Reemplazar todos los placeholders dinámicos de manera más eficiente
+    const replacements = [
+        { pattern: /\[dia\]/g, value: dia },
+        { pattern: /\[mes\]/g, value: mes },
+        { pattern: /\[anio\]/g, value: anio },
+        { pattern: /\[hora\]/g, value: hora },
+        { pattern: /\[saludo-dinamico\]/g, value: saludoDinamico }
+    ];
+    
+    // Aplicar todos los reemplazos
+    replacements.forEach(({ pattern, value }) => {
+        descripcionPlantilla = descripcionPlantilla.replace(pattern, value);
+    });
+    
+    // Crear nueva tarea
+    const nueva = {
+        id: Date.now(),
+        titulo: texto,
+        descripcion: descripcionPlantilla,
+        completada: false,
+        fechaCreacion: new Date().toISOString()
+    };
+    
+    try {
+        tareas.push(nueva);
+        await guardarTareaIndexedDB(nueva);
+        
+        // Limpiar el input
+        inputElement.value = '';
+        
+        mostrarToast("✅ Tarea creada exitosamente");
+        
+        // Abrir el modal de lista de tareas (usar el selector correcto)
+        const todoDialog = document.getElementById('todo-dialog');
+        if (todoDialog) {
+            todoDialog.showModal();
+        }
+        
+        // Actualizar vista de tareas si es necesario
+        if (fechaSeleccionada !== fechaHoy) {
+            fechaSeleccionada = fechaHoy;
+            const dateInput = document.getElementById('date-input');
+            if (dateInput) dateInput.value = fechaHoy;
+            await actualizarVistaTareas(fechaSeleccionada);
+        } else {
+            renderTareas();
+        }
+    } catch (error) {
+        console.error("Error al guardar la tarea:", error);
+        mostrarToast("❌ Error al guardar la tarea");
+    }
+}
+
+// Función para manejar pegado en descripciones de tareas
+function manejarPegadoDescripcion(event) {
+    event.preventDefault();
+    
+    // Obtener el texto del portapapeles
+    const pasteData = (event.clipboardData || window.clipboardData).getData('text');
+    if (!pasteData) return;
+    
+    // Ya no necesitamos limpiar HTML porque innerText ya devuelve texto limpio
+    // Usar execCommand para insertar el texto en la posición del cursor
+    if (document.execCommand) {
+        document.execCommand('insertText', false, pasteData);
+    } else {
+        // Fallback para navegadores que no soportan execCommand
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(pasteData));
+            range.collapse(false);
+        }
+    }
+    
+    // Guardar cambios
+    setTimeout(() => {
+        const taskId = event.target.closest('.task-item').dataset.id;
+        if (taskId) {
+            actualizarTareaDescripcion(taskId, event.target.textContent);
+        }
+    }, 10);
+}
+
+// Función para actualizar la descripción de una tarea
+function actualizarTareaDescripcion(taskId, nuevaDescripcion) {
+    const tarea = tareas.find(t => t.id == taskId);
+    if (tarea) {
+        tarea.descripcion = nuevaDescripcion;
+        guardarTareaIndexedDB(tarea);
+    }
+}
+
+// Función auxiliar para obtener saludo dinámico
+function obtenerSaludoDinamico() {
+    const hora = new Date().getHours();
+    if (hora >= 6 && hora < 12) {
+        return "Buenos días";
+    } else if (hora >= 12 && hora < 18) {
+        return "Buenas tardes";
+    } else {
+        return "Buenas noches";
+    }
 }
 
 async function addTarea() {
@@ -266,6 +551,9 @@ async function actualizarVistaTareas(fecha) {
 
 // === CÓDIGO PRINCIPAL: INICIALIZACIÓN ===
 document.addEventListener("DOMContentLoaded", async () => {
+    // Inicializar sistema de tareas en todas las plantillas
+    inicializarSistemaTareas();
+    
     // === Variables y elementos del DOM para la sesión ===
     const modal = document.querySelector("#modal");
     const btnGuardar = document.querySelector("#btn-guardar");
@@ -647,6 +935,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     window.generarCodigo = generarCodigo;
     window.eliminarUltimoCodigo = eliminarUltimoCodigo;
     window.copiarEnlace = copiarEnlace; // Agregar esta línea
+    window.agregarTarea = agregarTarea; // Agregar función para crear tareas desde plantillas
     window.descardarCodigos = function () {
         if (codigosGenerados.length === 0) {
             mostrarToast("No hay códigos generados aún.");
@@ -676,10 +965,82 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     });
 
     document.addEventListener('paste', function (e) {
-        if (!e.target.classList.contains('task-title')) return;
-        e.preventDefault();
-        const plainText = e.clipboardData.getData('text/plain');
-        document.execCommand('insertText', false, plainText);
+        // Manejar pegado en títulos de tareas, campos de input y descripciones
+        if (e.target.classList.contains('task-title') || 
+            e.target.classList.contains('input-task') ||
+            e.target.classList.contains('task-description') ||
+            e.target.tagName === 'TEXTAREA') {
+            e.preventDefault();
+            
+            let textoParaPegar;
+            
+            // Si es una descripción de tarea, obtener tanto HTML como texto plano
+            if (e.target.classList.contains('task-description')) {
+                const htmlData = e.clipboardData.getData('text/html');
+                const plainData = e.clipboardData.getData('text/plain');
+                
+                // Si hay HTML, limpiarlo, si no, usar texto plano
+                textoParaPegar = htmlData ? limpiarHTMLParaTarea(htmlData) : plainData;
+            } else {
+                // Para otros campos, solo texto plano
+                textoParaPegar = e.clipboardData.getData('text/plain');
+            }
+            
+            // Limpiar el texto pegado
+            const textoLimpio = textoParaPegar
+                .replace(/\u00A0/g, ' ') // Reemplazar espacios no separables
+                .replace(/[ \t]+/g, ' ') // Múltiples espacios por uno solo
+                .replace(/\n[ \t]+/g, '\n') // Eliminar espacios al inicio de línea
+                .replace(/[ \t]+\n/g, '\n') // Eliminar espacios al final de línea
+                .trim(); // Eliminar espacios al inicio y final
+            
+            // Insertar el texto limpio
+            if (e.target.classList.contains('task-description')) {
+                // Para descripciones, usar textContent para preservar formato
+                e.target.textContent = textoLimpio;
+            } else {
+                // Para otros campos, usar el método tradicional
+                if (document.execCommand) {
+                    document.execCommand('insertText', false, textoLimpio);
+                } else {
+                    // Fallback para navegadores que no soportan execCommand
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    e.target.value = e.target.value.substring(0, start) + textoLimpio + e.target.value.substring(end);
+                    e.target.selectionStart = e.target.selectionEnd = start + textoLimpio.length;
+                }
+            }
+        }
     });
+
+    // Función utilitaria para limpiar tareas existentes con formato corrupto
+    window.limpiarTareasExistentes = async function() {
+        try {
+            const todasLasTareas = await obtenerTodasTareasIndexedDB();
+            let tareasLimpiadas = 0;
+            
+            for (const tarea of todasLasTareas) {
+                if (tarea.descripcion && tarea.descripcion.includes('<')) {
+                    const descripcionLimpia = limpiarHTMLParaTarea(tarea.descripcion);
+                    if (descripcionLimpia !== tarea.descripcion) {
+                        tarea.descripcion = descripcionLimpia;
+                        await guardarTareaIndexedDB(tarea);
+                        tareasLimpiadas++;
+                    }
+                }
+            }
+            
+            if (tareasLimpiadas > 0) {
+                mostrarToast(`✅ ${tareasLimpiadas} tareas limpiadas`);
+                // Recargar las tareas actuales
+                await actualizarVistaTareas(fechaSeleccionada);
+            } else {
+                mostrarToast("ℹ️ No se encontraron tareas para limpiar");
+            }
+        } catch (error) {
+            console.error("Error limpiando tareas:", error);
+            mostrarToast("❌ Error al limpiar tareas");
+        }
+    };
 
 });

@@ -549,6 +549,64 @@ main aside {
     justify-content: flex-end;
     gap: 8px;
     margin-top: 12px;
+    position: relative;
+}
+
+.copiar-contenedor .add-task {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    z-index: 3;
+    padding: 8px 4px 8px 16px;
+    bottom: 34px;
+    transform: scale(0);    
+    border-radius: 16px 16px 0px 16px;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease-in-out;
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-in;
+}
+
+.add-task input{
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    outline: none;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid #818181;
+}
+
+.add-task-btn {
+    transition: all 0.2s ease-in-out;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.add-task-btn:hover {
+    background-color: #f0f0f0;
+    border-radius: 16px;
+    transform: scale(1.1);
+}
+
+.add-task-btn:active {
+    transform: scale(0.95);
+}
+
+.add-task:hover{
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    border: none;
+}
+
+.copiar-contenedor:hover .add-task {
+    transform: scale(1);
+
+}
+
+.copiar-contenedor .add-task:hover {
+    background-color: #ffffff;
+    transition: all;
+    box-shadow: 0 2px 8px rgba(123, 123, 123, 0.1);
 }
 
 .copy-icon {

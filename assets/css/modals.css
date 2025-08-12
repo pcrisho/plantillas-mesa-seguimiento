@@ -557,6 +557,8 @@ dialog.closing::backdrop {
   white-space: pre-wrap;
   line-height: 1.4;
   min-height: 100px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .task-title:focus,
