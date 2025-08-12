@@ -1,24 +1,10 @@
-# 🚀## 📋 Descripción del ProyectoPlantillas de Mesa de Seguimiento Hitss
+# 🚀 Plantillas de Mesa de Seguimiento Hitss
 
-Una aplicación w## 📁 Estructura del Proyectob moderna para facilitar el acceso a#### 🔄 Convertir MAC
-- Ingresa una dirección MAC sin formato
-- El convertidor agregará automáticamente los dos puntos
-- Copia el resultado formateado
-
-#### ✅ Gestionar Tareas
-- Desde cualquier plantilla, puedes crear una tarea personalizada
-- Usa `Ctrl+B` (o `Cmd+B` en Mac) para acceder rápidamente a tus tareas
-- Las tareas se sincronizan automáticamente con la fecha actual
-
-#### 📝 Reagendamientos Dinámicos
-- Selecciona el tipo de reagendamiento (CLARO/CLIENTE)
-- Elige el escenario correspondiente
-- El sistema generará automáticamente la plantilla con todos los datos
-- Usa el botón "Limpiar Campos" para resetear el formulariontillas estandarizadas para la gestión de tickets en la Mesa de Seguimiento Fija de Hitss.
+Una aplicación web moderna para optimizar la gestión de tickets y estandarizar las plantillas de atención de tickets para la Mesa de Seguimiento Fija de Hitss.
 
 ## � Descripción del Proyecto
 
-Este proyecto es una herramienta integral diseñada para optimizar el flujo de trabajo de los agentes de la Mesa de Seguimiento Fija de Hitss. Proporciona acceso rápido a plantillas predefinidas, generadores de códigos automatizados, y herramientas auxiliares que mejoran la eficiencia en la atención al cliente.
+Este proyecto es una herramienta integral diseñada para optimizar el flujo de trabajo de los asesores de la Mesa de Seguimiento Fija de Hitss. Proporciona acceso rápido a plantillas predefinidas, generadores de códigos automatizados, y herramientas auxiliares que mejoran la eficiencia en la atención de tickets.
 
 ### 🎯 Objetivo Principal
 
