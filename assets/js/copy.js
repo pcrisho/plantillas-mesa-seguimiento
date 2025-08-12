@@ -85,9 +85,3 @@ function mostrarDialogoCopia() {
 
     }, 2000);
 }
-
-
-// Insertar en los elementos HTML
-document.querySelectorAll(".adp").forEach(span => {
-    span.textContent = nombreAsesor;
-});
