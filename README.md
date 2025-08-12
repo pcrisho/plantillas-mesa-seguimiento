@@ -1,20 +1,20 @@
-# 🚀 Plantillas de Mesa de Seguimiento Hitss
+# 🚀## 📋 Descripción del ProyectoPlantillas de Mesa de Seguimiento Hitss
 
-Una aplicación web moderna para facilitar el acceso a plantillas estandarizadas para l#### 🔄 Convertir MAC
+Una aplicación w## 📁 Estructura del Proyectob moderna para facilitar el acceso a#### 🔄 Convertir MAC
 - Ingresa una dirección MAC sin formato
 - El convertidor agregará automáticamente los dos puntos
 - Copia el resultado formateado
 
-#### ✅ Sistema de Tareas
-- **Crear desde plantillas**: Cada plantilla tiene un input para generar tareas
-- **Título personalizable**: Define el nombre de tu tarea
-- **Contenido automático**: La descripción incluye el texto completo de la plantilla
-- **Datos dinámicos**: Reemplaza automáticamente fechas, nombres y saludos
-- **Texto plano limpio**: Las descripciones se guardan sin formato HTML
-- **Almacenamiento local**: Las tareas se guardan en IndexedDB
-- **Acceso rápido**: Presiona `Ctrl+B` (o `Cmd+B` en Mac) para ver tus tareas
-- **Límite inteligente**: Máximo 6 tareas pendientes para mantener el enfoque
-- **Pegado inteligente**: El texto pegado se limpia automáticamente sin formatoención de tickets en la Mesa de Seguimiento Fija de Hitss.
+#### ✅ Gestionar Tareas
+- Desde cualquier plantilla, puedes crear una tarea personalizada
+- Usa `Ctrl+B` (o `Cmd+B` en Mac) para acceder rápidamente a tus tareas
+- Las tareas se sincronizan automáticamente con la fecha actual
+
+#### 📝 Reagendamientos Dinámicos
+- Selecciona el tipo de reagendamiento (CLARO/CLIENTE)
+- Elige el escenario correspondiente
+- El sistema generará automáticamente la plantilla con todos los datos
+- Usa el botón "Limpiar Campos" para resetear el formulariontillas estandarizadas para la gestión de tickets en la Mesa de Seguimiento Fija de Hitss.
 
 ## � Descripción del Proyecto
 
@@ -40,11 +40,32 @@ Centralizar y estandarizar las plantillas de comunicación utilizadas en los dif
 - **Traslados Externos**: Gestión de cambios de dirección
 
 ### 📱 Herramientas Auxiliares
-- **Generador de Códigos de Autorización**: Sistema automatizado con historial
-- **Convertidor de MAC**: Herramienta para formateo de direcciones MAC
-- **Sistema de Flags**: Etiquetas visuales para identificación rápida de casos
-- **Gestión de Fechas**: Sistema dinámico de fechas y horarios
-- **Sistema de Tareas**: Crear tareas personalizadas desde cualquier plantilla
+
+#### 🔑 Generador de Códigos de Autorización
+- Sistema automatizado con historial
+- Generación única por sesión de usuario
+- Almacenamiento local con persistencia diaria
+
+#### 🔄 Convertidor de MAC
+- Ingresa una dirección MAC sin formato
+- El convertidor agregará automáticamente los dos puntos
+- Copia el resultado formateado
+
+#### ✅ Sistema de Tareas
+- **Crear desde plantillas**: Cada plantilla tiene un input para generar tareas
+- **Título personalizable**: Define el nombre de tu tarea
+- **Contenido automático**: La descripción incluye el texto completo de la plantilla
+- **Datos dinámicos**: Reemplaza automáticamente fechas, nombres y saludos
+- **Texto plano limpio**: Las descripciones se guardan sin formato HTML
+- **Almacenamiento local**: Las tareas se guardan en IndexedDB
+- **Acceso rápido**: Presiona `Ctrl+B` (o `Cmd+B` en Mac) para ver tus tareas
+- **Límite inteligente**: Máximo 6 tareas pendientes para mantener el enfoque
+- **Pegado inteligente**: El texto pegado se limpia automáticamente sin formato
+
+#### 🏷️ Sistema de Flags
+- Etiquetas visuales para identificación rápida de casos
+- Clasificación por colores según tipo de gestión
+- Activación manual o automática según el tipo
 
 ### 📊 Códigos de Mantenimiento
 - Base de datos completa de códigos técnicos actualizados
@@ -52,10 +73,13 @@ Centralizar y estandarizar las plantillas de comunicación utilizadas en los dif
 - Códigos específicos para servicios empresariales
 - Guías de derivación y escalamiento
 
-### 🔄 Gestión de Rechazos
+### 🔄 Gestión de Rechazos y Reagendamientos
 - **Rechazos de Mesa y Campo**: Plantillas por motivos específicos
 - **Rechazos Técnicos**: Gestión de limitaciones de infraestructura
-- **Reagendamientos**: Escenarios y plantillas de reprogramación
+- **Reagendamientos Dinámicos**: Sistema interactivo con escenarios predefinidos
+- **Motivos Categorizados**: Por CLARO o CLIENTE con sub-motivos específicos
+- **Plantilla Automática**: Generación en tiempo real de la plantilla de reagendamiento
+- **Formulario Inteligente**: Campos dinámicos que se actualizan automáticamente
 
 ### 📞 Derivaciones PEXT
 - **HFC**: Derivaciones para problemas de red coaxial
@@ -207,8 +231,18 @@ Las plantillas utilizan placeholders que se reemplazan automáticamente:
 
 - **Plantillas disponibles**: 50+ plantillas categorizadas
 - **Códigos de mantenimiento**: 100+ códigos actualizados
-- **Herramientas auxiliares**: 5 herramientas integradas
+- **Herramientas auxiliares**: 6 herramientas integradas
 - **Compatibilidad**: Todos los navegadores modernos
+- **Rendimiento**: Carga rápida y funcionamiento offline
+
+## 🆕 Últimas Actualizaciones
+
+### Versión 2.1.0 (Agosto 2025)
+- ✅ Sistema de reagendamientos dinámicos
+- ✅ Formularios inteligentes con validación
+- ✅ Mejoras en el sistema de tareas
+- ✅ Optimización de la interfaz de usuario
+- ✅ Corrección de bugs y mejoras de rendimiento
 
 ## � Versionado
 
@@ -251,11 +285,13 @@ Si encuentras algún bug o tienes sugerencias:
 - [ ] Exportación a PDF
 - [ ] Sistema de usuarios avanzado
 
-### En Desarrollo
+### Completado ✅
 - [x] Generador de códigos automatizado
 - [x] Convertidor de MAC addresses
 - [x] Sistema de flags dinámico
 - [x] Plantillas responsivas
+- [x] Sistema de tareas integrado
+- [x] Reagendamientos dinámicos
 
 ---
 
