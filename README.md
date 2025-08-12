@@ -6,7 +6,7 @@ Una aplicación web moderna para optimizar la gestión de tickets y estandarizar
 
 Este proyecto es una herramienta integral diseñada para optimizar el flujo de trabajo de los asesores de la Mesa de Seguimiento Fija de Hitss. Proporciona acceso rápido a plantillas predefinidas, generadores de códigos automatizados, y herramientas auxiliares que mejoran la eficiencia en la atención de tickets.
 
-### 🎯 Objetivo Principal
+## 🎯 Objetivo Principal
 
 Centralizar y estandarizar las plantillas de comunicación utilizadas en los diferentes procesos de seguimiento técnico, reduciendo tiempos de respuesta y mejorando la calidad del servicio.
 
