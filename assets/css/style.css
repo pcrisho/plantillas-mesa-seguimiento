@@ -559,7 +559,7 @@ main aside {
     gap: 4px;
     justify-content: center;
     z-index: 3;
-    padding: 8px 4px 8px 16px;
+    padding: 8px 8px 8px 16px;
     bottom: 34px;
     transform: scale(0);    
     border-radius: 16px 16px 0px 16px;
@@ -567,6 +567,7 @@ main aside {
     transition: background-color 0.3s ease-in-out;
     transform-origin: bottom right;
     transition: transform 0.3s ease-in;
+    cursor: pointer;
 }
 
 .add-task input{
@@ -1105,56 +1106,122 @@ tbody tr:hover {
 #reagendados .container__grid__item__dinamic {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 16px;
     width: 100%;
-    text-align: justify;
     margin: 0;
     align-items: stretch;
-    justify-content: center;
+    background-color: #f8f9fa;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .two-rows {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    /* Para 2 columnas */
     gap: 16px;
     width: 100%;
 }
 
-
-
+/* Estilos para labels */
 #reagendados .container__grid__item__dinamic label {
     font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    text-align: justify;
-    margin: 0;
-    align-items: stretch;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    margin-bottom: 6px;
+    display: block;
 }
 
-#reagendados .container__grid__item__dinamic input {
+/* Estilos unificados para inputs, selects y textarea */
+#reagendados .container__grid__item__dinamic input,
+#reagendados .container__grid__item__dinamic select,
+#reagendados .container__grid__item__dinamic textarea {
     font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    font-size: 0.9rem;
+    padding: 6px 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+    outline: none;
     width: 100%;
-    text-align: justify;
-    margin: 0;
-    align-items: stretch;
+    box-sizing: border-box;
 }
 
-.container__grid__item__dinamic select {
-    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+/* Estados hover y focus con blur effect */
+#reagendados .container__grid__item__dinamic input:hover,
+#reagendados .container__grid__item__dinamic select:hover,
+#reagendados .container__grid__item__dinamic textarea:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(148, 148, 150, 0.1);
+}
+
+#reagendados .container__grid__item__dinamic input:focus,
+#reagendados .container__grid__item__dinamic select:focus,
+#reagendados .container__grid__item__dinamic textarea:focus {
+    border-color: rgba(15, 98, 254, 0.5);
+    box-shadow: 0 0 0 3px rgba(15, 98, 254, 0.1), 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Estilos específicos para textarea */
+#reagendados .container__grid__item__dinamic textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+}
+
+/* Estilos específicos para select con blur effect */
+#reagendados .container__grid__item__dinamic select {
+    cursor: pointer;
+    padding-right: 36px; /* Espacio para la flecha personalizada */
+    -moz-appearance: none; /* Quitar flecha nativa en Firefox */
+    -webkit-appearance: none; /* Quitar flecha nativa en Safari */
+    appearance: none; /* Quitar flecha nativa */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Animación de la flecha cuando se hace focus/click */
+#reagendados .container__grid__item__dinamic select:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' style='transform: rotate(180deg);'%3e%3cpath stroke='%230F62FE' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* Animación adicional para cuando está activo */
+#reagendados .container__grid__item__dinamic select:active {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' style='transform: rotate(180deg);'%3e%3cpath stroke='%230F62FE' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* Estilos para placeholders */
+#reagendados .container__grid__item__dinamic input::placeholder,
+#reagendados .container__grid__item__dinamic textarea::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+/* Estilos para inputs de fecha */
+#reagendados .container__grid__item__dinamic input[type="date"] {
+    color-scheme: light;
+}
+
+/* Contenedor para inputs múltiples en una columna */
+#reagendados .container__grid__item__dinamic .input-group {
     display: flex;
-    font-weight: 500;
     flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    text-align: justify;
-    margin: 0;
-    align-items: stretch;
+    gap: 16px;
+}
+
+/* Mejora visual para divs que contienen múltiples inputs */
+#reagendados .container__grid__item__dinamic > div[style*="flex-direction: column"] {
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
 }
 
 #reagendados .plantilla {
