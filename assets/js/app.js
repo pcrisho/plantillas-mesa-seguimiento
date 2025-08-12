@@ -220,18 +220,18 @@ function renderTareas() {
                 </svg>
             </button>
         `;
-        
+
         // Configurar la descripción preservando saltos de línea
         const descripcionElement = li.querySelector('.task-description');
-        
+
         if (descripcionElement && task.descripcion) {
             // Usar directamente la descripción sin necesidad de limpiar
             descripcionElement.textContent = task.descripcion;
         }
-        
+
         taskList.appendChild(li);
     });
-    
+
     // Configurar event listeners usando delegation (solo una vez)
     setupTaskEditingListeners();
 }
@@ -241,18 +241,18 @@ function setupTaskEditingListeners() {
     // Solo configurar una vez, no en cada render
     if (setupTaskEditingListeners.configured) return;
     setupTaskEditingListeners.configured = true;
-    
+
     // Event listener para pegado en descripciones
-    document.addEventListener('paste', function(event) {
+    document.addEventListener('paste', function (event) {
         if (event.target.classList.contains('task-description')) {
             manejarPegadoDescripcion(event);
         } else if (event.target.classList.contains('task-title')) {
             manejarPegadoTitulo(event);
         }
     });
-    
+
     // Event listener para guardado al perder foco
-    document.addEventListener('blur', function(event) {
+    document.addEventListener('blur', function (event) {
         if (event.target.classList.contains('task-description')) {
             const taskId = event.target.closest('.task-item').dataset.id;
             if (taskId) {
@@ -295,11 +295,11 @@ function manejarPegadoTitulo(event) {
 // Función para inicializar el sistema de tareas en todas las plantillas
 function inicializarSistemaTareas() {
     const copiadores = document.querySelectorAll('.copiar-contenedor');
-    
+
     copiadores.forEach(contenedor => {
         // Verificar si ya tiene el sistema de add-task
         const existeAddTask = contenedor.querySelector('.add-task');
-        
+
         if (!existeAddTask) {
             // Crear el sistema de add-task
             const addTaskDiv = document.createElement('div');
@@ -308,7 +308,7 @@ function inicializarSistemaTareas() {
                 <input type="text" class="input-task" placeholder="Agregar tarea">
                 <span class="material-symbols-outlined add-task-btn" style="color: rgb(101, 101, 101); cursor: pointer;">add</span>
             `;
-            
+
             // Insertar antes del copy-icon
             const copyIcon = contenedor.querySelector('.copy-icon');
             if (copyIcon) {
@@ -318,7 +318,7 @@ function inicializarSistemaTareas() {
             }
         }
     });
-    
+
     // Event delegation para manejar todos los inputs y botones de tareas
     setupTaskEventListeners();
 }
@@ -326,14 +326,14 @@ function inicializarSistemaTareas() {
 // Configurar event listeners usando delegation
 function setupTaskEventListeners() {
     // Event listener para inputs de tareas (Enter key)
-    document.addEventListener('keypress', function(event) {
+    document.addEventListener('keypress', function (event) {
         if (event.target.classList.contains('input-task') && event.key === 'Enter') {
             agregarTarea(event.target);
         }
     });
-    
+
     // Event listener para botones de agregar tarea
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (event.target.classList.contains('add-task-btn')) {
             const input = event.target.parentElement.querySelector('.input-task');
             if (input) {
@@ -346,51 +346,51 @@ function setupTaskEventListeners() {
 // Función para agregar tarea desde plantilla
 async function agregarTarea(inputElement) {
     if (!inputElement) return;
-    
+
     const texto = inputElement.value.trim();
     if (!texto) {
         mostrarToast("Por favor ingresa un título para la tarea");
         return;
     }
-    
+
     // Verificar límite de tareas pendientes
     const pendientes = tareas.filter(t => !t.completada);
     if (pendientes.length >= 6) {
         mostrarToast("Regulariza tus plantillas antes de agregar más");
         return;
     }
-    
+
     // Buscar la plantilla asociada al input
     const plantillaContainer = inputElement.closest('.plantilla');
     if (!plantillaContainer) {
         mostrarToast("No se pudo encontrar la plantilla asociada");
         return;
     }
-    
+
     // Buscar el texto de la plantilla de manera más flexible
     let plantillaTexto = plantillaContainer.querySelector('#texto-plantilla');
     if (!plantillaTexto) {
         // Buscar cualquier párrafo que contenga contenido de plantilla
         const paragrafos = plantillaContainer.querySelectorAll('p');
-        plantillaTexto = Array.from(paragrafos).find(p => 
+        plantillaTexto = Array.from(paragrafos).find(p =>
             p.innerHTML.length > 50 && // Debe tener contenido sustancial
             !p.closest('.copiar-contenedor') // No debe estar en el contenedor de copia
         );
     }
-    
+
     if (!plantillaTexto) {
         mostrarToast("No se pudo encontrar el texto de la plantilla");
         return;
     }
-    
+
     // Obtener el texto de la plantilla usando la misma lógica que copiarPlantilla()
     let descripcionPlantilla = plantillaTexto.innerText || plantillaTexto.textContent;
-    
+
     // Reemplazar placeholders dinámicos DESPUÉS de obtener el texto limpio
     if (nombreAsesor) {
         descripcionPlantilla = descripcionPlantilla.replace(/ADP MULTISKILL HITSS/g, `${nombreAsesor} - ADP MULTISKILL HITSS`);
     }
-    
+
     // Reemplazar fechas dinámicas en el texto limpio
     const fecha = new Date();
     const dia = fecha.getDate();
@@ -399,10 +399,10 @@ async function agregarTarea(inputElement) {
     const horas = fecha.getHours().toString().padStart(2, "0");
     const minutos = fecha.getMinutes().toString().padStart(2, "0");
     const hora = `${horas}:${minutos}`;
-    
+
     // Generar saludo dinámico
     const saludoDinamico = obtenerSaludoDinamico();
-    
+
     // Reemplazar todos los placeholders dinámicos de manera más eficiente
     const replacements = [
         { pattern: /\[dia\]/g, value: dia },
@@ -411,12 +411,12 @@ async function agregarTarea(inputElement) {
         { pattern: /\[hora\]/g, value: hora },
         { pattern: /\[saludo-dinamico\]/g, value: saludoDinamico }
     ];
-    
+
     // Aplicar todos los reemplazos
     replacements.forEach(({ pattern, value }) => {
         descripcionPlantilla = descripcionPlantilla.replace(pattern, value);
     });
-    
+
     // Crear nueva tarea
     const nueva = {
         id: Date.now(),
@@ -425,22 +425,22 @@ async function agregarTarea(inputElement) {
         completada: false,
         fechaCreacion: new Date().toISOString()
     };
-    
+
     try {
         tareas.push(nueva);
         await guardarTareaIndexedDB(nueva);
-        
+
         // Limpiar el input
         inputElement.value = '';
-        
+
         mostrarToast("✅ Tarea creada exitosamente");
-        
+
         // Abrir el modal de lista de tareas (usar el selector correcto)
         const todoDialog = document.getElementById('todo-dialog');
         if (todoDialog) {
             todoDialog.showModal();
         }
-        
+
         // Actualizar vista de tareas si es necesario
         if (fechaSeleccionada !== fechaHoy) {
             fechaSeleccionada = fechaHoy;
@@ -459,11 +459,11 @@ async function agregarTarea(inputElement) {
 // Función para manejar pegado en descripciones de tareas
 function manejarPegadoDescripcion(event) {
     event.preventDefault();
-    
+
     // Obtener el texto del portapapeles
     const pasteData = (event.clipboardData || window.clipboardData).getData('text');
     if (!pasteData) return;
-    
+
     // Ya no necesitamos limpiar HTML porque innerText ya devuelve texto limpio
     // Usar execCommand para insertar el texto en la posición del cursor
     if (document.execCommand) {
@@ -478,7 +478,7 @@ function manejarPegadoDescripcion(event) {
             range.collapse(false);
         }
     }
-    
+
     // Guardar cambios
     setTimeout(() => {
         const taskId = event.target.closest('.task-item').dataset.id;
@@ -553,7 +553,7 @@ async function actualizarVistaTareas(fecha) {
 document.addEventListener("DOMContentLoaded", async () => {
     // Inicializar sistema de tareas en todas las plantillas
     inicializarSistemaTareas();
-    
+
     // === Variables y elementos del DOM para la sesión ===
     const modal = document.querySelector("#modal");
     const btnGuardar = document.querySelector("#btn-guardar");
@@ -585,12 +585,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (dateInput) {
         // Configurar el valor inicial
         dateInput.value = fechaHoy;
-        
+
         // Manejar el cambio de fecha
         dateInput.addEventListener('change', (e) => {
             const nuevaFecha = e.target.value;
             fechaSeleccionada = nuevaFecha;
-            
+
             // Actualizar la vista de tareas
             actualizarVistaTareas(fechaSeleccionada);
         });
@@ -782,82 +782,82 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF();
-            
+
             // Configurar metadatos
             pdf.setProperties({
                 title: 'Plantillas Mesa de Seguimiento',
                 author: nombreAsesor || 'Usuario',
                 subject: 'Hitss Peru'
             });
-            
+
             // Variables de layout
             let yPos = 25;
             const margen = 20;
             const anchoPage = 170;
             const fecha = new Date().toLocaleDateString('es-PE');
             const usuario = nombreAsesor || 'Usuario';
-            
+
             // === HEADER PRINCIPAL ===
             pdf.setFont("helvetica", "bold");
             pdf.setFontSize(24);
             pdf.setTextColor(0, 102, 204); // Azul similar a la imagen
             pdf.text("Plantillas Mesa de Seguimiento", margen, yPos);
-            
+
             yPos += 10;
             pdf.setFont("helvetica", "normal");
             pdf.setFontSize(12);
             pdf.setTextColor(120, 120, 120);
             pdf.text("Reporte generado desde Hitss Peru", margen, yPos);
-            
+
             yPos += 12; // Reducido de 20 a 12
-            
+
             // === LÍNEA SEPARADORA ===
             pdf.setDrawColor(200, 200, 200);
             pdf.setLineWidth(0.5); // Reducido de 1 a 0.5 - más delgado
             pdf.line(margen, yPos, margen + anchoPage, yPos);
-            
+
             yPos += 12; // Reducido de 15 a 12 - aún menos espaciado
-            
+
             // === INFORMACIÓN SIMPLE ===
             pdf.setFont("helvetica", "normal");
             pdf.setFontSize(11);
             pdf.setTextColor(80, 80, 80);
-            
+
             pdf.text(`Fecha de generación:`, margen, yPos);
             pdf.text(`${fecha}`, margen + 80, yPos);
-            
+
             yPos += 8;
             pdf.text(`Usuario:`, margen, yPos);
             pdf.text(`${usuario}`, margen + 80, yPos);
-            
+
             yPos += 8;
             pdf.text(`Total de plantillas:`, margen, yPos);
             pdf.text(`${tareas.length}`, margen + 80, yPos);
-            
+
             yPos += 25;
-            
+
             // === TAREAS ESTILO NOTION ===
             tareas.forEach((tarea, index) => {
                 // Calcular altura estimada de la tarea completa
                 let alturaEstimada = 35; // Altura base (título + estado + divider)
-                
+
                 if (tarea.descripcion) {
                     const lineasDesc = pdf.splitTextToSize(tarea.descripcion, anchoPage - 15);
                     alturaEstimada += Math.min(lineasDesc.length * 4, 50) + 8;
                 } else {
                     alturaEstimada += 18; // Quote vacío
                 }
-                
+
                 // Verificar si la tarea completa cabe en la página actual
                 if (yPos + alturaEstimada > 270) { // Margen inferior más conservador
                     pdf.addPage();
                     yPos = 25;
                 }
-                
+
                 // === H2 CON FONDO DE COLOR (estilo Notion) ===
                 const colorFondo = tarea.completada ? [40, 167, 69] : [255, 193, 7]; // Verde o Amarillo
                 const colorTexto = tarea.completada ? [255, 255, 255] : [33, 37, 41]; // Blanco o Negro
-                
+
                 // Fondo del título (como highlight en Notion)
                 pdf.setFillColor(...colorFondo);
                 const tituloTexto = `${index + 1}. ${tarea.titulo}`;
@@ -865,86 +865,86 @@ document.addEventListener("DOMContentLoaded", async () => {
                 pdf.setFontSize(14);
                 const anchoTitulo = pdf.getTextWidth(tituloTexto) + 8;
                 const altoTitulo = 10; // Aumentado de 8 a 10 para mejor centrado
-                
+
                 // Rectángulo redondeado personalizado
                 const x = margen;
                 const y = yPos - 6;
                 const w = anchoTitulo;
                 const h = altoTitulo;
                 const r = 3; // Radio de las esquinas redondeadas
-                
+
                 // Crear rectángulo con bordes redondeados
                 pdf.roundedRect(x, y, w, h, r, r, 'F');
-                
+
                 // Texto del título sobre el fondo - mejor centrado
                 pdf.setTextColor(...colorTexto);
                 pdf.text(tituloTexto, margen + 4, yPos + 1); // Ajustado +1 para centrado vertical
-                
+
                 yPos += 8; // Reducido de 12 a 8
-                
+
                 // === ESTADO SIMPLE ===
                 pdf.setFont("helvetica", "normal");
                 pdf.setFontSize(10);
                 pdf.setTextColor(100, 100, 100);
                 const estado = tarea.completada ? "Completado" : "Pendiente";
                 pdf.text(estado, margen, yPos);
-                
+
                 yPos += 6; // Reducido de 10 a 6
-                
+
                 // === QUOTE BLOCK (como en Notion) ===
                 if (tarea.descripcion) {
                     // Línea lateral del quote (como en Notion)
                     pdf.setDrawColor(200, 200, 200);
                     pdf.setLineWidth(1);
-                    
+
                     // Calcular altura del contenido
                     pdf.setFont("consolas", "bold"); // Fuente monoespaciada Consolas
                     pdf.setFontSize(10); // Aumentado de 9 a 10
                     const lineas = pdf.splitTextToSize(tarea.descripcion, anchoPage - 15);
                     const alturaQuote = Math.min(lineas.length * 4, 50);
-                    
+
                     // Línea lateral izquierda del quote
                     pdf.line(margen, yPos, margen, yPos + alturaQuote);
-                    
+
                     // Contenido del quote con padding - texto más oscuro
                     pdf.setTextColor(40, 40, 40); // Cambiado de (70, 70, 70) a (40, 40, 40) - más oscuro
                     pdf.text(lineas.slice(0, 12), margen + 8, yPos + 3);
-                    
+
                     yPos += alturaQuote + 2; // Reducido de 3 a 2
                 } else {
                     // Quote vacío estilo Notion
                     pdf.setDrawColor(200, 200, 200);
                     pdf.setLineWidth(3);
                     pdf.line(margen, yPos, margen, yPos + 8);
-                    
+
                     pdf.setFont("helvetica", "italic");
                     pdf.setFontSize(9);
                     pdf.setTextColor(150, 150, 150);
                     pdf.text("Sin contenido", margen + 8, yPos + 5);
-                    
+
                     yPos += 10; // Reducido de 12 a 10
                 }
-                
+
                 // === DIVIDER ENTRE TAREAS ===
                 pdf.setDrawColor(180, 180, 180); // Cambiado de (240, 240, 240) a gris más oscuro
                 pdf.setLineWidth(0.3);
                 pdf.line(margen, yPos, margen + anchoPage, yPos);
                 yPos += 8; // Reducido de 15 a 8
             });
-            
+
             // === FOOTER MINIMALISTA ===
             const totalPaginas = pdf.internal.getNumberOfPages();
             for (let i = 1; i <= totalPaginas; i++) {
                 pdf.setPage(i);
-                
+
                 pdf.setFont("helvetica", "normal");
                 pdf.setFontSize(9); // Ligeramente más grande
                 pdf.setTextColor(120, 120, 120); // Un poco más oscuro
-                
+
                 // Footer izquierda: "Documento - Empresa"
                 const footerLeft = "Plantillas Mesa de Seguimiento - Hitss Peru";
                 pdf.text(footerLeft, margen, 285);
-                
+
                 // Footer derecha: "X de Y"
                 if (totalPaginas > 1) {
                     const footerRight = `${i} de ${totalPaginas}`;
@@ -952,24 +952,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                     pdf.text(footerRight, margen + anchoPage - rightWidth, 285);
                 }
             }
-            
+
             // Guardar PDF
             const nombreArchivo = `plantillas-notion-${fecha.replace(/\//g, '-')}.pdf`;
             pdf.save(nombreArchivo);
-            
+
             mostrarToast('📄 PDF estilo Notion generado');
-            
+
         } catch (error) {
             console.error('Error al generar PDF:', error);
             mostrarToast('❌ Error al generar PDF');
         }
     }
-    
+
     // === Función para generar contenido Markdown ===
     function generarMarkdown(tareas) {
         const fecha = new Date().toLocaleDateString('es-PE');
         const usuario = nombreAsesor || 'Usuario';
-        
+
         let markdown = `# 📋 Plantillas Mesa de Seguimiento
 
 > **Reporte generado desde Hitss Peru**
@@ -994,7 +994,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tareas.forEach((tarea, index) => {
             const estado = tarea.completada ? '✅ **COMPLETADA**' : '⏳ **PENDIENTE**';
             const estadoClass = tarea.completada ? 'status-completed' : 'status-pending';
-            
+
             markdown += `### ${index + 1}. ${tarea.titulo}
 
 **Estado:** <span class="${estadoClass}">${estado}</span>
@@ -1007,7 +1007,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     .replace(/`/g, '\\`')
                     .replace(/\*/g, '\\*')
                     .replace(/_/g, '\\_');
-                
+
                 markdown += `**Contenido de la plantilla:**
 
 \`\`\`
@@ -1020,12 +1020,12 @@ ${descripcionEscapada}
 
 `;
             }
-            
+
             markdown += `---
 
 `;
         });
-        
+
         // Footer
         markdown += `## 📞 Información de Contacto
 
@@ -1033,7 +1033,7 @@ ${descripcionEscapada}
 
 *Documento generado automáticamente el ${fecha}*
 `;
-        
+
         return markdown;
     }
 
@@ -1043,7 +1043,7 @@ ${descripcionEscapada}
                 mostrarToast("No hay tareas para descargar.");
                 return;
             }
-            
+
             // Generar PDF estilo Notion directamente
             descargarTareasPDF(tareas);
         });
@@ -1219,61 +1219,54 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         }
     });
 
+    // app.js
+
+    // ... (resto del código anterior)
+
+    // === LÓGICA DE PEGADO (CORRECCIÓN FINAL) ===
     document.addEventListener('paste', function (e) {
-        // Manejar pegado en títulos de tareas, campos de input y descripciones
-        if (e.target.classList.contains('task-title') || 
+        // Verificamos si el foco está en un elemento editable
+        if (e.target.classList.contains('task-title') ||
             e.target.classList.contains('input-task') ||
             e.target.classList.contains('task-description') ||
             e.target.tagName === 'TEXTAREA') {
+
             e.preventDefault();
-            
-            let textoParaPegar;
-            
-            // Si es una descripción de tarea, obtener tanto HTML como texto plano
-            if (e.target.classList.contains('task-description')) {
-                const htmlData = e.clipboardData.getData('text/html');
-                const plainData = e.clipboardData.getData('text/plain');
-                
-                // Si hay HTML, limpiarlo, si no, usar texto plano
-                textoParaPegar = htmlData ? limpiarHTMLParaTarea(htmlData) : plainData;
-            } else {
-                // Para otros campos, solo texto plano
-                textoParaPegar = e.clipboardData.getData('text/plain');
-            }
-            
-            // Limpiar el texto pegado
+
+            // Obtenemos el texto plano del portapapeles
+            const textoParaPegar = (e.clipboardData || window.clipboardData).getData('text/plain');
+
+            // Limpiamos el texto pegado de espacios y otros caracteres no deseados
             const textoLimpio = textoParaPegar
-                .replace(/\u00A0/g, ' ') // Reemplazar espacios no separables
-                .replace(/[ \t]+/g, ' ') // Múltiples espacios por uno solo
-                .replace(/\n[ \t]+/g, '\n') // Eliminar espacios al inicio de línea
-                .replace(/[ \t]+\n/g, '\n') // Eliminar espacios al final de línea
-                .trim(); // Eliminar espacios al inicio y final
-            
-            // Insertar el texto limpio
-            if (e.target.classList.contains('task-description')) {
-                // Para descripciones, usar textContent para preservar formato
-                e.target.textContent = textoLimpio;
+                .replace(/\u00A0/g, ' ')
+                .replace(/[ \t]+/g, ' ')
+                .replace(/\n[ \t]+/g, '\n')
+                .replace(/[ \t]+\n/g, '\n')
+                .trim();
+
+            // Usamos document.execCommand para insertar el texto plano
+            // en la posición actual del cursor. Esto evita que se borre
+            // el contenido existente y que se pegue el formato.
+            if (document.execCommand) {
+                document.execCommand('insertText', false, textoLimpio);
             } else {
-                // Para otros campos, usar el método tradicional
-                if (document.execCommand) {
-                    document.execCommand('insertText', false, textoLimpio);
-                } else {
-                    // Fallback para navegadores que no soportan execCommand
-                    const start = e.target.selectionStart;
-                    const end = e.target.selectionEnd;
-                    e.target.value = e.target.value.substring(0, start) + textoLimpio + e.target.value.substring(end);
-                    e.target.selectionStart = e.target.selectionEnd = start + textoLimpio.length;
-                }
+                // Fallback para navegadores que no soportan execCommand
+                const start = e.target.selectionStart;
+                const end = e.target.selectionEnd;
+                e.target.value = e.target.value.substring(0, start) + textoLimpio + e.target.value.substring(end);
+                e.target.selectionStart = e.target.selectionEnd = start + textoLimpio.length;
             }
         }
     });
 
+    // ... (resto del código, después de esta función)
+
     // Función utilitaria para limpiar tareas existentes con formato corrupto
-    window.limpiarTareasExistentes = async function() {
+    window.limpiarTareasExistentes = async function () {
         try {
             const todasLasTareas = await obtenerTodasTareasIndexedDB();
             let tareasLimpiadas = 0;
-            
+
             for (const tarea of todasLasTareas) {
                 if (tarea.descripcion && tarea.descripcion.includes('<')) {
                     const descripcionLimpia = limpiarHTMLParaTarea(tarea.descripcion);
@@ -1284,7 +1277,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
                     }
                 }
             }
-            
+
             if (tareasLimpiadas > 0) {
                 mostrarToast(`✅ ${tareasLimpiadas} tareas limpiadas`);
                 // Recargar las tareas actuales
@@ -1299,7 +1292,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     };
 
     // Función para limpiar el formulario de reprogramación
-    window.limpiarFormularioReprogramacion = function() {
+    window.limpiarFormularioReprogramacion = function () {
         // Resetear selects a valores por defecto
         const tipoReprogramado = document.getElementById("tipo-reprogramado");
         if (tipoReprogramado) tipoReprogramado.value = "MESA";
@@ -1335,10 +1328,10 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
 
         // Recargar escenarios para resetear los selects dependientes
         cargarEscenarios();
-        
+
         // Actualizar la plantilla con los valores por defecto
         actualizarPlantilla();
-        
+
         // Mostrar mensaje de confirmación
         mostrarToast("✅ Formulario limpiado correctamente");
     };
