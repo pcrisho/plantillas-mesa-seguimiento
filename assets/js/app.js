@@ -864,13 +864,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                 pdf.setFont("helvetica", "bold");
                 pdf.setFontSize(14);
                 const anchoTitulo = pdf.getTextWidth(tituloTexto) + 8;
-                const altoTitulo = 8;
+                const altoTitulo = 10; // Aumentado de 8 a 10 para mejor centrado
                 
-                pdf.rect(margen, yPos - 5, anchoTitulo, altoTitulo, 'F');
+                // Rectángulo redondeado personalizado
+                const x = margen;
+                const y = yPos - 6;
+                const w = anchoTitulo;
+                const h = altoTitulo;
+                const r = 3; // Radio de las esquinas redondeadas
                 
-                // Texto del título sobre el fondo
+                // Crear rectángulo con bordes redondeados
+                pdf.roundedRect(x, y, w, h, r, r, 'F');
+                
+                // Texto del título sobre el fondo - mejor centrado
                 pdf.setTextColor(...colorTexto);
-                pdf.text(tituloTexto, margen + 4, yPos);
+                pdf.text(tituloTexto, margen + 4, yPos + 1); // Ajustado +1 para centrado vertical
                 
                 yPos += 8; // Reducido de 12 a 8
                 
