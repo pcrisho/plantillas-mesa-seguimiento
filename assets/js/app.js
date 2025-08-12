@@ -774,25 +774,270 @@ document.addEventListener("DOMContentLoaded", async () => {
             renderTareas();
         });
     }
+
+    // === PDF limpio estilo Notion con jsPDF ===
+    // === PDF limpio estilo Notion con jsPDF ===
+    // === PDF limpio estilo Notion con jsPDF ===
+    function descargarTareasPDF(tareas) {
+        try {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            
+            // Configurar metadatos
+            pdf.setProperties({
+                title: 'Plantillas Mesa de Seguimiento',
+                author: nombreAsesor || 'Usuario',
+                subject: 'Hitss Peru'
+            });
+            
+            // Variables de layout
+            let yPos = 25;
+            const margen = 20;
+            const anchoPage = 170;
+            const fecha = new Date().toLocaleDateString('es-PE');
+            const usuario = nombreAsesor || 'Usuario';
+            
+            // === HEADER PRINCIPAL ===
+            pdf.setFont("helvetica", "bold");
+            pdf.setFontSize(24);
+            pdf.setTextColor(0, 102, 204); // Azul similar a la imagen
+            pdf.text("Plantillas Mesa de Seguimiento", margen, yPos);
+            
+            yPos += 10;
+            pdf.setFont("helvetica", "normal");
+            pdf.setFontSize(12);
+            pdf.setTextColor(120, 120, 120);
+            pdf.text("Reporte generado desde Hitss Peru", margen, yPos);
+            
+            yPos += 12; // Reducido de 20 a 12
+            
+            // === LÍNEA SEPARADORA ===
+            pdf.setDrawColor(200, 200, 200);
+            pdf.setLineWidth(0.5); // Reducido de 1 a 0.5 - más delgado
+            pdf.line(margen, yPos, margen + anchoPage, yPos);
+            
+            yPos += 12; // Reducido de 15 a 12 - aún menos espaciado
+            
+            // === INFORMACIÓN SIMPLE ===
+            pdf.setFont("helvetica", "normal");
+            pdf.setFontSize(11);
+            pdf.setTextColor(80, 80, 80);
+            
+            pdf.text(`Fecha de generación:`, margen, yPos);
+            pdf.text(`${fecha}`, margen + 80, yPos);
+            
+            yPos += 8;
+            pdf.text(`Usuario:`, margen, yPos);
+            pdf.text(`${usuario}`, margen + 80, yPos);
+            
+            yPos += 8;
+            pdf.text(`Total de plantillas:`, margen, yPos);
+            pdf.text(`${tareas.length}`, margen + 80, yPos);
+            
+            yPos += 25;
+            
+            // === TAREAS ESTILO NOTION ===
+            tareas.forEach((tarea, index) => {
+                // Calcular altura estimada de la tarea completa
+                let alturaEstimada = 35; // Altura base (título + estado + divider)
+                
+                if (tarea.descripcion) {
+                    const lineasDesc = pdf.splitTextToSize(tarea.descripcion, anchoPage - 15);
+                    alturaEstimada += Math.min(lineasDesc.length * 4, 50) + 8;
+                } else {
+                    alturaEstimada += 18; // Quote vacío
+                }
+                
+                // Verificar si la tarea completa cabe en la página actual
+                if (yPos + alturaEstimada > 270) { // Margen inferior más conservador
+                    pdf.addPage();
+                    yPos = 25;
+                }
+                
+                // === H2 CON FONDO DE COLOR (estilo Notion) ===
+                const colorFondo = tarea.completada ? [40, 167, 69] : [255, 193, 7]; // Verde o Amarillo
+                const colorTexto = tarea.completada ? [255, 255, 255] : [33, 37, 41]; // Blanco o Negro
+                
+                // Fondo del título (como highlight en Notion)
+                pdf.setFillColor(...colorFondo);
+                const tituloTexto = `${index + 1}. ${tarea.titulo}`;
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(14);
+                const anchoTitulo = pdf.getTextWidth(tituloTexto) + 8;
+                const altoTitulo = 8;
+                
+                pdf.rect(margen, yPos - 5, anchoTitulo, altoTitulo, 'F');
+                
+                // Texto del título sobre el fondo
+                pdf.setTextColor(...colorTexto);
+                pdf.text(tituloTexto, margen + 4, yPos);
+                
+                yPos += 8; // Reducido de 12 a 8
+                
+                // === ESTADO SIMPLE ===
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(10);
+                pdf.setTextColor(100, 100, 100);
+                const estado = tarea.completada ? "Completado" : "Pendiente";
+                pdf.text(estado, margen, yPos);
+                
+                yPos += 6; // Reducido de 10 a 6
+                
+                // === QUOTE BLOCK (como en Notion) ===
+                if (tarea.descripcion) {
+                    // Línea lateral del quote (como en Notion)
+                    pdf.setDrawColor(200, 200, 200);
+                    pdf.setLineWidth(1);
+                    
+                    // Calcular altura del contenido
+                    pdf.setFont("consolas", "bold"); // Fuente monoespaciada Consolas
+                    pdf.setFontSize(10); // Aumentado de 9 a 10
+                    const lineas = pdf.splitTextToSize(tarea.descripcion, anchoPage - 15);
+                    const alturaQuote = Math.min(lineas.length * 4, 50);
+                    
+                    // Línea lateral izquierda del quote
+                    pdf.line(margen, yPos, margen, yPos + alturaQuote);
+                    
+                    // Contenido del quote con padding - texto más oscuro
+                    pdf.setTextColor(40, 40, 40); // Cambiado de (70, 70, 70) a (40, 40, 40) - más oscuro
+                    pdf.text(lineas.slice(0, 12), margen + 8, yPos + 3);
+                    
+                    yPos += alturaQuote + 2; // Reducido de 3 a 2
+                } else {
+                    // Quote vacío estilo Notion
+                    pdf.setDrawColor(200, 200, 200);
+                    pdf.setLineWidth(3);
+                    pdf.line(margen, yPos, margen, yPos + 8);
+                    
+                    pdf.setFont("helvetica", "italic");
+                    pdf.setFontSize(9);
+                    pdf.setTextColor(150, 150, 150);
+                    pdf.text("Sin contenido", margen + 8, yPos + 5);
+                    
+                    yPos += 10; // Reducido de 12 a 10
+                }
+                
+                // === DIVIDER ENTRE TAREAS ===
+                pdf.setDrawColor(180, 180, 180); // Cambiado de (240, 240, 240) a gris más oscuro
+                pdf.setLineWidth(0.3);
+                pdf.line(margen, yPos, margen + anchoPage, yPos);
+                yPos += 8; // Reducido de 15 a 8
+            });
+            
+            // === FOOTER MINIMALISTA ===
+            const totalPaginas = pdf.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPaginas; i++) {
+                pdf.setPage(i);
+                
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(9); // Ligeramente más grande
+                pdf.setTextColor(120, 120, 120); // Un poco más oscuro
+                
+                // Footer izquierda: "Documento - Empresa"
+                const footerLeft = "Plantillas Mesa de Seguimiento - Hitss Peru";
+                pdf.text(footerLeft, margen, 285);
+                
+                // Footer derecha: "X de Y"
+                if (totalPaginas > 1) {
+                    const footerRight = `${i} de ${totalPaginas}`;
+                    const rightWidth = pdf.getTextWidth(footerRight);
+                    pdf.text(footerRight, margen + anchoPage - rightWidth, 285);
+                }
+            }
+            
+            // Guardar PDF
+            const nombreArchivo = `plantillas-notion-${fecha.replace(/\//g, '-')}.pdf`;
+            pdf.save(nombreArchivo);
+            
+            mostrarToast('📄 PDF estilo Notion generado');
+            
+        } catch (error) {
+            console.error('Error al generar PDF:', error);
+            mostrarToast('❌ Error al generar PDF');
+        }
+    }
+    
+    // === Función para generar contenido Markdown ===
+    function generarMarkdown(tareas) {
+        const fecha = new Date().toLocaleDateString('es-PE');
+        const usuario = nombreAsesor || 'Usuario';
+        
+        let markdown = `# 📋 Plantillas Mesa de Seguimiento
+
+> **Reporte generado desde Hitss Peru**
+
+---
+
+## 📊 Información del Reporte
+
+| Campo | Valor |
+|-------|-------|
+| **Fecha de generación** | ${fecha} |
+| **Usuario** | ${usuario} |
+| **Total de plantillas** | ${tareas.length} |
+
+---
+
+## 📝 Plantillas
+
+`;
+
+        // Agregar cada tarea
+        tareas.forEach((tarea, index) => {
+            const estado = tarea.completada ? '✅ **COMPLETADA**' : '⏳ **PENDIENTE**';
+            const estadoClass = tarea.completada ? 'status-completed' : 'status-pending';
+            
+            markdown += `### ${index + 1}. ${tarea.titulo}
+
+**Estado:** <span class="${estadoClass}">${estado}</span>
+
+`;
+
+            if (tarea.descripcion) {
+                // Escapar caracteres especiales en el código
+                const descripcionEscapada = tarea.descripcion
+                    .replace(/`/g, '\\`')
+                    .replace(/\*/g, '\\*')
+                    .replace(/_/g, '\\_');
+                
+                markdown += `**Contenido de la plantilla:**
+
+\`\`\`
+${descripcionEscapada}
+\`\`\`
+
+`;
+            } else {
+                markdown += `*Sin descripción disponible*
+
+`;
+            }
+            
+            markdown += `---
+
+`;
+        });
+        
+        // Footer
+        markdown += `## 📞 Información de Contacto
+
+**Plantillas Mesa de Seguimiento - Hitss Peru**
+
+*Documento generado automáticamente el ${fecha}*
+`;
+        
+        return markdown;
+    }
+
     if (downloadTasksBtn) {
-        downloadTasksBtn.addEventListener('click', () => {
+        downloadTasksBtn.addEventListener('click', async () => {
             if (tareas.length === 0) {
                 mostrarToast("No hay tareas para descargar.");
                 return;
             }
-            let contenido = "LISTA DE PLANTILLAS\n====================\n\n";
-            tareas.forEach((t, i) => {
-                const estado = t.completada ? "✅ Completada" : "⏳ Pendiente";
-                contenido += `Plantilla ${i + 1}\nTítulo: ${t.titulo}\n${t.descripcion || "(Sin descripción)"}\nEstado: ${estado}\n\n`;
-            });
-            const blob = new Blob([contenido], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `tareas-${new Date().toLocaleDateString('es-PE')}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            mostrarToast("Plantillas descargadas");
+            
+            // Generar PDF estilo Notion directamente
+            descargarTareasPDF(tareas);
         });
     }
 

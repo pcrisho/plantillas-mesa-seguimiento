@@ -77,6 +77,7 @@ body {
 #modal::backdrop {
   background-color: rgba(38, 38, 38, 0.637);
   /**/
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 
@@ -178,6 +179,7 @@ dialog.closing::backdrop {
 
 #confirmar-cierre-sesion::backdrop {
   background-color: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
 }
 
@@ -225,12 +227,12 @@ dialog.closing::backdrop {
   border: none;
   box-shadow: none;
   font-size: 0.9rem;
-  backdrop-filter: none;
   animation: fadeOut 2s ease forwards;
   pointer-events: none;
   /* Evita que bloquee clicks */
   z-index: 999;
   border-radius: 8px;
+  -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
 }
 
@@ -325,6 +327,7 @@ dialog.closing::backdrop {
   border-radius: 8px;
   opacity: 0;
   pointer-events: none;
+  -webkit-backdrop-filter: blur(50px);
   backdrop-filter: blur(50px);
 }
 
@@ -384,6 +387,7 @@ dialog.closing::backdrop {
   border-radius: 8px;
   text-align: left;
   background-color: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(30px);
   backdrop-filter: blur(30px);
 
   display: flex;
@@ -405,6 +409,7 @@ dialog.closing::backdrop {
 
 .todo-dialog::backdrop {
   background-color: transparent;
+  -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
 
@@ -414,6 +419,7 @@ dialog.closing::backdrop {
 
 .todo-header {
   background-color: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(40px);
   backdrop-filter: blur(40px);
   padding: 1rem;
   display: flex;
@@ -608,6 +614,7 @@ dialog.closing::backdrop {
   align-items: center;
   border-top: 1px solid #eee;
   background-color: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border-radius: 0 0 12px 12px;
 }
