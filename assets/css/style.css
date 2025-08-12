@@ -559,10 +559,10 @@ main aside {
     gap: 4px;
     justify-content: center;
     z-index: 3;
-    padding: 8px 8px;
-    bottom: 30px;
+    padding: 8px 4px 8px 16px;
+    bottom: 34px;
     transform: scale(0);    
-    border-radius: 4px;
+    border-radius: 16px 16px 0px 16px;
     background-color: #ffffff;
     transition: background-color 0.3s ease-in-out;
     transform-origin: bottom right;
@@ -572,7 +572,9 @@ main aside {
 .add-task input{
     font-family: 'Montserrat', Helvetica, Arial, sans-serif;
     outline: none;
-    padding: 2px 8px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid #818181;
 }
 
 .add-task-btn {
@@ -583,6 +585,7 @@ main aside {
 
 .add-task-btn:hover {
     background-color: #f0f0f0;
+    border-radius: 16px;
     transform: scale(1.1);
 }
 

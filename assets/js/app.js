@@ -223,52 +223,73 @@ function renderTareas() {
         
         // Configurar la descripción preservando saltos de línea
         const descripcionElement = li.querySelector('.task-description');
-        const tituloElement = li.querySelector('.task-title');
         
         if (descripcionElement && task.descripcion) {
             // Usar directamente la descripción sin necesidad de limpiar
             descripcionElement.textContent = task.descripcion;
-            
-            // Agregar event listeners para edición de descripción
-            descripcionElement.addEventListener('paste', manejarPegadoDescripcion);
-            descripcionElement.addEventListener('blur', function() {
-                actualizarTareaDescripcion(task.id, this.textContent);
-            });
         }
         
-        if (tituloElement) {
-            // Agregar event listeners para edición de título
-            tituloElement.addEventListener('paste', function(event) {
-                event.preventDefault();
-                const pasteData = (event.clipboardData || window.clipboardData).getData('text');
-                if (pasteData) {
-                    // Limpiar saltos de línea del texto pegado para el título
-                    const textoLimpio = pasteData.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-                    // Insertar texto plano sin formato
-                    if (document.execCommand) {
-                        document.execCommand('insertText', false, textoLimpio);
-                    } else {
-                        // Fallback
-                        const selection = window.getSelection();
-                        if (selection.rangeCount > 0) {
-                            const range = selection.getRangeAt(0);
-                            range.deleteContents();
-                            range.insertNode(document.createTextNode(textoLimpio));
-                            range.collapse(false);
-                        }
-                    }
-                }
-            });
-            tituloElement.addEventListener('blur', function() {
-                const tarea = tareas.find(t => t.id == task.id);
-                if (tarea) {
-                    tarea.titulo = this.textContent;
-                    guardarTareaIndexedDB(tarea);
-                }
-            });
-        }
         taskList.appendChild(li);
     });
+    
+    // Configurar event listeners usando delegation (solo una vez)
+    setupTaskEditingListeners();
+}
+
+// Configurar event listeners para edición de tareas usando delegation
+function setupTaskEditingListeners() {
+    // Solo configurar una vez, no en cada render
+    if (setupTaskEditingListeners.configured) return;
+    setupTaskEditingListeners.configured = true;
+    
+    // Event listener para pegado en descripciones
+    document.addEventListener('paste', function(event) {
+        if (event.target.classList.contains('task-description')) {
+            manejarPegadoDescripcion(event);
+        } else if (event.target.classList.contains('task-title')) {
+            manejarPegadoTitulo(event);
+        }
+    });
+    
+    // Event listener para guardado al perder foco
+    document.addEventListener('blur', function(event) {
+        if (event.target.classList.contains('task-description')) {
+            const taskId = event.target.closest('.task-item').dataset.id;
+            if (taskId) {
+                actualizarTareaDescripcion(taskId, event.target.textContent);
+            }
+        } else if (event.target.classList.contains('task-title')) {
+            const taskId = event.target.closest('.task-item').dataset.id;
+            const tarea = tareas.find(t => t.id == taskId);
+            if (tarea) {
+                tarea.titulo = event.target.textContent;
+                guardarTareaIndexedDB(tarea);
+            }
+        }
+    }, true);
+}
+
+// Función para manejar pegado en títulos
+function manejarPegadoTitulo(event) {
+    event.preventDefault();
+    const pasteData = (event.clipboardData || window.clipboardData).getData('text');
+    if (pasteData) {
+        // Limpiar saltos de línea del texto pegado para el título
+        const textoLimpio = pasteData.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        // Insertar texto plano sin formato
+        if (document.execCommand) {
+            document.execCommand('insertText', false, textoLimpio);
+        } else {
+            // Fallback
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(document.createTextNode(textoLimpio));
+                range.collapse(false);
+            }
+        }
+    }
 }
 
 // Función para inicializar el sistema de tareas en todas las plantillas
@@ -283,28 +304,10 @@ function inicializarSistemaTareas() {
             // Crear el sistema de add-task
             const addTaskDiv = document.createElement('div');
             addTaskDiv.className = 'add-task';
-            
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.className = 'input-task';
-            input.placeholder = 'Agregar tarea';
-            input.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    agregarTarea(this);
-                }
-            });
-            
-            const addIcon = document.createElement('span');
-            addIcon.className = 'material-symbols-outlined add-task-btn';
-            addIcon.style.color = 'rgb(101, 101, 101)';
-            addIcon.style.cursor = 'pointer';
-            addIcon.textContent = 'add';
-            addIcon.addEventListener('click', function() {
-                agregarTarea(input);
-            });
-            
-            addTaskDiv.appendChild(input);
-            addTaskDiv.appendChild(addIcon);
+            addTaskDiv.innerHTML = `
+                <input type="text" class="input-task" placeholder="Agregar tarea">
+                <span class="material-symbols-outlined add-task-btn" style="color: rgb(101, 101, 101); cursor: pointer;">add</span>
+            `;
             
             // Insertar antes del copy-icon
             const copyIcon = contenedor.querySelector('.copy-icon');
@@ -312,6 +315,29 @@ function inicializarSistemaTareas() {
                 contenedor.insertBefore(addTaskDiv, copyIcon);
             } else {
                 contenedor.appendChild(addTaskDiv);
+            }
+        }
+    });
+    
+    // Event delegation para manejar todos los inputs y botones de tareas
+    setupTaskEventListeners();
+}
+
+// Configurar event listeners usando delegation
+function setupTaskEventListeners() {
+    // Event listener para inputs de tareas (Enter key)
+    document.addEventListener('keypress', function(event) {
+        if (event.target.classList.contains('input-task') && event.key === 'Enter') {
+            agregarTarea(event.target);
+        }
+    });
+    
+    // Event listener para botones de agregar tarea
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('add-task-btn')) {
+            const input = event.target.parentElement.querySelector('.input-task');
+            if (input) {
+                agregarTarea(input);
             }
         }
     });
@@ -374,17 +400,22 @@ async function agregarTarea(inputElement) {
     const minutos = fecha.getMinutes().toString().padStart(2, "0");
     const hora = `${horas}:${minutos}`;
     
-    // Reemplazar todos los placeholders dinámicos directamente en el texto
-    descripcionPlantilla = descripcionPlantilla.replace(/\[dia\]/g, dia);
-    descripcionPlantilla = descripcionPlantilla.replace(/\[mes\]/g, mes);
-    descripcionPlantilla = descripcionPlantilla.replace(/\[anio\]/g, anio);
-    descripcionPlantilla = descripcionPlantilla.replace(/\[hora\]/g, hora);
-    
-    // Generar saludo dinámico si existe placeholder
+    // Generar saludo dinámico
     const saludoDinamico = obtenerSaludoDinamico();
-    descripcionPlantilla = descripcionPlantilla.replace(/\[saludo-dinamico\]/g, saludoDinamico);
     
-    // Ya no necesitamos limpiar HTML porque usamos innerText
+    // Reemplazar todos los placeholders dinámicos de manera más eficiente
+    const replacements = [
+        { pattern: /\[dia\]/g, value: dia },
+        { pattern: /\[mes\]/g, value: mes },
+        { pattern: /\[anio\]/g, value: anio },
+        { pattern: /\[hora\]/g, value: hora },
+        { pattern: /\[saludo-dinamico\]/g, value: saludoDinamico }
+    ];
+    
+    // Aplicar todos los reemplazos
+    replacements.forEach(({ pattern, value }) => {
+        descripcionPlantilla = descripcionPlantilla.replace(pattern, value);
+    });
     
     // Crear nueva tarea
     const nueva = {
@@ -403,6 +434,12 @@ async function agregarTarea(inputElement) {
         inputElement.value = '';
         
         mostrarToast("✅ Tarea creada exitosamente");
+        
+        // Abrir el modal de lista de tareas (usar el selector correcto)
+        const todoDialog = document.getElementById('todo-dialog');
+        if (todoDialog) {
+            todoDialog.showModal();
+        }
         
         // Actualizar vista de tareas si es necesario
         if (fechaSeleccionada !== fechaHoy) {
@@ -899,7 +936,6 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     window.eliminarUltimoCodigo = eliminarUltimoCodigo;
     window.copiarEnlace = copiarEnlace; // Agregar esta línea
     window.agregarTarea = agregarTarea; // Agregar función para crear tareas desde plantillas
-    window.limpiarHTMLParaTarea = limpiarHTMLParaTarea; // Función de utilidad disponible globalmente
     window.descardarCodigos = function () {
         if (codigosGenerados.length === 0) {
             mostrarToast("No hay códigos generados aún.");

@@ -1355,11 +1355,9 @@
                                     <div class="copiar-contenedor">
                                         <div class="add-task">
                                             
-                                            <input type="text" class="input-task" placeholder="Agregar tarea"
-                                                onkeypress="if(event.key === 'Enter') agregarTarea(this)">
+                                            <input type="text" class="input-task" placeholder="Agregar tarea">
                                                 <span class="material-symbols-outlined add-task-btn"
-                                                style="color: rgb(101, 101, 101); cursor: pointer;"
-                                                onclick="agregarTarea(this.previousElementSibling)">add</span>
+                                                style="color: rgb(101, 101, 101); cursor: pointer;">add</span>
                                         </div>
                                         <span class="copy-icon" onclick="copiarPlantilla(this)">
                                             <span class="material-symbols-outlined"
@@ -2966,7 +2964,8 @@
                                     <label for="observacion">Observación:</label>
                                     <textarea id="observacion" placeholder="Ingresar observación" rows="6"
                                         style="width: 100%; resize: vertical; font-family: 'Montserrat', Helvetica, Arial, sans-serif;"></textarea>
-                                </div>
+                                        <!-- Quisiera que haya un botón para que los campos rellenados de todo el div class="container__grid__item__dinamic se borren y todo quede por default-->
+                                    </div>
                             </div>
 
 
