@@ -1,6 +1,20 @@
 # 🚀 Plantillas de Mesa de Seguimiento Hitss
 
-Una aplicación web moderna para facilitar el acceso a plantillas estandarizadas para la atención de tickets en la Mesa de Seguimiento Fija de Hitss.
+Una aplicación web moderna para facilitar el acceso a plantillas estandarizadas para l#### 🔄 Convertir MAC
+- Ingresa una dirección MAC sin formato
+- El convertidor agregará automáticamente los dos puntos
+- Copia el resultado formateado
+
+#### ✅ Sistema de Tareas
+- **Crear desde plantillas**: Cada plantilla tiene un input para generar tareas
+- **Título personalizable**: Define el nombre de tu tarea
+- **Contenido automático**: La descripción incluye el texto completo de la plantilla
+- **Datos dinámicos**: Reemplaza automáticamente fechas, nombres y saludos
+- **Texto plano limpio**: Las descripciones se guardan sin formato HTML
+- **Almacenamiento local**: Las tareas se guardan en IndexedDB
+- **Acceso rápido**: Presiona `Ctrl+B` (o `Cmd+B` en Mac) para ver tus tareas
+- **Límite inteligente**: Máximo 6 tareas pendientes para mantener el enfoque
+- **Pegado inteligente**: El texto pegado se limpia automáticamente sin formatoención de tickets en la Mesa de Seguimiento Fija de Hitss.
 
 ## � Descripción del Proyecto
 
@@ -30,6 +44,7 @@ Centralizar y estandarizar las plantillas de comunicación utilizadas en los dif
 - **Convertidor de MAC**: Herramienta para formateo de direcciones MAC
 - **Sistema de Flags**: Etiquetas visuales para identificación rápida de casos
 - **Gestión de Fechas**: Sistema dinámico de fechas y horarios
+- **Sistema de Tareas**: Crear tareas personalizadas desde cualquier plantilla
 
 ### 📊 Códigos de Mantenimiento
 - Base de datos completa de códigos técnicos actualizados

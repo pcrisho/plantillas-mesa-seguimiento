@@ -1353,11 +1353,18 @@
                                         REALIZADO POR: <span class="adp"></span>
                                     </p>
                                     <div class="copiar-contenedor">
+                                        <div class="add-task">
+                                            
+                                            <input type="text" class="input-task" placeholder="Agregar tarea"
+                                                onkeypress="if(event.key === 'Enter') agregarTarea(this)">
+                                                <span class="material-symbols-outlined add-task-btn"
+                                                style="color: rgb(101, 101, 101); cursor: pointer;"
+                                                onclick="agregarTarea(this.previousElementSibling)">add</span>
+                                        </div>
                                         <span class="copy-icon" onclick="copiarPlantilla(this)">
                                             <span class="material-symbols-outlined"
                                                 style="color: rgb(101, 101, 101);">content_copy</span>
                                         </span>
-                                        <span class="copiado hidden">Copiado!</span>
                                     </div>
                                 </div>
                             </div>
@@ -4541,7 +4548,8 @@
                                     <tr>
                                         <td>ZTE ZXHNF680</td>
                                         <td>
-                                            <img src="./assets/img/ZTE ZXHNF680.webp" alt="ultimo" style="width: 200px;">
+                                            <img src="./assets/img/ZTE ZXHNF680.webp" alt="ultimo"
+                                                style="width: 200px;">
                                         </td>
                                         <td>NO</td>
                                         <td>3×2</td>
