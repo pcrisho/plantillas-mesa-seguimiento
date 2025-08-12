@@ -883,6 +883,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const franjaVisita = document.getElementById("franja-visita")?.value || "";
         const nombreCliente = document.getElementById("nombre-cliente")?.value.trim() || "";
         const numeroCliente = document.getElementById("numero-cliente")?.value.trim() || "";
+        const contrata = document.getElementById("contrata")?.value || "";
         let fechaFormateada = "";
         if (fechaVisita) {
             const [año, mes, dia] = fechaVisita.split('-');
@@ -894,7 +895,7 @@ CLIENTE:&nbsp;${nombreCliente}<br>
 NÚMERO:&nbsp;${numeroCliente}<br>
 NUEVA FECHA Y FRANJA DE VISITA:&nbsp;${fechaFormateada} - ${franjaVisita}<br>
 MOTIVO DE REPROGRAMACIÓN: ${tipoReagen} # ${motivo}<br>
-CONTRATA:&nbsp;<br>
+CONTRATA:&nbsp;${contrata}<br>
 ID DE LLAMADA:&nbsp;${idLlamada}<br>
 OBSERVACIÓN:&nbsp;${observacion}<br>
 REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
@@ -912,6 +913,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         actualizarPlantilla();
     });
     document.getElementById("motivo")?.addEventListener("change", actualizarPlantilla);
+    document.getElementById("contrata")?.addEventListener("change", actualizarPlantilla);
     document.getElementById("id-llamada")?.addEventListener("input", actualizarPlantilla);
     document.getElementById("observacion")?.addEventListener("input", actualizarPlantilla);
     document.getElementById("fecha-visita")?.addEventListener("change", actualizarPlantilla);
@@ -1041,6 +1043,51 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
             console.error("Error limpiando tareas:", error);
             mostrarToast("❌ Error al limpiar tareas");
         }
+    };
+
+    // Función para limpiar el formulario de reprogramación
+    window.limpiarFormularioReprogramacion = function() {
+        // Resetear selects a valores por defecto
+        const tipoReprogramado = document.getElementById("tipo-reprogramado");
+        if (tipoReprogramado) tipoReprogramado.value = "MESA";
+
+        const tipoReagendado = document.getElementById("tipo-reagendado");
+        if (tipoReagendado) tipoReagendado.value = "CLARO";
+
+        // Resetear contrata al primer valor (Saval)
+        const contrata = document.getElementById("contrata");
+        if (contrata) contrata.value = "Saval";
+
+        // Limpiar inputs de texto
+        const nombreCliente = document.getElementById("nombre-cliente");
+        if (nombreCliente) nombreCliente.value = "";
+
+        const numeroCliente = document.getElementById("numero-cliente");
+        if (numeroCliente) numeroCliente.value = "";
+
+        const idLlamada = document.getElementById("id-llamada");
+        if (idLlamada) idLlamada.value = "";
+
+        // Limpiar fecha de visita
+        const fechaVisita = document.getElementById("fecha-visita");
+        if (fechaVisita) fechaVisita.value = "";
+
+        // Resetear franja de visita al primer valor
+        const franjaVisita = document.getElementById("franja-visita");
+        if (franjaVisita) franjaVisita.value = "AM1";
+
+        // Limpiar textarea de observación
+        const observacion = document.getElementById("observacion");
+        if (observacion) observacion.value = "";
+
+        // Recargar escenarios para resetear los selects dependientes
+        cargarEscenarios();
+        
+        // Actualizar la plantilla con los valores por defecto
+        actualizarPlantilla();
+        
+        // Mostrar mensaje de confirmación
+        mostrarToast("✅ Formulario limpiado correctamente");
     };
 
 });

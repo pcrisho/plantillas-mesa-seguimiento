@@ -1354,9 +1354,9 @@
                                     </p>
                                     <div class="copiar-contenedor">
                                         <div class="add-task">
-                                            
+
                                             <input type="text" class="input-task" placeholder="Agregar tarea">
-                                                <span class="material-symbols-outlined add-task-btn"
+                                            <span class="material-symbols-outlined add-task-btn"
                                                 style="color: rgb(101, 101, 101); cursor: pointer;">add</span>
                                         </div>
                                         <span class="copy-icon" onclick="copiarPlantilla(this)">
@@ -2947,6 +2947,17 @@
                                     <label for="id-llamada">ID de Llamada:</label>
                                     <input type="text" id="id-llamada" placeholder="Ingresar ID de llamada">
 
+                                    <!--Nueva lógica-->
+                                    <label for="contrata">Contrata:</label>
+                                    <select id="contrata">
+                                        <option value="Saval">Saval</option>
+                                        <option value="Carlei">Carlei</option>
+                                        <option value="Telecom">Telecom</option>
+                                        <option value="Telecontacto">Telecontacto</option>
+                                        <option value="Witlink">Witlink</option>
+                                        <option value="Jamapuc">Jamapuc</option>
+                                        <option value="Insertel">Insertel</option>
+                                    </select>
 
 
                                     <label for="fecha-visita">Fecha de Visita:</label>
@@ -2964,17 +2975,16 @@
                                     <label for="observacion">Observación:</label>
                                     <textarea id="observacion" placeholder="Ingresar observación" rows="6"
                                         style="width: 100%; resize: vertical; font-family: 'Montserrat', Helvetica, Arial, sans-serif;"></textarea>
-                                        <!-- Quisiera que haya un botón para que los campos rellenados de todo el div class="container__grid__item__dinamic se borren y todo quede por default-->
+                                    <div style="display: flex; justify-content: center; margin-top: 16px;">
+                                        <button class="button_delete" onclick="limpiarFormularioReprogramacion()"
+                                            style="width: 100%; height: 100%;">
+                                            <span class="material-symbols-outlined"
+                                                style="vertical-align: middle; margin-right: 8px;">refresh</span>
+                                            Limpiar Campos
+                                        </button>
                                     </div>
+                                </div>
                             </div>
-
-
-
-
-
-
-
-
 
                         </div>
                     </div>
@@ -3365,7 +3375,7 @@
                                         *Cliente salió de viaje&nbsp;&nbsp;y en el domicilio no tienen conocimiento de
                                         la Instalación.<br>
                                         ID DE LLAMADA:&nbsp;<br>
-                                        REALIZADO POR:&nbsp;<span class="adp"></span>&nbsp;-&nbsp;AGENTE HITSS
+                                        REALIZADO POR:&nbsp;<span class="adp"></span>&nbsp;-&nbsp;ADP MULTISKILL HITSS
 
                                     </p>
                                     <div class="copiar-contenedor">
@@ -3397,7 +3407,7 @@
                                         *Cliente salió de viaje&nbsp;&nbsp;y en el domicilio no tienen conocimiento de
                                         la Instalación.<br>
                                         ID DE LLAMADA:&nbsp;<br>
-                                        REALIZADO POR:&nbsp;<span class="adp"></span>&nbsp;-&nbsp;AGENTE HITSS
+                                        REALIZADO POR:&nbsp;<span class="adp"></span>&nbsp;-&nbsp;ADP MULTISKILL HITSS
 
                                     </p>
                                     <div class="copiar-contenedor">
