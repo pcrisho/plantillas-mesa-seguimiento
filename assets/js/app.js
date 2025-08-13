@@ -242,15 +242,6 @@ function setupTaskEditingListeners() {
     if (setupTaskEditingListeners.configured) return;
     setupTaskEditingListeners.configured = true;
 
-    // Event listener para pegado en descripciones
-    document.addEventListener('paste', function (event) {
-        if (event.target.classList.contains('task-description')) {
-            manejarPegadoDescripcion(event);
-        } else if (event.target.classList.contains('task-title')) {
-            manejarPegadoTitulo(event);
-        }
-    });
-
     // Event listener para guardado al perder foco
     document.addEventListener('blur', function (event) {
         if (event.target.classList.contains('task-description')) {
@@ -267,29 +258,6 @@ function setupTaskEditingListeners() {
             }
         }
     }, true);
-}
-
-// Función para manejar pegado en títulos
-function manejarPegadoTitulo(event) {
-    event.preventDefault();
-    const pasteData = (event.clipboardData || window.clipboardData).getData('text');
-    if (pasteData) {
-        // Limpiar saltos de línea del texto pegado para el título
-        const textoLimpio = pasteData.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-        // Insertar texto plano sin formato
-        if (document.execCommand) {
-            document.execCommand('insertText', false, textoLimpio);
-        } else {
-            // Fallback
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                range.deleteContents();
-                range.insertNode(document.createTextNode(textoLimpio));
-                range.collapse(false);
-            }
-        }
-    }
 }
 
 // Función para inicializar el sistema de tareas en todas las plantillas
@@ -457,37 +425,6 @@ async function agregarTarea(inputElement) {
 }
 
 // Función para manejar pegado en descripciones de tareas
-function manejarPegadoDescripcion(event) {
-    event.preventDefault();
-
-    // Obtener el texto del portapapeles
-    const pasteData = (event.clipboardData || window.clipboardData).getData('text');
-    if (!pasteData) return;
-
-    // Ya no necesitamos limpiar HTML porque innerText ya devuelve texto limpio
-    // Usar execCommand para insertar el texto en la posición del cursor
-    if (document.execCommand) {
-        document.execCommand('insertText', false, pasteData);
-    } else {
-        // Fallback para navegadores que no soportan execCommand
-        const selection = window.getSelection();
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            range.deleteContents();
-            range.insertNode(document.createTextNode(pasteData));
-            range.collapse(false);
-        }
-    }
-
-    // Guardar cambios
-    setTimeout(() => {
-        const taskId = event.target.closest('.task-item').dataset.id;
-        if (taskId) {
-            actualizarTareaDescripcion(taskId, event.target.textContent);
-        }
-    }, 10);
-}
-
 // Función para actualizar la descripción de una tarea
 function actualizarTareaDescripcion(taskId, nuevaDescripcion) {
     const tarea = tareas.find(t => t.id == taskId);
@@ -1236,17 +1173,25 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
             // Obtenemos el texto plano del portapapeles
             const textoParaPegar = (e.clipboardData || window.clipboardData).getData('text/plain');
 
-            // Limpiamos el texto pegado de espacios y otros caracteres no deseados
-            const textoLimpio = textoParaPegar
-                .replace(/\u00A0/g, ' ')
-                .replace(/[ \t]+/g, ' ')
-                .replace(/\n[ \t]+/g, '\n')
-                .replace(/[ \t]+\n/g, '\n')
-                .trim();
+            let textoLimpio;
+            
+            // Lógica específica para títulos de tareas
+            if (e.target.classList.contains('task-title')) {
+                textoLimpio = textoParaPegar
+                    .replace(/\n/g, ' ')          // Convertir saltos de línea a espacios
+                    .replace(/\s+/g, ' ')         // Múltiples espacios a uno solo
+                    .trim();
+            } else {
+                // Lógica para descripciones y otros elementos
+                textoLimpio = textoParaPegar
+                    .replace(/\u00A0/g, ' ')      // Espacios no rompibles
+                    .replace(/[ \t]+/g, ' ')      // Múltiples espacios/tabs a uno solo
+                    .replace(/\n[ \t]+/g, '\n')   // Limpiar espacios después de saltos
+                    .replace(/[ \t]+\n/g, '\n')   // Limpiar espacios antes de saltos
+                    .trim();
+            }
 
-            // Usamos document.execCommand para insertar el texto plano
-            // en la posición actual del cursor. Esto evita que se borre
-            // el contenido existente y que se pegue el formato.
+            // Insertar el texto limpio en la posición del cursor
             if (document.execCommand) {
                 document.execCommand('insertText', false, textoLimpio);
             } else {
@@ -1255,6 +1200,24 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
                 const end = e.target.selectionEnd;
                 e.target.value = e.target.value.substring(0, start) + textoLimpio + e.target.value.substring(end);
                 e.target.selectionStart = e.target.selectionEnd = start + textoLimpio.length;
+            }
+            
+            // Guardar cambios automáticamente para tareas
+            if (e.target.classList.contains('task-description') || e.target.classList.contains('task-title')) {
+                setTimeout(() => {
+                    const taskId = e.target.closest('.task-item')?.dataset.id;
+                    if (taskId) {
+                        if (e.target.classList.contains('task-description')) {
+                            actualizarTareaDescripcion(taskId, e.target.textContent);
+                        } else if (e.target.classList.contains('task-title')) {
+                            const tarea = tareas.find(t => t.id == taskId);
+                            if (tarea) {
+                                tarea.titulo = e.target.textContent;
+                                guardarTareaIndexedDB(tarea);
+                            }
+                        }
+                    }
+                }, 10);
             }
         }
     });
