@@ -242,7 +242,7 @@ export class PasteHandler {
                 }
             }
             
-            // MANEJO PARA DESCRIPCIONES (incluyendo BR y divs internos)
+            // MANEJO PARA DESCRIPCIONES (incluyendo BR y divs internos) ctadsa
             if (targetElement.classList.contains('task-description') || 
                 taskContainer?.classList.contains('task-description')) {
                 
