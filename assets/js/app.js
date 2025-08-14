@@ -9,14 +9,24 @@ import {
     eliminarTodasLasTareasIndexedDB
 } from './indexeddb.js';
 
+import { sessionManager, getSessionVars } from './modules/session.js';
+import { 
+    codesManager, 
+    generarCodigo, 
+    eliminarUltimoCodigo, 
+    cargarDatosGuardados,
+    getCodigosGenerados,
+    limpiarCodigosVisuales 
+} from './modules/codes.js';
+import { 
+    pasteHandler, 
+    limpiarTareasExistentes,
+    posicionarCursorEnTexto 
+} from './modules/paste-handler.js';
+
 // === VARIABLES GLOBALES ===
 let toastVisible = false;
 const toastQueue = [];
-let nombreAsesor = "";
-let usuarioAdp = "";
-let correlativo = 1;
-let letraActual = "A";
-let codigosGenerados = [];
 let tareas = [];
 let filtroActual = 'all';
 
@@ -99,89 +109,9 @@ function toggleElementVisibility(element, visible, displayMode = "flex") {
     }
 }
 
-// === LÓGICA DE SESIÓN Y CÓDIGOS ===
-function claveUsuario() { return `codigos_${usuarioAdp}`; }
-function guardarDatos() {
-    const fecha = new Date().toDateString();
-    const clave = `codigos_${usuarioAdp}`;
-    localStorage.setItem(clave, JSON.stringify({ fecha, codigos: codigosGenerados }));
-}
-function mostrarUltimoCodigoGenerado() {
-    const ult = codigosGenerados[codigosGenerados.length - 1] || "";
-    const codigoGenerado = document.getElementById("codigo-generado");
-    if (codigoGenerado) codigoGenerado.textContent = ult;
-}
-function cargarDatosGuardados() {
-    if (!usuarioAdp) return;
-    const clave = `codigos_${usuarioAdp}`;
-    const data = JSON.parse(localStorage.getItem(clave));
-    const fechaActual = new Date().toDateString();
-    const listaCodigos = document.getElementById("lista-codigos");
-
-    if (!data || data.fecha !== fechaActual) {
-        codigosGenerados = [];
-        correlativo = 1;
-        letraActual = "A";
-        localStorage.setItem(clave, JSON.stringify({ fecha: fechaActual, codigos: [] }));
-        if (listaCodigos) listaCodigos.innerHTML = "";
-    } else {
-        codigosGenerados = data.codigos;
-        if (listaCodigos) listaCodigos.innerHTML = "";
-        codigosGenerados.forEach(codigo => {
-            const item = document.createElement("li");
-            item.textContent = codigo;
-            if (listaCodigos) listaCodigos.appendChild(item);
-        });
-        correlativo = codigosGenerados.length + 1;
-        letraActual = codigosGenerados.length % 2 === 0 ? "A" : "B";
-    }
-    mostrarUltimoCodigoGenerado();
-}
-function generarCodigo() {
-    if (!usuarioAdp || usuarioAdp.length !== 7) {
-        mostrarToast("⚠️ Primero guarda tu usuario correctamente.");
-        return;
-    }
-    const fecha = new Date();
-    const dia = fecha.getDate().toString().padStart(2, "0");
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-    const anio = fecha.getFullYear();
-    const codigo = `${correlativo}${usuarioAdp}${dia}${mes}${anio}${letraActual}`;
-    codigosGenerados.push(codigo);
-    guardarDatos();
-    const codigoGenerado = document.getElementById("codigo-generado");
-    if (codigoGenerado) codigoGenerado.textContent = codigo;
-    letraActual = letraActual === "A" ? "B" : "A";
-    correlativo++;
-    const lista = document.getElementById("lista-codigos");
-    const item = document.createElement("li");
-    item.textContent = codigo;
-    if (lista) lista.appendChild(item);
-}
-function eliminarUltimoCodigo() {
-    if (codigosGenerados.length === 0) {
-        mostrarToast("⚠️ No hay códigos para eliminar.");
-        return;
-    }
-    codigosGenerados.pop();
-    correlativo = Math.max(1, correlativo - 1);
-    letraActual = letraActual === "A" ? "B" : "A";
-    guardarDatos();
-    const lista = document.getElementById("lista-codigos");
-    if (lista && lista.lastElementChild) {
-        lista.removeChild(lista.lastElementChild);
-    }
-    mostrarUltimoCodigoGenerado();
-}
-function limpiarCodigosVisuales() {
-    const listaCodigos = document.getElementById("lista-codigos");
-    if (listaCodigos) listaCodigos.innerHTML = "";
-    const codigoGenerado = document.getElementById("codigo-generado");
-    if (codigoGenerado) codigoGenerado.textContent = "";
-}
-
 // === LÓGICA DE TO-DO LIST ===
 function saveTareas() {
+    const { usuarioAdp } = getSessionVars();
     localStorage.setItem(`filtro_tareas_${usuarioAdp || 'anonimo'}`, filtroActual);
 }
 
@@ -211,8 +141,24 @@ function renderTareas() {
         li.innerHTML = `
             <input type="checkbox" ${task.completada ? 'checked' : ''}>
             <div class="task-text-container" style="width: 100%;">
-                <div class="task-title" contenteditable="true">${task.titulo}</div>
-                <div class="task-description" contenteditable="true"></div>
+                <div class="task-title" 
+                     contenteditable="true" 
+                     spellcheck="false" 
+                     autocomplete="off" 
+                     autocorrect="off" 
+                     autocapitalize="off" 
+                     data-gramm="false"
+                     data-gramm_editor="false"
+                     data-enable-grammarly="false">${task.titulo}</div>
+                <div class="task-description" 
+                     contenteditable="true" 
+                     spellcheck="false" 
+                     autocomplete="off" 
+                     autocorrect="off" 
+                     autocapitalize="off"
+                     data-gramm="false"
+                     data-gramm_editor="false"
+                     data-enable-grammarly="false"></div>
             </div>
             <button class="delete-task-btn" title="Eliminar">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323">
@@ -221,45 +167,186 @@ function renderTareas() {
             </button>
         `;
 
-        // Configurar la descripción preservando saltos de línea
+        // Configurar la descripción con estructura de divs por línea
         const descripcionElement = li.querySelector('.task-description');
 
         if (descripcionElement && task.descripcion) {
-            // Usar directamente la descripción sin necesidad de limpiar
-            descripcionElement.textContent = task.descripcion;
+            // Aplicar formato de divs por línea
+            convertirTextoADivsPorLinea(descripcionElement, task.descripcion);
+        } else if (descripcionElement) {
+            // Descripción vacía - agregar div placeholder
+            descripcionElement.innerHTML = '<div><br></div>';
         }
 
         taskList.appendChild(li);
     });
+}
 
-    // Configurar event listeners usando delegation (solo una vez)
-    setupTaskEditingListeners();
+// === FUNCIONES PARA MANEJO DE DIVS POR LÍNEA ===
+
+// Función para convertir texto plano a estructura de divs por línea
+function convertirTextoADivsPorLinea(elemento, texto) {
+    if (!elemento) return;
+    
+    // Si no hay texto, crear div vacío
+    if (!texto || texto.trim() === '') {
+        elemento.innerHTML = '<div><br></div>';
+        return;
+    }
+    
+    // Limpiar texto antes de procesarlo
+    let textoLimpio = texto;
+    
+    // MEJORAR DETECCIÓN: Si el texto YA contiene HTML estructurado, usarlo directamente
+    if (texto.includes('<div>') && texto.includes('</div>')) {
+        // El texto ya está en formato HTML correcto, usar directamente
+        elemento.innerHTML = texto;
+        return;
+    }
+    
+    // Si el texto contiene algunos elementos HTML pero no está completamente estructurado
+    if (texto.includes('<') || texto.includes('<br>')) {
+        // Crear un elemento temporal para extraer solo el texto
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = texto;
+        textoLimpio = tempDiv.textContent || tempDiv.innerText || '';
+    }
+    
+    // Dividir por saltos de línea y crear divs
+    const lineas = textoLimpio.split('\n');
+    const divsHTML = lineas.map(linea => {
+        // Si la línea está vacía o solo contiene espacios, usar <br> para mantener el espaciado
+        if (linea.trim() === '') {
+            return '<div><br></div>';
+        }
+        // Escapar caracteres especiales HTML para evitar problemas
+        const lineaEscapada = linea
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        return `<div>${lineaEscapada}</div>`;
+    }).join('');
+    
+    elemento.innerHTML = divsHTML;
+    
+    // Verificar que se aplicó correctamente el formato
+    const divsCreados = elemento.querySelectorAll('div');
+    if (divsCreados.length === 0) {
+        console.warn('No se pudo crear estructura de divs, usando fallback');
+        elemento.innerHTML = `<div>${texto.replace(/\n/g, '</div><div>')}</div>`;
+    }
+}
+
+// Función para extraer texto de estructura de divs
+function extraerTextoDeLineasDiv(elemento) {
+    const divs = elemento.querySelectorAll('div');
+    if (divs.length === 0) {
+        return elemento.textContent || '';
+    }
+    
+    return Array.from(divs).map(div => {
+        // Si el div solo contiene <br>, es una línea vacía - mantener como línea vacía
+        if (div.innerHTML === '<br>' || div.innerHTML.trim() === '') {
+            return '';
+        }
+        return div.textContent || '';
+    }).join('\n');
+}
+
+// Función para manejar Enter en descripciones con divs (MUY SIMPLIFICADA)
+function manejarEnterEnDescripcion(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        // NO prevenir el comportamiento por defecto para mantener Ctrl+Z natural
+        // event.preventDefault();
+        
+        // Dejar que el navegador maneje Enter naturalmente
+        // Solo convertir a divs después si es necesario
+        setTimeout(() => {
+            const elemento = event.target;
+            // Si no tiene estructura de divs, convertir
+            if (elemento.querySelectorAll('div').length === 0) {
+                const texto = elemento.textContent;
+                convertirTextoADivsPorLinea(elemento, texto);
+            }
+        }, 10);
+    }
+}
+
+// Función fallback para navegadores sin execCommand
+function manejarEnterSinExecCommand(range, divActual) {
+    const textoCompleto = divActual.textContent;
+    let posicionCursor = 0;
+    
+    // Calcular la posición exacta del cursor en el texto
+    if (range.startContainer.nodeType === Node.TEXT_NODE) {
+        let nodoActual = divActual.firstChild;
+        while (nodoActual && nodoActual !== range.startContainer) {
+            if (nodoActual.nodeType === Node.TEXT_NODE) {
+                posicionCursor += nodoActual.textContent.length;
+            }
+            nodoActual = nodoActual.nextSibling;
+        }
+        posicionCursor += range.startOffset;
+    } else {
+        posicionCursor = range.startOffset;
+    }
+    
+    // Dividir el texto en la posición del cursor
+    const textoAntes = textoCompleto.substring(0, posicionCursor);
+    const textoDespues = textoCompleto.substring(posicionCursor);
+    
+    // Actualizar el div actual con el texto antes del cursor
+    if (textoAntes.trim() === '') {
+        divActual.innerHTML = '<br>';
+    } else {
+        divActual.textContent = textoAntes;
+    }
+    
+    // Crear nuevo div para el texto después del cursor
+    const nuevoDiv = document.createElement('div');
+    if (textoDespues.trim() === '') {
+        nuevoDiv.innerHTML = '<br>';
+    } else {
+        nuevoDiv.textContent = textoDespues;
+    }
+    
+    // Insertar el nuevo div después del div actual
+    divActual.parentNode.insertBefore(nuevoDiv, divActual.nextSibling);
+    
+    // Mover cursor al inicio del nuevo div
+    const newRange = document.createRange();
+    const selection = window.getSelection();
+    
+    if (nuevoDiv.innerHTML === '<br>') {
+        newRange.setStart(nuevoDiv, 0);
+        newRange.setEnd(nuevoDiv, 0);
+    } else if (nuevoDiv.firstChild) {
+        newRange.setStart(nuevoDiv.firstChild, 0);
+        newRange.setEnd(nuevoDiv.firstChild, 0);
+    }
+    
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+}
+
+// Función para limpiar divs vacíos duplicados
+function limpiarDivsVacios(contenedor) {
+    if (!contenedor) return;
+    
+    const divs = contenedor.querySelectorAll('div');
+    divs.forEach(div => {
+        // Eliminar divs completamente vacíos (sin contenido ni <br>)
+        if (div.innerHTML.trim() === '' && div.textContent.trim() === '') {
+            div.remove();
+        }
+        // Asegurar que divs vacíos tengan <br>
+        else if (div.textContent.trim() === '' && div.innerHTML !== '<br>') {
+            div.innerHTML = '<br>';
+        }
+    });
 }
 
 // Configurar event listeners para edición de tareas usando delegation
-function setupTaskEditingListeners() {
-    // Solo configurar una vez, no en cada render
-    if (setupTaskEditingListeners.configured) return;
-    setupTaskEditingListeners.configured = true;
-
-    // Event listener para guardado al perder foco
-    document.addEventListener('blur', function (event) {
-        if (event.target.classList.contains('task-description')) {
-            const taskId = event.target.closest('.task-item').dataset.id;
-            if (taskId) {
-                actualizarTareaDescripcion(taskId, event.target.textContent);
-            }
-        } else if (event.target.classList.contains('task-title')) {
-            const taskId = event.target.closest('.task-item').dataset.id;
-            const tarea = tareas.find(t => t.id == taskId);
-            if (tarea) {
-                tarea.titulo = event.target.textContent;
-                guardarTareaIndexedDB(tarea);
-            }
-        }
-    }, true);
-}
-
 // Función para inicializar el sistema de tareas en todas las plantillas
 function inicializarSistemaTareas() {
     const copiadores = document.querySelectorAll('.copiar-contenedor');
@@ -273,7 +360,16 @@ function inicializarSistemaTareas() {
             const addTaskDiv = document.createElement('div');
             addTaskDiv.className = 'add-task';
             addTaskDiv.innerHTML = `
-                <input type="text" class="input-task" placeholder="Agregar tarea">
+                <input type="text" 
+                       class="input-task" 
+                       placeholder="Agregar tarea"
+                       autocomplete="off" 
+                       autocorrect="off" 
+                       autocapitalize="off" 
+                       spellcheck="false"
+                       data-gramm="false"
+                       data-gramm_editor="false"
+                       data-enable-grammarly="false">
                 <span class="material-symbols-outlined add-task-btn" style="color: rgb(101, 101, 101); cursor: pointer;">add</span>
             `;
 
@@ -289,6 +385,25 @@ function inicializarSistemaTareas() {
 
     // Event delegation para manejar todos los inputs y botones de tareas
     setupTaskEventListeners();
+    
+    // Event listener para guardado al perder foco (configurado una sola vez)
+    document.addEventListener('blur', function (event) {
+        if (event.target.classList.contains('task-description')) {
+            const taskId = event.target.closest('.task-item')?.dataset.id;
+            if (taskId) {
+                // Guardar el contenido HTML para preservar la estructura
+                const contenidoHTML = event.target.innerHTML || '';
+                actualizarTareaDescripcion(taskId, contenidoHTML);
+            }
+        } else if (event.target.classList.contains('task-title')) {
+            const taskId = event.target.closest('.task-item')?.dataset.id;
+            const tarea = tareas.find(t => t.id == taskId);
+            if (tarea) {
+                tarea.titulo = event.target.textContent;
+                guardarTareaIndexedDB(tarea);
+            }
+        }
+    }, true);
 }
 
 // Configurar event listeners usando delegation
@@ -311,9 +426,13 @@ function setupTaskEventListeners() {
     });
 }
 
-// Función para agregar tarea desde plantilla
+// Función unificada para agregar tarea (desde plantilla o modal)
 async function agregarTarea(inputElement) {
-    if (!inputElement) return;
+    if (!inputElement) {
+        // Si no se pasa inputElement, buscar el input del modal
+        inputElement = document.getElementById('new-task-input');
+        if (!inputElement) return;
+    }
 
     const texto = inputElement.value.trim();
     if (!texto) {
@@ -328,62 +447,59 @@ async function agregarTarea(inputElement) {
         return;
     }
 
-    // Buscar la plantilla asociada al input
+    let descripcionPlantilla = '';
+
+    // Si viene desde una plantilla (no desde el modal)
     const plantillaContainer = inputElement.closest('.plantilla');
-    if (!plantillaContainer) {
-        mostrarToast("No se pudo encontrar la plantilla asociada");
-        return;
+    if (plantillaContainer) {
+        // Buscar el texto de la plantilla de manera más flexible
+        let plantillaTexto = plantillaContainer.querySelector('#texto-plantilla');
+        if (!plantillaTexto) {
+            // Buscar cualquier párrafo que contenga contenido de plantilla
+            const paragrafos = plantillaContainer.querySelectorAll('p');
+            plantillaTexto = Array.from(paragrafos).find(p =>
+                p.innerHTML.length > 50 && // Debe tener contenido sustancial
+                !p.closest('.copiar-contenedor') // No debe estar en el contenedor de copia
+            );
+        }
+
+        if (plantillaTexto) {
+            // Obtener el texto de la plantilla usando la misma lógica que copiarPlantilla()
+            descripcionPlantilla = plantillaTexto.innerText || plantillaTexto.textContent;
+
+            // Reemplazar placeholders dinámicos DESPUÉS de obtener el texto limpio
+            const { nombreAsesor } = getSessionVars();
+            if (nombreAsesor) {
+                descripcionPlantilla = descripcionPlantilla.replace(/ADP MULTISKILL HITSS/g, `${nombreAsesor} - ADP MULTISKILL HITSS`);
+            }
+
+            // Reemplazar fechas dinámicas en el texto limpio
+            const fecha = new Date();
+            const dia = fecha.getDate();
+            const mes = fecha.toLocaleString("es-PE", { month: "long" });
+            const anio = fecha.getFullYear();
+            const horas = fecha.getHours().toString().padStart(2, "0");
+            const minutos = fecha.getMinutes().toString().padStart(2, "0");
+            const hora = `${horas}:${minutos}`;
+
+            // Generar saludo dinámico
+            const saludoDinamico = obtenerSaludoDinamico();
+
+            // Reemplazar todos los placeholders dinámicos de manera más eficiente
+            const replacements = [
+                { pattern: /\[dia\]/g, value: dia },
+                { pattern: /\[mes\]/g, value: mes },
+                { pattern: /\[anio\]/g, value: anio },
+                { pattern: /\[hora\]/g, value: hora },
+                { pattern: /\[saludo-dinamico\]/g, value: saludoDinamico }
+            ];
+
+            // Aplicar todos los reemplazos
+            replacements.forEach(({ pattern, value }) => {
+                descripcionPlantilla = descripcionPlantilla.replace(pattern, value);
+            });
+        }
     }
-
-    // Buscar el texto de la plantilla de manera más flexible
-    let plantillaTexto = plantillaContainer.querySelector('#texto-plantilla');
-    if (!plantillaTexto) {
-        // Buscar cualquier párrafo que contenga contenido de plantilla
-        const paragrafos = plantillaContainer.querySelectorAll('p');
-        plantillaTexto = Array.from(paragrafos).find(p =>
-            p.innerHTML.length > 50 && // Debe tener contenido sustancial
-            !p.closest('.copiar-contenedor') // No debe estar en el contenedor de copia
-        );
-    }
-
-    if (!plantillaTexto) {
-        mostrarToast("No se pudo encontrar el texto de la plantilla");
-        return;
-    }
-
-    // Obtener el texto de la plantilla usando la misma lógica que copiarPlantilla()
-    let descripcionPlantilla = plantillaTexto.innerText || plantillaTexto.textContent;
-
-    // Reemplazar placeholders dinámicos DESPUÉS de obtener el texto limpio
-    if (nombreAsesor) {
-        descripcionPlantilla = descripcionPlantilla.replace(/ADP MULTISKILL HITSS/g, `${nombreAsesor} - ADP MULTISKILL HITSS`);
-    }
-
-    // Reemplazar fechas dinámicas en el texto limpio
-    const fecha = new Date();
-    const dia = fecha.getDate();
-    const mes = fecha.toLocaleString("es-PE", { month: "long" });
-    const anio = fecha.getFullYear();
-    const horas = fecha.getHours().toString().padStart(2, "0");
-    const minutos = fecha.getMinutes().toString().padStart(2, "0");
-    const hora = `${horas}:${minutos}`;
-
-    // Generar saludo dinámico
-    const saludoDinamico = obtenerSaludoDinamico();
-
-    // Reemplazar todos los placeholders dinámicos de manera más eficiente
-    const replacements = [
-        { pattern: /\[dia\]/g, value: dia },
-        { pattern: /\[mes\]/g, value: mes },
-        { pattern: /\[anio\]/g, value: anio },
-        { pattern: /\[hora\]/g, value: hora },
-        { pattern: /\[saludo-dinamico\]/g, value: saludoDinamico }
-    ];
-
-    // Aplicar todos los reemplazos
-    replacements.forEach(({ pattern, value }) => {
-        descripcionPlantilla = descripcionPlantilla.replace(pattern, value);
-    });
 
     // Crear nueva tarea
     const nueva = {
@@ -403,10 +519,12 @@ async function agregarTarea(inputElement) {
 
         mostrarToast("✅ Tarea creada exitosamente");
 
-        // Abrir el modal de lista de tareas (usar el selector correcto)
-        const todoDialog = document.getElementById('todo-dialog');
-        if (todoDialog) {
-            todoDialog.showModal();
+        // Si viene desde plantilla, abrir el modal de lista de tareas
+        if (plantillaContainer) {
+            const todoDialog = document.getElementById('todo-dialog');
+            if (todoDialog) {
+                todoDialog.showModal();
+            }
         }
 
         // Actualizar vista de tareas si es necesario
@@ -443,36 +561,6 @@ function obtenerSaludoDinamico() {
         return "Buenas tardes";
     } else {
         return "Buenas noches";
-    }
-}
-
-async function addTarea() {
-    const newTaskInput = document.getElementById('new-task-input');
-    if (!newTaskInput) return;
-    const texto = newTaskInput.value.trim();
-    if (!texto) return;
-    const pendientes = tareas.filter(t => !t.completada);
-    if (pendientes.length >= 6) {
-        mostrarToast("Regulariza tus plantillas antes de agregar más");
-        return;
-    }
-    const nueva = {
-        id: Date.now(),
-        titulo: texto,
-        descripcion: '',
-        completada: false,
-        fechaCreacion: new Date().toISOString() // Debe guardar la hora exacta
-    };
-    tareas.push(nueva);
-    await guardarTareaIndexedDB(nueva);
-    newTaskInput.value = '';
-    if (fechaSeleccionada !== fechaHoy) {
-        fechaSeleccionada = fechaHoy;
-        const dateInput = document.getElementById('date-input');
-        if (dateInput) dateInput.value = fechaHoy;
-        await actualizarVistaTareas(fechaSeleccionada);
-    } else {
-        renderTareas();
     }
 }
 
@@ -546,26 +634,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (dateInput) dateInput.value = fechaHoy;
 
-    // === Lógica inicial de carga de sesión ===
-    function cargarCredenciales() {
-        const adpGuardado = localStorage.getItem("adpNombre");
-        const usuarioGuardado = localStorage.getItem("adpUsuario");
-        if (adpGuardado && usuarioGuardado) {
-            nombreAsesor = adpGuardado;
-            usuarioAdp = usuarioGuardado;
-            if (spanAdp) spanAdp.textContent = nombreAsesor;
-            if (spanUsuario) spanUsuario.textContent = usuarioAdp;
-            toggleElementVisibility(userCredentials, true);
-            toggleElementVisibility(btnAbrirModal, false);
-            document.querySelectorAll(".adp").forEach(span => {
-                span.textContent = nombreAsesor;
-            });
-            cargarDatosGuardados();
-        } else {
-            if (modal) modal.showModal();
-        }
-    }
-    cargarCredenciales();
+    // === Exponer funciones globalmente para los módulos ===
+    window.mostrarToast = mostrarToast;
+    window.toggleElementVisibility = toggleElementVisibility;
+    window.cerrarDialogConAnimacion = cerrarDialogConAnimacion;
+    window.generarCodigo = generarCodigo;
+    window.eliminarUltimoCodigo = eliminarUltimoCodigo;
+    window.actualizarTareaDescripcion = actualizarTareaDescripcion; // Para paste-handler
+
+    // === Inicializar módulos ===
+    sessionManager.inicializar();
+    codesManager.inicializar();
+    pasteHandler.inicializar();
 
     // === Event listeners para la sesión ===
     if (btnAbrirModal) {
@@ -578,19 +658,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const nombre = inputAdp.value.trim();
             const usuario = inputUsuario.value.trim().toUpperCase();
             if (nombre && usuario.length === 7) {
-                localStorage.setItem("adpNombre", nombre);
-                localStorage.setItem("adpUsuario", usuario);
-                nombreAsesor = nombre;
-                usuarioAdp = usuario;
-                if (spanAdp) spanAdp.textContent = nombreAsesor;
-                if (spanUsuario) spanUsuario.textContent = usuarioAdp;
-                toggleElementVisibility(userCredentials, true);
-                toggleElementVisibility(btnAbrirModal, false);
-                document.querySelectorAll(".adp").forEach(span => {
-                    span.textContent = nombreAsesor;
-                });
+                sessionManager.guardarCredenciales(nombre, usuario);
                 cerrarDialogConAnimacion(modal);
-                cargarDatosGuardados();
+                // cargarDatosGuardados(); // Ya no es necesario, el SessionManager se encarga
             } else {
                 mostrarToast("⚠️ Por favor, completa los datos correctamente.");
             }
@@ -608,22 +678,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (btnConfirmarCerrarSesion) {
         btnConfirmarCerrarSesion.addEventListener("click", () => {
-            localStorage.removeItem("adpNombre");
-            localStorage.removeItem("adpUsuario");
-            toggleElementVisibility(userCredentials, false);
-            toggleElementVisibility(btnAbrirModal, true);
-            if (spanAdp) spanAdp.textContent = "";
-            if (spanUsuario) spanUsuario.textContent = "";
-            document.querySelectorAll(".adp").forEach(span => {
-                span.textContent = "";
-            });
-            nombreAsesor = "";
-            usuarioAdp = "";
-            codigosGenerados = [];
+            sessionManager.cerrarSesion();
+            codesManager.resetCodigos();
             const listaCodigos = document.getElementById("lista-codigos");
             if (listaCodigos) listaCodigos.innerHTML = "";
             const codigoGenerado = document.getElementById("codigo-generado");
             if (codigoGenerado) codigoGenerado.textContent = "";
+            if (confirmDialog) confirmDialog.close();
+            if (modal) modal.showModal();
             if (confirmDialog) confirmDialog.close();
             if (modal) modal.showModal();
         });
@@ -670,17 +732,42 @@ document.addEventListener("DOMContentLoaded", async () => {
                 renderTareas();
             }
         });
+        
+        // Event listener para manejar Enter en descripciones
+        taskList.addEventListener('keydown', async (e) => {
+            if (e.target.classList.contains('task-description') && e.key === 'Enter') {
+                manejarEnterEnDescripcion(e);
+                
+                // Guardar automáticamente después de manejar Enter
+                setTimeout(async () => {
+                    const li = e.target.closest('.task-item');
+                    if (li) {
+                        const id = parseInt(li.dataset.id);
+                        const tarea = tareas.find(t => t.id === id);
+                        if (tarea) {
+                            const textoDescripcion = extraerTextoDeLineasDiv(e.target);
+                            tarea.descripcion = textoDescripcion;
+                            await guardarTareaIndexedDB(tarea);
+                        }
+                    }
+                }, 10);
+            }
+        });
+        
+        // Event listener para actualizar tarea al perder foco o modificar
         taskList.addEventListener('input', async (e) => {
             const li = e.target.closest('.task-item');
             if (!li) return;
             const id = parseInt(li.dataset.id);
             const tarea = tareas.find(t => t.id === id);
             if (!tarea) return;
+            
             if (e.target.classList.contains('task-title')) {
                 tarea.titulo = e.target.textContent.trim();
             }
             if (e.target.classList.contains('task-description')) {
-                tarea.descripcion = e.target.textContent.trim();
+                // Extraer texto de la estructura de divs
+                tarea.descripcion = extraerTextoDeLineasDiv(e.target);
             }
             await guardarTareaIndexedDB(tarea);
         });
@@ -689,7 +776,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         newTaskInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                addTarea();
+                agregarTarea(); // Llamar función unificada sin parámetros
             }
         });
     }
@@ -717,6 +804,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // === PDF limpio estilo Notion con jsPDF ===
     function descargarTareasPDF(tareas) {
         try {
+            const { nombreAsesor } = getSessionVars();
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF();
 
@@ -904,6 +992,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // === Función para generar contenido Markdown ===
     function generarMarkdown(tareas) {
+        const { nombreAsesor } = getSessionVars();
         const fecha = new Date().toLocaleDateString('es-PE');
         const usuario = nombreAsesor || 'Usuario';
 
@@ -1079,6 +1168,7 @@ ${descripcionEscapada}
             const [año, mes, dia] = fechaVisita.split('-');
             fechaFormateada = `${dia}/${mes}`;
         }
+        const { nombreAsesor } = getSessionVars();
         const plantillaTexto = `MESA DE PROGRAMACIONES HITSS<br>
 REPROGRAMADO EN ${tipoRepro} / REAGENDADO POR ${tipoReagen}<br>
 CLIENTE:&nbsp;${nombreCliente}<br>
@@ -1124,16 +1214,17 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
     document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
 
-    window.generarCodigo = generarCodigo;
-    window.eliminarUltimoCodigo = eliminarUltimoCodigo;
-    window.copiarEnlace = copiarEnlace; // Agregar esta línea
-    window.agregarTarea = agregarTarea; // Agregar función para crear tareas desde plantillas
+    // Funciones adicionales para ventana global
+    window.copiarEnlace = copiarEnlace;
+    window.limpiarTareasExistentes = limpiarTareasExistentes; // Desde paste-handler module
+    window.agregarTarea = agregarTarea; // Para crear tareas desde plantillas
     window.descardarCodigos = function () {
-        if (codigosGenerados.length === 0) {
+        const codigos = getCodigosGenerados();
+        if (codigos.length === 0) {
             mostrarToast("No hay códigos generados aún.");
             return;
         }
-        const contenido = codigosGenerados.join("\n");
+        const contenido = codigos.join("\n");
         const blob = new Blob([contenido], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const enlace = document.createElement("a");
@@ -1156,83 +1247,40 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         }
     });
 
-    // app.js
-
-    // ... (resto del código anterior)
-
-    // === LÓGICA DE PEGADO (CORRECCIÓN FINAL) ===
-    document.addEventListener('paste', function (e) {
-        // Verificamos si el foco está en un elemento editable
-        if (e.target.classList.contains('task-title') ||
-            e.target.classList.contains('input-task') ||
-            e.target.classList.contains('task-description') ||
-            e.target.tagName === 'TEXTAREA') {
-
-            e.preventDefault();
-
-            // Obtenemos el texto plano del portapapeles
-            const textoParaPegar = (e.clipboardData || window.clipboardData).getData('text/plain');
-
-            let textoLimpio;
-            
-            // Lógica específica para títulos de tareas
-            if (e.target.classList.contains('task-title')) {
-                textoLimpio = textoParaPegar
-                    .replace(/\n/g, ' ')          // Convertir saltos de línea a espacios
-                    .replace(/\s+/g, ' ')         // Múltiples espacios a uno solo
-                    .trim();
-            } else {
-                // Lógica para descripciones y otros elementos
-                textoLimpio = textoParaPegar
-                    .replace(/\u00A0/g, ' ')      // Espacios no rompibles
-                    .replace(/[ \t]+/g, ' ')      // Múltiples espacios/tabs a uno solo
-                    .replace(/\n[ \t]+/g, '\n')   // Limpiar espacios después de saltos
-                    .replace(/[ \t]+\n/g, '\n')   // Limpiar espacios antes de saltos
-                    .trim();
+    // === FUNCIONES DE PEGADO SIMPLIFICADAS ===
+    
+    // Función auxiliar para obtener offset de texto
+    function getTextOffset(container, node, offset) {
+        let textOffset = 0;
+        const walker = document.createTreeWalker(
+            container,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
+        
+        let currentNode;
+        while (currentNode = walker.nextNode()) {
+            if (currentNode === node) {
+                return textOffset + offset;
             }
-
-            // Insertar el texto limpio en la posición del cursor
-            if (document.execCommand) {
-                document.execCommand('insertText', false, textoLimpio);
-            } else {
-                // Fallback para navegadores que no soportan execCommand
-                const start = e.target.selectionStart;
-                const end = e.target.selectionEnd;
-                e.target.value = e.target.value.substring(0, start) + textoLimpio + e.target.value.substring(end);
-                e.target.selectionStart = e.target.selectionEnd = start + textoLimpio.length;
-            }
-            
-            // Guardar cambios automáticamente para tareas
-            if (e.target.classList.contains('task-description') || e.target.classList.contains('task-title')) {
-                setTimeout(() => {
-                    const taskId = e.target.closest('.task-item')?.dataset.id;
-                    if (taskId) {
-                        if (e.target.classList.contains('task-description')) {
-                            actualizarTareaDescripcion(taskId, e.target.textContent);
-                        } else if (e.target.classList.contains('task-title')) {
-                            const tarea = tareas.find(t => t.id == taskId);
-                            if (tarea) {
-                                tarea.titulo = e.target.textContent;
-                                guardarTareaIndexedDB(tarea);
-                            }
-                        }
-                    }
-                }, 10);
-            }
+            textOffset += currentNode.textContent.length;
         }
-    });
+        return textOffset;
+    }
 
-    // ... (resto del código, después de esta función)
-
-    // Función utilitaria para limpiar tareas existentes con formato corrupto
-    window.limpiarTareasExistentes = async function () {
+    // Función utilitaria para limpiar tareas existentes con formato corrupto (solo si es necesario)
+    window.limpiarTareasConFormatoCorrupto = async function () {
         try {
             const todasLasTareas = await obtenerTodasTareasIndexedDB();
             let tareasLimpiadas = 0;
 
             for (const tarea of todasLasTareas) {
                 if (tarea.descripcion && tarea.descripcion.includes('<')) {
-                    const descripcionLimpia = limpiarHTMLParaTarea(tarea.descripcion);
+                    // Usar DOM parser para limpiar HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = tarea.descripcion;
+                    const descripcionLimpia = tempDiv.textContent || tempDiv.innerText || '';
                     if (descripcionLimpia !== tarea.descripcion) {
                         tarea.descripcion = descripcionLimpia;
                         await guardarTareaIndexedDB(tarea);
