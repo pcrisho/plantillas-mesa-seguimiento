@@ -33,6 +33,12 @@ export class SessionManager {
             this._actualizarUICredenciales();
             this._actualizarPlaceholdersADP();
             
+            // Emitir evento para otros módulos
+            this.emitEvent('credentialsLoaded', {
+                nombreAsesor: this.nombreAsesor,
+                usuarioAdp: this.usuarioAdp
+            });
+            
             return true;
         }
         
@@ -65,6 +71,12 @@ export class SessionManager {
         this._actualizarUICredenciales();
         this._actualizarPlaceholdersADP();
         
+        // Emitir evento para otros módulos
+        this.emitEvent('credentialsLoaded', {
+            nombreAsesor: this.nombreAsesor,
+            usuarioAdp: this.usuarioAdp
+        });
+        
         return true;
     }
 
@@ -86,6 +98,9 @@ export class SessionManager {
         
         // Limpiar datos dependientes (códigos, etc.)
         this._limpiarDatosDependientes();
+        
+        // Emitir evento para otros módulos
+        this.emitEvent('logout', {});
     }
 
     /**
@@ -314,6 +329,16 @@ export class SessionManager {
         } else {
             console.log(mensaje); // Fallback
         }
+    }
+
+    /**
+     * Emite eventos personalizados para comunicación entre módulos
+     */
+    emitEvent(eventName, data) {
+        const event = new CustomEvent(`session:${eventName}`, {
+            detail: data
+        });
+        document.dispatchEvent(event);
     }
 }
 

@@ -10,13 +10,23 @@ import {
 } from './indexeddb.js';
 
 import { sessionManager, getSessionVars } from './modules/session.js';
+import { 
+    codesManager, 
+    generarCodigo, 
+    eliminarUltimoCodigo, 
+    cargarDatosGuardados,
+    getCodigosGenerados,
+    limpiarCodigosVisuales 
+} from './modules/codes.js';
+import { 
+    pasteHandler, 
+    limpiarTareasExistentes,
+    posicionarCursorEnTexto 
+} from './modules/paste-handler.js';
 
 // === VARIABLES GLOBALES ===
 let toastVisible = false;
 const toastQueue = [];
-let correlativo = 1;
-let letraActual = "A";
-let codigosGenerados = [];
 let tareas = [];
 let filtroActual = 'all';
 
@@ -97,98 +107,6 @@ function toggleElementVisibility(element, visible, displayMode = "flex") {
         element.classList.remove("fade-in");
         element.style.display = "none";
     }
-}
-
-// === LÓGICA DE SESIÓN Y CÓDIGOS ===
-function claveUsuario() { 
-    const { usuarioAdp } = getSessionVars();
-    return `codigos_${usuarioAdp}`;
-}
-
-function guardarDatos() {
-    const fecha = new Date().toDateString();
-    const { usuarioAdp } = getSessionVars();
-    const clave = `codigos_${usuarioAdp}`;
-    localStorage.setItem(clave, JSON.stringify({ fecha, codigos: codigosGenerados }));
-}
-
-function mostrarUltimoCodigoGenerado() {
-    const ult = codigosGenerados[codigosGenerados.length - 1] || "";
-    const codigoGenerado = document.getElementById("codigo-generado");
-    if (codigoGenerado) codigoGenerado.textContent = ult;
-}
-
-function cargarDatosGuardados() {
-    const { usuarioAdp } = getSessionVars();
-    if (!usuarioAdp) return;
-    
-    const clave = `codigos_${usuarioAdp}`;
-    const data = JSON.parse(localStorage.getItem(clave));
-    const fechaActual = new Date().toDateString();
-    const listaCodigos = document.getElementById("lista-codigos");
-
-    if (!data || data.fecha !== fechaActual) {
-        codigosGenerados = [];
-        correlativo = 1;
-        letraActual = "A";
-        localStorage.setItem(clave, JSON.stringify({ fecha: fechaActual, codigos: [] }));
-        if (listaCodigos) listaCodigos.innerHTML = "";
-    } else {
-        codigosGenerados = data.codigos;
-        if (listaCodigos) listaCodigos.innerHTML = "";
-        codigosGenerados.forEach(codigo => {
-            const item = document.createElement("li");
-            item.textContent = codigo;
-            if (listaCodigos) listaCodigos.appendChild(item);
-        });
-        correlativo = codigosGenerados.length + 1;
-        letraActual = codigosGenerados.length % 2 === 0 ? "A" : "B";
-    }
-    mostrarUltimoCodigoGenerado();
-}
-
-function generarCodigo() {
-    const { usuarioAdp } = getSessionVars();
-    if (!usuarioAdp || usuarioAdp.length !== 7) {
-        mostrarToast("⚠️ Primero guarda tu usuario correctamente.");
-        return;
-    }
-    const fecha = new Date();
-    const dia = fecha.getDate().toString().padStart(2, "0");
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-    const anio = fecha.getFullYear();
-    const codigo = `${correlativo}${usuarioAdp}${dia}${mes}${anio}${letraActual}`;
-    codigosGenerados.push(codigo);
-    guardarDatos();
-    const codigoGenerado = document.getElementById("codigo-generado");
-    if (codigoGenerado) codigoGenerado.textContent = codigo;
-    letraActual = letraActual === "A" ? "B" : "A";
-    correlativo++;
-    const lista = document.getElementById("lista-codigos");
-    const item = document.createElement("li");
-    item.textContent = codigo;
-    if (lista) lista.appendChild(item);
-}
-function eliminarUltimoCodigo() {
-    if (codigosGenerados.length === 0) {
-        mostrarToast("⚠️ No hay códigos para eliminar.");
-        return;
-    }
-    codigosGenerados.pop();
-    correlativo = Math.max(1, correlativo - 1);
-    letraActual = letraActual === "A" ? "B" : "A";
-    guardarDatos();
-    const lista = document.getElementById("lista-codigos");
-    if (lista && lista.lastElementChild) {
-        lista.removeChild(lista.lastElementChild);
-    }
-    mostrarUltimoCodigoGenerado();
-}
-function limpiarCodigosVisuales() {
-    const listaCodigos = document.getElementById("lista-codigos");
-    if (listaCodigos) listaCodigos.innerHTML = "";
-    const codigoGenerado = document.getElementById("codigo-generado");
-    if (codigoGenerado) codigoGenerado.textContent = "";
 }
 
 // === LÓGICA DE TO-DO LIST ===
@@ -279,8 +197,15 @@ function convertirTextoADivsPorLinea(elemento, texto) {
     // Limpiar texto antes de procesarlo
     let textoLimpio = texto;
     
-    // Si el texto contiene HTML (tareas existentes), extraer solo el texto
-    if (texto.includes('<div>') || texto.includes('<br>')) {
+    // MEJORAR DETECCIÓN: Si el texto YA contiene HTML estructurado, usarlo directamente
+    if (texto.includes('<div>') && texto.includes('</div>')) {
+        // El texto ya está en formato HTML correcto, usar directamente
+        elemento.innerHTML = texto;
+        return;
+    }
+    
+    // Si el texto contiene algunos elementos HTML pero no está completamente estructurado
+    if (texto.includes('<') || texto.includes('<br>')) {
         // Crear un elemento temporal para extraer solo el texto
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = texto;
@@ -466,8 +391,9 @@ function inicializarSistemaTareas() {
         if (event.target.classList.contains('task-description')) {
             const taskId = event.target.closest('.task-item')?.dataset.id;
             if (taskId) {
-                const textoDescripcion = extraerTextoDeLineasDiv(event.target);
-                actualizarTareaDescripcion(taskId, textoDescripcion);
+                // Guardar el contenido HTML para preservar la estructura
+                const contenidoHTML = event.target.innerHTML || '';
+                actualizarTareaDescripcion(taskId, contenidoHTML);
             }
         } else if (event.target.classList.contains('task-title')) {
             const taskId = event.target.closest('.task-item')?.dataset.id;
@@ -708,8 +634,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (dateInput) dateInput.value = fechaHoy;
 
-    // === Inicializar sesión con el SessionManager ===
+    // === Exponer funciones globalmente para los módulos ===
+    window.mostrarToast = mostrarToast;
+    window.toggleElementVisibility = toggleElementVisibility;
+    window.cerrarDialogConAnimacion = cerrarDialogConAnimacion;
+    window.generarCodigo = generarCodigo;
+    window.eliminarUltimoCodigo = eliminarUltimoCodigo;
+    window.actualizarTareaDescripcion = actualizarTareaDescripcion; // Para paste-handler
+
+    // === Inicializar módulos ===
     sessionManager.inicializar();
+    codesManager.inicializar();
+    pasteHandler.inicializar();
 
     // === Event listeners para la sesión ===
     if (btnAbrirModal) {
@@ -724,7 +660,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (nombre && usuario.length === 7) {
                 sessionManager.guardarCredenciales(nombre, usuario);
                 cerrarDialogConAnimacion(modal);
-                cargarDatosGuardados();
+                // cargarDatosGuardados(); // Ya no es necesario, el SessionManager se encarga
             } else {
                 mostrarToast("⚠️ Por favor, completa los datos correctamente.");
             }
@@ -743,7 +679,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (btnConfirmarCerrarSesion) {
         btnConfirmarCerrarSesion.addEventListener("click", () => {
             sessionManager.cerrarSesion();
-            codigosGenerados = [];
+            codesManager.resetCodigos();
             const listaCodigos = document.getElementById("lista-codigos");
             if (listaCodigos) listaCodigos.innerHTML = "";
             const codigoGenerado = document.getElementById("codigo-generado");
@@ -1278,16 +1214,17 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     document.querySelectorAll(".anio").forEach(el => el.textContent = anio);
     document.querySelectorAll(".hora").forEach(el => el.textContent = hora);
 
-    window.generarCodigo = generarCodigo;
-    window.eliminarUltimoCodigo = eliminarUltimoCodigo;
-    window.copiarEnlace = copiarEnlace; // Agregar esta línea
+    // Funciones adicionales para ventana global
+    window.copiarEnlace = copiarEnlace;
+    window.limpiarTareasExistentes = limpiarTareasExistentes; // Desde paste-handler module // Agregar esta línea
     window.agregarTarea = agregarTarea; // Agregar función para crear tareas desde plantillas
     window.descardarCodigos = function () {
-        if (codigosGenerados.length === 0) {
+        const codigos = getCodigosGenerados();
+        if (codigos.length === 0) {
             mostrarToast("No hay códigos generados aún.");
             return;
         }
-        const contenido = codigosGenerados.join("\n");
+        const contenido = codigos.join("\n");
         const blob = new Blob([contenido], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const enlace = document.createElement("a");
@@ -1331,304 +1268,6 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         }
         return textOffset;
     }
-    
-    // Función auxiliar para posicionar cursor en texto
-    function posicionarCursorEnTexto(container, targetOffset) {
-        const walker = document.createTreeWalker(
-            container,
-            NodeFilter.SHOW_TEXT,
-            null,
-            false
-        );
-        
-        let currentOffset = 0;
-        let currentNode;
-        
-        while (currentNode = walker.nextNode()) {
-            const nodeLength = currentNode.textContent.length;
-            if (currentOffset + nodeLength >= targetOffset) {
-                const range = document.createRange();
-                const selection = window.getSelection();
-                const localOffset = targetOffset - currentOffset;
-                
-                range.setStart(currentNode, Math.min(localOffset, nodeLength));
-                range.collapse(true);
-                selection.removeAllRanges();
-                selection.addRange(range);
-                return;
-            }
-            currentOffset += nodeLength;
-        }
-    }
-    
-    // Función para manejar pegado en títulos de tareas
-    function manejarPegadoTitulo(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
-        
-        if (pasteData) {
-            const textoLimpio = pasteData.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-            
-            // USAR execCommand para mantener historial de deshacer (Ctrl+Z)
-            const exito = document.execCommand('insertText', false, textoLimpio);
-            
-            if (!exito) {
-                // Fallback manual solo si execCommand falla
-                const selection = window.getSelection();
-                if (selection.rangeCount > 0) {
-                    const range = selection.getRangeAt(0);
-                    range.deleteContents();
-                    const textNode = document.createTextNode(textoLimpio);
-                    range.insertNode(textNode);
-                    range.setStartAfter(textNode);
-                    range.collapse(true);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                }
-            }
-            
-            // Limpiar cualquier formato que se haya colado DESPUÉS del insertText
-            setTimeout(() => {
-                const targetElement = event.target;
-                const elementosConFormato = targetElement.querySelectorAll('[style], span, font, b, i, strong, em, mark');
-                
-                if (elementosConFormato.length > 0) {
-                    const selection = window.getSelection();
-                    
-                    elementosConFormato.forEach(elem => {
-                        const texto = elem.textContent;
-                        // Usar execCommand para la limpieza también
-                        const rangeToClean = document.createRange();
-                        rangeToClean.selectNode(elem);
-                        selection.removeAllRanges();
-                        selection.addRange(rangeToClean);
-                        
-                        const cleanExito = document.execCommand('insertText', false, texto);
-                        
-                        if (!cleanExito) {
-                            // Fallback manual
-                            const nodoTexto = document.createTextNode(texto);
-                            elem.parentNode.replaceChild(nodoTexto, elem);
-                        }
-                    });
-                }
-            }, 20);
-        }
-    }
-
-    // Función para manejar pegado en descripciones de tareas
-    function manejarPegadoDescripcion(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
-        if (!pasteData) return;
-        
-        // USAR execCommand para mantener historial de deshacer (Ctrl+Z)
-        const exito = document.execCommand('insertText', false, pasteData);
-        
-        if (!exito) {
-            // Fallback manual solo si execCommand falla
-            const targetElement = event.target;
-            const selection = window.getSelection();
-            
-            if (selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                
-                // Eliminar contenido seleccionado
-                range.deleteContents();
-                
-                // CRÍTICO: Crear un nodo de texto puro sin ningún wrapper
-                const textNode = document.createTextNode(pasteData);
-                range.insertNode(textNode);
-                
-                // Posicionar cursor después del texto insertado
-                range.setStartAfter(textNode);
-                range.collapse(true);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
-        
-        // VERIFICACIÓN Y LIMPIEZA DESPUÉS del insertText
-        setTimeout(() => {
-            const targetElement = event.target;
-            // Buscar elementos con formato no deseado en toda la descripción
-            const elementosConFormato = targetElement.querySelectorAll('[style], span:not([class]), font, b, i, strong, em, mark');
-            
-            if (elementosConFormato.length > 0) {
-                const selection = window.getSelection();
-                
-                elementosConFormato.forEach(elem => {
-                    const texto = elem.textContent;
-                    
-                    try {
-                        // Usar execCommand para la limpieza también
-                        const rangeToClean = document.createRange();
-                        rangeToClean.selectNode(elem);
-                        selection.removeAllRanges();
-                        selection.addRange(rangeToClean);
-                        
-                        const cleanExito = document.execCommand('insertText', false, texto);
-                        
-                        if (!cleanExito) {
-                            // Fallback manual
-                            const nodoTexto = document.createTextNode(texto);
-                            elem.parentNode.replaceChild(nodoTexto, elem);
-                        }
-                    } catch (error) {
-                        // Manejo silencioso de errores
-                    }
-                });
-            }
-        }, 20);
-    }
-
-    // === EVENT LISTENER PARA PEGADO SIMPLIFICADO ===
-    document.addEventListener('paste', function(event) {
-        let targetElement = event.target;
-        
-        // Buscar el contenedor de descripción o título más cercano
-        let taskContainer = null;
-        
-        // Si pegamos en BR, DIV sin clases, o cualquier elemento dentro de una tarea
-        if (targetElement.tagName === 'BR' || 
-            (targetElement.tagName === 'DIV' && !targetElement.className) ||
-            !targetElement.classList.contains('task-description') && !targetElement.classList.contains('task-title')) {
-            
-            // Buscar hacia arriba el contenedor de tarea más cercano
-            taskContainer = targetElement.closest('.task-description, .task-title');
-            
-            if (taskContainer) {
-                targetElement = taskContainer;
-            }
-        }
-        
-        // MANEJO PARA DESCRIPCIONES (incluyendo BR y divs internos)
-        if (targetElement.classList.contains('task-description') || 
-            taskContainer?.classList.contains('task-description')) {
-            
-            const descripcionElement = targetElement.classList.contains('task-description') ? 
-                                     targetElement : taskContainer;
-            
-            event.preventDefault();
-            event.stopPropagation();
-            
-            // Obtener solo texto plano
-            const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
-            
-            if (pasteData) {
-                // MÉTODO COMPATIBLE CON CTRL+Z: Usar execCommand en lugar de manipulación manual
-                const selection = window.getSelection();
-                
-                if (selection.rangeCount > 0) {
-                    // Primero, asegurar que tenemos una selección válida
-                    const range = selection.getRangeAt(0);
-                    
-                    // Si el cursor está en un BR, ajustar la posición
-                    if (range.startContainer.nodeName === 'BR') {
-                        range.setStartBefore(range.startContainer);
-                        range.collapse(true);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    }
-                    
-                    // USAR execCommand para mantener el historial de deshacer
-                    const exito = document.execCommand('insertText', false, pasteData);
-                    
-                    if (!exito) {
-                        // Fallback manual solo si execCommand falla
-                        range.deleteContents();
-                        const textNode = document.createTextNode(pasteData);
-                        range.insertNode(textNode);
-                        range.setStartAfter(textNode);
-                        range.collapse(true);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    }
-                }
-                
-                // Limpiar cualquier formato que se haya colado (DESPUÉS del insertText)
-                setTimeout(() => {
-                    // Buscar y eliminar TODOS los elementos con formato
-                    const elementosConFormato = descripcionElement.querySelectorAll('[style], span, font, b, i, strong, em, mark');
-                    
-                    if (elementosConFormato.length > 0) {
-                        // Usar execCommand para la limpieza también (si es posible)
-                        elementosConFormato.forEach(elem => {
-                            const texto = elem.textContent;
-                            // Seleccionar el elemento con formato
-                            const rangeToClean = document.createRange();
-                            rangeToClean.selectNode(elem);
-                            selection.removeAllRanges();
-                            selection.addRange(rangeToClean);
-                            
-                            // Reemplazar con texto plano usando execCommand
-                            const cleanExito = document.execCommand('insertText', false, texto);
-                            
-                            if (!cleanExito) {
-                                // Fallback manual
-                                const nodoTexto = document.createTextNode(texto);
-                                elem.parentNode.replaceChild(nodoTexto, elem);
-                            }
-                        });
-                        
-                        // Restaurar selección al final del texto pegado
-                        const allText = descripcionElement.textContent;
-                        const pasteIndex = allText.lastIndexOf(pasteData);
-                        if (pasteIndex !== -1) {
-                            const endPosition = pasteIndex + pasteData.length;
-                            posicionarCursorEnTexto(descripcionElement, endPosition);
-                        }
-                    }
-                }, 20); // Aumentar timeout para dar tiempo a execCommand
-                
-                // Guardar cambios
-                setTimeout(() => {
-                    const taskId = descripcionElement.closest('.task-item')?.dataset.id;
-                    if (taskId) {
-                        const textoFinal = descripcionElement.textContent || '';
-                        actualizarTareaDescripcion(taskId, textoFinal);
-                    }
-                }, 100);
-            }
-            return;
-        }
-        
-        // MANEJO PARA TÍTULOS
-        if (targetElement.classList.contains('task-title') || 
-            taskContainer?.classList.contains('task-title')) {
-            
-            const tituloElement = targetElement.classList.contains('task-title') ? 
-                                targetElement : taskContainer;
-            
-            // Redirigir el evento al elemento correcto
-            Object.defineProperty(event, 'target', { value: tituloElement, writable: false });
-            manejarPegadoTitulo(event);
-            return;
-        }
-        
-        // MANEJO PARA INPUTS/TEXTAREAS
-        if (targetElement.classList.contains('input-task') || targetElement.tagName === 'TEXTAREA') {
-            event.preventDefault();
-            const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
-            
-            if (pasteData) {
-                const textoLimpio = pasteData.trim();
-                
-                const exito = document.execCommand('insertText', false, textoLimpio);
-                
-                if (!exito) {
-                    targetElement.value = (targetElement.value || '') + textoLimpio;
-                }
-            }
-            return;
-        }
-    }, true);
-
-    // ... (resto del código, después de esta función)
 
     // Función utilitaria para limpiar tareas existentes con formato corrupto (solo si es necesario)
     window.limpiarTareasExistentes = async function () {
