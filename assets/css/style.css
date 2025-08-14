@@ -1491,6 +1491,84 @@ tbody tr:hover {
     transform: scale(1.01);
 }
 
+
+
+#guia-activaciones .container__grid__item div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: justify;
+
+}
+
+#guia-activaciones .container__grid__item h3{
+width: 90%;
+
+}
+
+
+
+#manuales-aplicaciones .container__grid__item div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: justify;
+
+}
+
+#cambios-equipos .container__grid__item div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: justify;
+
+}
+
+#procedimientos-postventa .container__grid__item div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: justify;
+
+}
+
+#procedimientos-postventa .container__grid__item h3{
+width: 90%;
+
+}
+
+#activacion-servicios-plume .container__grid__item div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: justify;
+
+}
+
+
+
+#manuales-aplicaciones .container__grid__item h3{
+width: 90%;
+
+}
+
+#cambios-equipos .container__grid__item h3{
+width: 90%;
+
+}
+
+#activacion-servicios-plume .container__grid__item h3{
+width: 90%;
+
+}
+
+
+
 @media (max-width: 1240px) {
     .nav {
         width: 30%;
