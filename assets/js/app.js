@@ -1455,10 +1455,56 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     function manejarPegadoTitulo(event) {
         event.preventDefault();
         event.stopPropagation();
+        
         const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
+        
         if (pasteData) {
             const textoLimpio = pasteData.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-            document.execCommand('insertText', false, textoLimpio);
+            
+            // USAR execCommand para mantener historial de deshacer (Ctrl+Z)
+            const exito = document.execCommand('insertText', false, textoLimpio);
+            
+            if (!exito) {
+                // Fallback manual solo si execCommand falla
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents();
+                    const textNode = document.createTextNode(textoLimpio);
+                    range.insertNode(textNode);
+                    range.setStartAfter(textNode);
+                    range.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            }
+            
+            // Limpiar cualquier formato que se haya colado DESPUÉS del insertText
+            setTimeout(() => {
+                const targetElement = event.target;
+                const elementosConFormato = targetElement.querySelectorAll('[style], span, font, b, i, strong, em, mark');
+                
+                if (elementosConFormato.length > 0) {
+                    const selection = window.getSelection();
+                    
+                    elementosConFormato.forEach(elem => {
+                        const texto = elem.textContent;
+                        // Usar execCommand para la limpieza también
+                        const rangeToClean = document.createRange();
+                        rangeToClean.selectNode(elem);
+                        selection.removeAllRanges();
+                        selection.addRange(rangeToClean);
+                        
+                        const cleanExito = document.execCommand('insertText', false, texto);
+                        
+                        if (!cleanExito) {
+                            // Fallback manual
+                            const nodoTexto = document.createTextNode(texto);
+                            elem.parentNode.replaceChild(nodoTexto, elem);
+                        }
+                    });
+                }
+            }, 20);
         }
     }
 
@@ -1470,65 +1516,128 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
         if (!pasteData) return;
         
-        console.log('🔧 Manejando pegado en descripción:', pasteData.substring(0, 50));
+        // USAR execCommand para mantener historial de deshacer (Ctrl+Z)
+        const exito = document.execCommand('insertText', false, pasteData);
         
-        // MÉTODO AGRESIVO: Limpiar completamente el contenido antes de pegar
-        const targetElement = event.target;
-        const selection = window.getSelection();
-        
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
+        if (!exito) {
+            // Fallback manual solo si execCommand falla
+            const targetElement = event.target;
+            const selection = window.getSelection();
             
-            // Eliminar contenido seleccionado
-            range.deleteContents();
-            
-            // CRÍTICO: Crear un nodo de texto puro sin ningún wrapper
-            const textNode = document.createTextNode(pasteData);
-            range.insertNode(textNode);
-            
-            // Posicionar cursor después del texto insertado
-            range.setStartAfter(textNode);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            
-            // VERIFICACIÓN INMEDIATA: Limpiar cualquier formato heredado
-            setTimeout(() => {
-                // Buscar elementos con formato no deseado en toda la descripción
-                const elementosConFormato = targetElement.querySelectorAll('[style], span:not([class]), font, b, i, strong, em');
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
                 
-                if (elementosConFormato.length > 0) {
-                    console.warn('🚨 Formato heredado detectado, limpiando...');
-                    
-                    elementosConFormato.forEach(elem => {
-                        // Reemplazar elementos con formato por su contenido de texto
-                        const textContent = elem.textContent;
-                        const textNode = document.createTextNode(textContent);
-                        elem.parentNode.replaceChild(textNode, elem);
-                    });
-                    
-                    // Normalizar la estructura de divs después de limpiar
-                    const textoCompleto = extraerTextoDeLineasDiv(targetElement);
-                    convertirTextoADivsPorLinea(targetElement, textoCompleto);
-                }
-            }, 5);
+                // Eliminar contenido seleccionado
+                range.deleteContents();
+                
+                // CRÍTICO: Crear un nodo de texto puro sin ningún wrapper
+                const textNode = document.createTextNode(pasteData);
+                range.insertNode(textNode);
+                
+                // Posicionar cursor después del texto insertado
+                range.setStartAfter(textNode);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
         }
         
-        // Guardar cambios
+        // VERIFICACIÓN Y LIMPIEZA DESPUÉS del insertText
         setTimeout(() => {
-            const taskId = event.target.closest('.task-item').dataset.id;
-            if (taskId) {
-                const textoFinal = extraerTextoDeLineasDiv(event.target);
-                actualizarTareaDescripcion(taskId, textoFinal);
+            const targetElement = event.target;
+            // Buscar elementos con formato no deseado en toda la descripción
+            const elementosConFormato = targetElement.querySelectorAll('[style], span:not([class]), font, b, i, strong, em, mark');
+            
+            if (elementosConFormato.length > 0) {
+                const selection = window.getSelection();
+                
+                elementosConFormato.forEach(elem => {
+                    const texto = elem.textContent;
+                    
+                    try {
+                        // Usar execCommand para la limpieza también
+                        const rangeToClean = document.createRange();
+                        rangeToClean.selectNode(elem);
+                        selection.removeAllRanges();
+                        selection.addRange(rangeToClean);
+                        
+                        const cleanExito = document.execCommand('insertText', false, texto);
+                        
+                        if (!cleanExito) {
+                            // Fallback manual
+                            const nodoTexto = document.createTextNode(texto);
+                            elem.parentNode.replaceChild(nodoTexto, elem);
+                        }
+                    } catch (error) {
+                        // Manejo silencioso de errores
+                    }
+                });
             }
-        }, 50);
+        }, 20);
     }
+
+    // === FUNCIÓN DE UTILIDAD PARA DEBUGGING ===
+    window.debugPasteInfo = function() {
+        console.log('🔍 === INFORMACIÓN DE DEBUG PARA PEGADO ===');
+        console.log('⏰ Timestamp:', new Date().toLocaleString());
+        
+        // Verificar si las funciones están disponibles
+        console.log('🔧 Funciones disponibles:', {
+            manejarPegadoTitulo: typeof manejarPegadoTitulo,
+            manejarPegadoDescripcion: typeof manejarPegadoDescripcion,
+            posicionarCursorEnTexto: typeof posicionarCursorEnTexto,
+            actualizarTareaDescripcion: typeof actualizarTareaDescripcion,
+            actualizarTareaTitulo: typeof actualizarTareaTitulo
+        });
+        
+        // Verificar elementos en la página
+        const descripciones = document.querySelectorAll('.task-description');
+        const titulos = document.querySelectorAll('.task-title');
+        
+        console.log('📋 Elementos en la página:', {
+            descripciones: descripciones.length,
+            titulos: titulos.length,
+            tareas: document.querySelectorAll('.task-item').length
+        });
+        
+        // Verificar selección actual
+        const selection = window.getSelection();
+        console.log('🎯 Selección actual:', {
+            type: selection.type,
+            rangeCount: selection.rangeCount,
+            isCollapsed: selection.isCollapsed,
+            anchorNode: selection.anchorNode?.nodeName || 'N/A',
+            focusNode: selection.focusNode?.nodeName || 'N/A'
+        });
+        
+        // Verificar support de execCommand
+        console.log('⚡ Soporte execCommand:', {
+            insertText: document.queryCommandSupported('insertText'),
+            copy: document.queryCommandSupported('copy'),
+            paste: document.queryCommandSupported('paste')
+        });
+        
+        console.log('✅ Debug info completado');
+    };
+    
+    // === FUNCIÓN PARA TESTEAR PEGADO ===
+    window.testPaste = function(texto = 'Texto de prueba') {
+        console.log('🧪 === INICIANDO TEST DE PEGADO ===');
+        
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+            console.warn('⚠️ No hay selección activa. Haz clic en una descripción o título primero.');
+            return;
+        }
+        
+        const resultado = document.execCommand('insertText', false, texto);
+        console.log('✅ Test execCommand resultado:', resultado);
+        console.log('🧪 === FIN TEST DE PEGADO ===');
+    };
 
     // === EVENT LISTENER PARA PEGADO SIMPLIFICADO ===
     document.addEventListener('paste', function(event) {
         let targetElement = event.target;
-        
-        console.log('🎯 PASTE detectado en:', targetElement.tagName, targetElement.className);
         
         // Buscar el contenedor de descripción o título más cercano
         let taskContainer = null;
@@ -1540,7 +1649,6 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
             
             // Buscar hacia arriba el contenedor de tarea más cercano
             taskContainer = targetElement.closest('.task-description, .task-title');
-            console.log('🔍 Buscando contenedor padre...', taskContainer?.className);
             
             if (taskContainer) {
                 targetElement = taskContainer;
@@ -1554,62 +1662,77 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
             const descripcionElement = targetElement.classList.contains('task-description') ? 
                                      targetElement : taskContainer;
             
-            console.log('🚨 INTERCEPTANDO pegado en descripción');
             event.preventDefault();
             event.stopPropagation();
             
             // Obtener solo texto plano
             const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
-            console.log('📝 Texto a pegar:', pasteData);
             
             if (pasteData) {
-                // MÉTODO ULTRA SIMPLE: Insertar solo texto donde está el cursor
+                // MÉTODO COMPATIBLE CON CTRL+Z: Usar execCommand en lugar de manipulación manual
                 const selection = window.getSelection();
+                
                 if (selection.rangeCount > 0) {
+                    // Primero, asegurar que tenemos una selección válida
                     const range = selection.getRangeAt(0);
                     
-                    // Si el cursor está en un BR, posicionarlo correctamente
-                    if (range.startContainer.nodeName === 'BR' || 
-                        (range.startContainer.nodeType === Node.ELEMENT_NODE && 
-                         range.startContainer.children[range.startOffset]?.nodeName === 'BR')) {
-                        // Posicionar antes del BR para insertar texto
-                        if (range.startContainer.nodeName === 'BR') {
-                            range.setStartBefore(range.startContainer);
-                        }
+                    // Si el cursor está en un BR, ajustar la posición
+                    if (range.startContainer.nodeName === 'BR') {
+                        range.setStartBefore(range.startContainer);
+                        range.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
                     }
                     
-                    range.deleteContents();
+                    // USAR execCommand para mantener el historial de deshacer
+                    const exito = document.execCommand('insertText', false, pasteData);
                     
-                    // Insertar SOLO texto, sin ningún wrapper
-                    const textNode = document.createTextNode(pasteData);
-                    range.insertNode(textNode);
-                    
-                    // Posicionar cursor después del texto
-                    range.setStartAfter(textNode);
-                    range.collapse(true);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
+                    if (!exito) {
+                        // Fallback manual solo si execCommand falla
+                        range.deleteContents();
+                        const textNode = document.createTextNode(pasteData);
+                        range.insertNode(textNode);
+                        range.setStartAfter(textNode);
+                        range.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
                 }
                 
-                // Limpiar cualquier formato que se haya colado
+                // Limpiar cualquier formato que se haya colado (DESPUÉS del insertText)
                 setTimeout(() => {
                     // Buscar y eliminar TODOS los elementos con formato
                     const elementosConFormato = descripcionElement.querySelectorAll('[style], span, font, b, i, strong, em, mark');
                     
                     if (elementosConFormato.length > 0) {
-                        console.log('🧹 Limpiando', elementosConFormato.length, 'elementos con formato');
-                        
+                        // Usar execCommand para la limpieza también (si es posible)
                         elementosConFormato.forEach(elem => {
-                            console.log('🧹 Limpiando elemento:', elem.tagName, elem.getAttribute('style'));
-                            // Reemplazar con texto plano
                             const texto = elem.textContent;
-                            const nodoTexto = document.createTextNode(texto);
-                            elem.parentNode.replaceChild(nodoTexto, elem);
+                            // Seleccionar el elemento con formato
+                            const rangeToClean = document.createRange();
+                            rangeToClean.selectNode(elem);
+                            selection.removeAllRanges();
+                            selection.addRange(rangeToClean);
+                            
+                            // Reemplazar con texto plano usando execCommand
+                            const cleanExito = document.execCommand('insertText', false, texto);
+                            
+                            if (!cleanExito) {
+                                // Fallback manual
+                                const nodoTexto = document.createTextNode(texto);
+                                elem.parentNode.replaceChild(nodoTexto, elem);
+                            }
                         });
+                        
+                        // Restaurar selección al final del texto pegado
+                        const allText = descripcionElement.textContent;
+                        const pasteIndex = allText.lastIndexOf(pasteData);
+                        if (pasteIndex !== -1) {
+                            const endPosition = pasteIndex + pasteData.length;
+                            posicionarCursorEnTexto(descripcionElement, endPosition);
+                        }
                     }
-                    
-                    console.log('✅ Limpieza completada');
-                }, 10);
+                }, 20); // Aumentar timeout para dar tiempo a execCommand
                 
                 // Guardar cambios
                 setTimeout(() => {
@@ -1617,7 +1740,6 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
                     if (taskId) {
                         const textoFinal = descripcionElement.textContent || '';
                         actualizarTareaDescripcion(taskId, textoFinal);
-                        console.log('💾 Guardado:', textoFinal.substring(0, 50));
                     }
                 }, 100);
             }
@@ -1628,9 +1750,10 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         if (targetElement.classList.contains('task-title') || 
             taskContainer?.classList.contains('task-title')) {
             
-            console.log('📝 Manejando título');
             const tituloElement = targetElement.classList.contains('task-title') ? 
                                 targetElement : taskContainer;
+            
+            // Redirigir el evento al elemento correcto
             Object.defineProperty(event, 'target', { value: tituloElement, writable: false });
             manejarPegadoTitulo(event);
             return;
@@ -1640,14 +1763,18 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         if (targetElement.classList.contains('input-task') || targetElement.tagName === 'TEXTAREA') {
             event.preventDefault();
             const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
+            
             if (pasteData) {
                 const textoLimpio = pasteData.trim();
-                document.execCommand('insertText', false, textoLimpio);
+                
+                const exito = document.execCommand('insertText', false, textoLimpio);
+                
+                if (!exito) {
+                    targetElement.value = (targetElement.value || '') + textoLimpio;
+                }
             }
             return;
         }
-        
-        console.log('⚠️ No manejado:', targetElement.tagName, targetElement.className);
     }, true);
 
     // ... (resto del código, después de esta función)
