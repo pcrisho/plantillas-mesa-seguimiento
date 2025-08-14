@@ -1400,340 +1400,257 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         }
     });
 
-    // app.js
+    // === FUNCIONES DE PEGADO SIMPLIFICADAS ===
+    
+    // Función auxiliar para obtener offset de texto
+    function getTextOffset(container, node, offset) {
+        let textOffset = 0;
+        const walker = document.createTreeWalker(
+            container,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
+        
+        let currentNode;
+        while (currentNode = walker.nextNode()) {
+            if (currentNode === node) {
+                return textOffset + offset;
+            }
+            textOffset += currentNode.textContent.length;
+        }
+        return textOffset;
+    }
+    
+    // Función auxiliar para posicionar cursor en texto
+    function posicionarCursorEnTexto(container, targetOffset) {
+        const walker = document.createTreeWalker(
+            container,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
+        
+        let currentOffset = 0;
+        let currentNode;
+        
+        while (currentNode = walker.nextNode()) {
+            const nodeLength = currentNode.textContent.length;
+            if (currentOffset + nodeLength >= targetOffset) {
+                const range = document.createRange();
+                const selection = window.getSelection();
+                const localOffset = targetOffset - currentOffset;
+                
+                range.setStart(currentNode, Math.min(localOffset, nodeLength));
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return;
+            }
+            currentOffset += nodeLength;
+        }
+    }
+    
+    // Función para manejar pegado en títulos de tareas
+    function manejarPegadoTitulo(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
+        if (pasteData) {
+            const textoLimpio = pasteData.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+            document.execCommand('insertText', false, textoLimpio);
+        }
+    }
 
-    // ... (resto del código anterior)
-
-    // === LÓGICA DE PEGADO ULTRA ESTRICTA (SOLO TEXTO PLANO) ===
-    document.addEventListener('paste', function (e) {
-        // Verificamos si el foco está en un elemento editable de tareas
-        if (e.target.classList.contains('task-title') ||
-            e.target.classList.contains('input-task') ||
-            e.target.classList.contains('task-description') ||
-            e.target.tagName === 'TEXTAREA') {
-
-            // BLOQUEAR COMPLETAMENTE el pegado por defecto
-            e.preventDefault();
-            e.stopPropagation();
-
-            const clipboardData = e.clipboardData || window.clipboardData;
+    // Función para manejar pegado en descripciones de tareas
+    function manejarPegadoDescripcion(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
+        if (!pasteData) return;
+        
+        console.log('🔧 Manejando pegado en descripción:', pasteData.substring(0, 50));
+        
+        // MÉTODO AGRESIVO: Limpiar completamente el contenido antes de pegar
+        const targetElement = event.target;
+        const selection = window.getSelection();
+        
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
             
-            // Verificar si hay archivos o imágenes en el portapapeles
-            if (clipboardData.files && clipboardData.files.length > 0) {
-                mostrarToast("❌ No se pueden pegar archivos o imágenes");
-                return;
-            }
-
-            // Verificar todos los tipos de datos disponibles
-            const types = clipboardData.types || [];
+            // Eliminar contenido seleccionado
+            range.deleteContents();
             
-            // Rechazar si contiene archivos o imágenes
-            if (types.includes('Files') || 
-                types.some(type => type.startsWith('image/')) ||
-                types.includes('application/x-moz-file')) {
-                mostrarToast("❌ Solo se permite texto plano");
-                return;
-            }
-
-            // Obtener EXCLUSIVAMENTE texto plano
-            let textoParaPegar = '';
+            // CRÍTICO: Crear un nodo de texto puro sin ningún wrapper
+            const textNode = document.createTextNode(pasteData);
+            range.insertNode(textNode);
             
-            try {
-                // Solo obtener text/plain - ignorar completamente text/html y otros formatos
-                textoParaPegar = clipboardData.getData('text/plain') || '';
-                
-                // Verificación adicional: si no hay texto plano puro, rechazar
-                if (!textoParaPegar || textoParaPegar.trim() === '') {
-                    mostrarToast("⚠️ Solo se puede pegar texto sin formato");
-                    return;
-                }
-                
-                // VALIDACIÓN ANTI-SPAM: detectar si el texto contiene HTML spam
-                const contieneHTMLSpam = /<[^>]+>/.test(textoParaPegar) || 
-                                       textoParaPegar.includes('style=') ||
-                                       textoParaPegar.includes('class=') ||
-                                       textoParaPegar.includes('&nbsp;') ||
-                                       textoParaPegar.includes('&amp;');
-                
-                if (contieneHTMLSpam) {
-                    // Advertir al usuario sobre contenido con formato
-                    console.warn('🚫 Detectado contenido HTML spam:', textoParaPegar.substring(0, 100));
-                    mostrarToast("⚠️ Detectado contenido con formato - se limpiará automáticamente");
-                }
-            } catch (error) {
-                console.error("Error al obtener texto del portapapeles:", error);
-                mostrarToast("❌ Error al acceder al portapapeles");
-                return;
-            }
-
-            // FUNCIÓN PARA DETECTAR Y ELIMINAR ETIQUETAS HTML SPAM (DEFINIR PRIMERO)
-            function limpiarHTMLSpam(texto) {
-                let textoSinSpam = texto;
-                
-                // MÉTODO 1: Usar DOM parser para extraer solo texto (más efectivo)
-                try {
-                    const tempElement = document.createElement('div');
-                    tempElement.innerHTML = textoSinSpam;
-                    textoSinSpam = tempElement.textContent || tempElement.innerText || '';
-                } catch (error) {
-                    console.warn('Error con DOM parser, usando método regex:', error);
-                }
-                
-                // MÉTODO 2: Limpieza agresiva con regex como respaldo
-                // Eliminar TODAS las etiquetas HTML (abiertas, cerradas, auto-cerradas)
-                textoSinSpam = textoSinSpam.replace(/<[^>]*>/g, '');
-                
-                // Eliminar entidades HTML comunes
-                const entidadesHTML = {
-                    '&amp;': '&',
-                    '&lt;': '<',
-                    '&gt;': '>',
-                    '&quot;': '"',
-                    '&#039;': "'",
-                    '&apos;': "'",
-                    '&nbsp;': ' ',
-                    '&copy;': '©',
-                    '&reg;': '®'
-                };
-                
-                // Reemplazar entidades HTML conocidas
-                Object.keys(entidadesHTML).forEach(entidad => {
-                    textoSinSpam = textoSinSpam.replace(new RegExp(entidad, 'gi'), entidadesHTML[entidad]);
-                });
-                
-                // Eliminar cualquier entidad HTML restante
-                textoSinSpam = textoSinSpam.replace(/&[a-zA-Z0-9#]+;/g, '');
-                
-                // Limpiar espacios múltiples, tabs y caracteres de control
-                textoSinSpam = textoSinSpam
-                    .replace(/[\u00A0\u2000-\u200B\u2028\u2029]/g, ' ') // Espacios especiales
-                    .replace(/\s+/g, ' ') // Múltiples espacios
-                    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Caracteres de control
-                    .trim();
-                
-                return textoSinSpam;
-            }
-
-            // LIMPIEZA EXHAUSTIVA del texto - ANTI-SPAM HTML
-            let textoLimpio;
+            // Posicionar cursor después del texto insertado
+            range.setStartAfter(textNode);
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
             
-            if (e.target.classList.contains('task-title')) {
-                // Para títulos: estrictamente una línea
-                textoLimpio = limpiarHTMLSpam(textoParaPegar)
-                    .replace(/[\r\n\t]/g, ' ')    // Todos los caracteres de control a espacios
-                    .replace(/\s+/g, ' ')         // Múltiples espacios a uno solo
-                    .replace(/[^\x20-\x7E\u00A0-\uFFFF]/g, '') // Remover caracteres de control
-                    .trim()
-                    .substring(0, 500);          // Límite de longitud para títulos
-            } else {
-                // Para descripciones: limpiar pero mantener estructura básica
-                textoLimpio = limpiarHTMLSpam(textoParaPegar)
-                    .replace(/\u00A0/g, ' ')      // Espacios no rompibles
-                    .replace(/\r\n/g, '\n')       // Normalizar Windows
-                    .replace(/\r/g, '\n')         // Normalizar Mac  
-                    .replace(/\t/g, '    ')       // Tabs a 4 espacios
-                    .replace(/[ \t]+/g, ' ')      // Múltiples espacios/tabs
-                    .replace(/\n[ ]+/g, '\n')     // Espacios después de saltos
-                    .replace(/[ ]+\n/g, '\n')     // Espacios antes de saltos
-                    .replace(/\n{3,}/g, '\n\n')   // Max 2 saltos consecutivos
-                    .replace(/[^\x20-\x7E\u00A0-\uFFFF\n]/g, '') // Solo caracteres imprimibles y saltos
-                    .trim()
-                    .substring(0, 5000);          // Límite razonable para descripciones
-            }
-
-            // Validación final del contenido
-            if (!textoLimpio || textoLimpio.trim().length === 0) {
-                mostrarToast("⚠️ El texto pegado está vacío o contiene solo caracteres no válidos");
-                return;
-            }
-            
-            // VALIDACIÓN FINAL: verificar que no quede HTML después de la limpieza
-            if (/<[^>]+>/.test(textoLimpio)) {
-                console.error('🚫 HTML detectado después de limpieza:', textoLimpio);
-                mostrarToast("❌ No se puede pegar contenido con formato HTML");
-                return;
-            }
-
-            // Verificar que el texto no sea suspiciosamente largo (posible spam)
-            if (textoLimpio.length > 10000) {
-                mostrarToast("⚠️ El texto es demasiado largo");
-                return;
-            }
-
-            // Insertar el texto usando el método más seguro - ANTI-HERENCIA DE FORMATO
-            try {
-                // DETECCIÓN PREVIA: Verificar si el elemento ya tiene formato que podría "contagiar"
-                const tieneFormatoPrevio = e.target.classList.contains('task-description') && 
-                                         e.target.children.length > 0;
-                
-                if (tieneFormatoPrevio) {
-                    console.log('🔍 Descripción con formato previo detectada - modo anti-herencia');
-                }
-                
-                // MÉTODO PRINCIPAL: execCommand insertText
-                if (document.execCommand) {
-                    // Asegurar que hay una selección válida o crear una
-                    const selection = window.getSelection();
-                    if (!selection.rangeCount) {
-                        const range = document.createRange();
-                        range.selectNodeContents(e.target);
-                        range.collapse(false);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    }
-                    
-                    // USAR insertText directamente
-                    const exitoso = document.execCommand('insertText', false, textoLimpio);
-                    
-                    if (exitoso) {
-                        console.log('✅ Texto insertado con execCommand');
-                        
-                        // VERIFICACIÓN INMEDIATA para descripciones con formato previo
-                        if (tieneFormatoPrevio) {
-                            setTimeout(() => {
-                                // Buscar inmediatamente si se aplicó formato no deseado
-                                const elementosConFormato = e.target.querySelectorAll('[style], span:not([class]), font, b, i, strong, em');
-                                if (elementosConFormato.length > 0) {
-                                    console.warn('🚨 Formato heredado detectado inmediatamente, corrigiendo...');
-                                    
-                                    // Extraer texto limpio y reaplican estructura
-                                    const textoLimpio = extraerTextoDeLineasDiv(e.target) || e.target.textContent;
-                                    convertirTextoADivsPorLinea(e.target, textoLimpio);
-                                    
-                                    mostrarToast("🔧 Formato heredado corregido");
-                                }
-                            }, 5); // Verificación muy rápida (5ms)
-                        }
-                        
-                        // Disparar evento input
-                        const inputEvent = new Event('input', { bubbles: true });
-                        e.target.dispatchEvent(inputEvent);
-                        return;
-                    }
-                }
-                
-                // FALLBACK: Método manual más controlado
-                console.warn('⚠️ execCommand no disponible, usando método manual anti-herencia');
-                
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                    // Para inputs tradicionales
-                    const start = e.target.selectionStart || 0;
-                    const end = e.target.selectionEnd || 0;
-                    const value = e.target.value || '';
-                    e.target.value = value.substring(0, start) + textoLimpio + value.substring(end);
-                    e.target.selectionStart = e.target.selectionEnd = start + textoLimpio.length;
-                } else {
-                    // Para contenteditable con formato: método super controlado
-                    const selection = window.getSelection();
-                    if (selection.rangeCount > 0) {
-                        const range = selection.getRangeAt(0);
-                        
-                        // Eliminar contenido seleccionado
-                        range.deleteContents();
-                        
-                        // CRÍTICO: Crear nodo de texto AISLADO para evitar herencia
-                        const textNode = document.createTextNode(textoLimpio);
-                        
-                        // Si es descripción con formato, envolver en div limpio
-                        if (tieneFormatoPrevio) {
-                            const divLimpio = document.createElement('div');
-                            divLimpio.appendChild(textNode);
-                            range.insertNode(divLimpio);
-                            
-                            // Posicionar cursor después del div
-                            range.setStartAfter(divLimpio);
-                        } else {
-                            // Para títulos o elementos sin formato previo
-                            range.insertNode(textNode);
-                            range.setStartAfter(textNode);
-                        }
-                        
-                        range.collapse(true);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    } else {
-                        // Inserción al final
-                        if (tieneFormatoPrevio) {
-                            // Crear div limpio
-                            const divLimpio = document.createElement('div');
-                            divLimpio.textContent = textoLimpio;
-                            e.target.appendChild(divLimpio);
-                        } else {
-                            // Texto directo
-                            const textNode = document.createTextNode(textoLimpio);
-                            e.target.appendChild(textNode);
-                        }
-                    }
-                }
-                
-                // Disparar evento input para el fallback
-                const inputEvent = new Event('input', { bubbles: true });
-                e.target.dispatchEvent(inputEvent);
-                
-            } catch (error) {
-                console.error("Error al insertar texto:", error);
-                mostrarToast("❌ Error al insertar el texto");
-                return;
-            }
-            
-            // LIMPIEZA POST-INSERCIÓN: Verificar herencia de formato (más específica)
+            // VERIFICACIÓN INMEDIATA: Limpiar cualquier formato heredado
             setTimeout(() => {
-                // Buscar específicamente problemas de herencia de formato
-                const elementosProblematicos = e.target.querySelectorAll(
-                    '[style*="color"], [style*="background"], [style*="font"], ' +
-                    'span:not([class]), font, b, i, strong, em, ' +
-                    '[class]:not([class="task-description"]):not([class="task-title"])'
-                );
+                // Buscar elementos con formato no deseado en toda la descripción
+                const elementosConFormato = targetElement.querySelectorAll('[style], span:not([class]), font, b, i, strong, em');
                 
-                if (elementosProblematicos.length > 0) {
-                    console.warn('🚨 Herencia de formato detectada:', elementosProblematicos.length, 'elementos');
+                if (elementosConFormato.length > 0) {
+                    console.warn('🚨 Formato heredado detectado, limpiando...');
                     
-                    // Log específico para debugging
-                    elementosProblematicos.forEach((elem, index) => {
-                        console.log(`Elemento ${index + 1}:`, elem.tagName, 
-                                  elem.getAttribute('style') || elem.getAttribute('class') || 'sin atributos');
+                    elementosConFormato.forEach(elem => {
+                        // Reemplazar elementos con formato por su contenido de texto
+                        const textContent = elem.textContent;
+                        const textNode = document.createTextNode(textContent);
+                        elem.parentNode.replaceChild(textNode, elem);
                     });
                     
-                    if (e.target.classList.contains('task-description')) {
-                        // Para descripciones: extraer texto y reaplican divs limpios
-                        const textoLimpio = extraerTextoDeLineasDiv(e.target) || e.target.textContent;
-                        console.log('🔧 Reaplicando formato limpio a descripción:', textoLimpio.substring(0, 50) + '...');
-                        convertirTextoADivsPorLinea(e.target, textoLimpio);
-                    } else {
-                        // Para títulos: usar textContent para eliminar todo formato
-                        console.log('🔧 Limpiando formato de título');
-                        e.target.textContent = e.target.textContent;
-                    }
-                    
-                    mostrarToast("🧹 Herencia de formato corregida");
-                } else {
-                    console.log('✅ No se detectó herencia de formato');
+                    // Normalizar la estructura de divs después de limpiar
+                    const textoCompleto = extraerTextoDeLineasDiv(targetElement);
+                    convertirTextoADivsPorLinea(targetElement, textoCompleto);
                 }
-            }, 20); // Verificación rápida para capturar herencia inmediata
+            }, 5);
+        }
+        
+        // Guardar cambios
+        setTimeout(() => {
+            const taskId = event.target.closest('.task-item').dataset.id;
+            if (taskId) {
+                const textoFinal = extraerTextoDeLineasDiv(event.target);
+                actualizarTareaDescripcion(taskId, textoFinal);
+            }
+        }, 50);
+    }
+
+    // === EVENT LISTENER PARA PEGADO SIMPLIFICADO ===
+    document.addEventListener('paste', function(event) {
+        let targetElement = event.target;
+        
+        console.log('🎯 PASTE detectado en:', targetElement.tagName, targetElement.className);
+        
+        // Buscar el contenedor de descripción o título más cercano
+        let taskContainer = null;
+        
+        // Si pegamos en BR, DIV sin clases, o cualquier elemento dentro de una tarea
+        if (targetElement.tagName === 'BR' || 
+            (targetElement.tagName === 'DIV' && !targetElement.className) ||
+            !targetElement.classList.contains('task-description') && !targetElement.classList.contains('task-title')) {
             
-            // Guardar cambios automáticamente para tareas
-            if (e.target.classList.contains('task-description') || e.target.classList.contains('task-title')) {
-                setTimeout(() => {
-                    const taskId = e.target.closest('.task-item')?.dataset.id;
-                    if (taskId) {
-                        if (e.target.classList.contains('task-description')) {
-                            const textoDescripcion = extraerTextoDeLineasDiv(e.target);
-                            actualizarTareaDescripcion(taskId, textoDescripcion);
-                        } else if (e.target.classList.contains('task-title')) {
-                            const tarea = tareas.find(t => t.id == taskId);
-                            if (tarea) {
-                                tarea.titulo = e.target.textContent;
-                                guardarTareaIndexedDB(tarea);
-                            }
+            // Buscar hacia arriba el contenedor de tarea más cercano
+            taskContainer = targetElement.closest('.task-description, .task-title');
+            console.log('🔍 Buscando contenedor padre...', taskContainer?.className);
+            
+            if (taskContainer) {
+                targetElement = taskContainer;
+            }
+        }
+        
+        // MANEJO PARA DESCRIPCIONES (incluyendo BR y divs internos)
+        if (targetElement.classList.contains('task-description') || 
+            taskContainer?.classList.contains('task-description')) {
+            
+            const descripcionElement = targetElement.classList.contains('task-description') ? 
+                                     targetElement : taskContainer;
+            
+            console.log('🚨 INTERCEPTANDO pegado en descripción');
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Obtener solo texto plano
+            const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
+            console.log('📝 Texto a pegar:', pasteData);
+            
+            if (pasteData) {
+                // MÉTODO ULTRA SIMPLE: Insertar solo texto donde está el cursor
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    
+                    // Si el cursor está en un BR, posicionarlo correctamente
+                    if (range.startContainer.nodeName === 'BR' || 
+                        (range.startContainer.nodeType === Node.ELEMENT_NODE && 
+                         range.startContainer.children[range.startOffset]?.nodeName === 'BR')) {
+                        // Posicionar antes del BR para insertar texto
+                        if (range.startContainer.nodeName === 'BR') {
+                            range.setStartBefore(range.startContainer);
                         }
                     }
-                }, 50);
+                    
+                    range.deleteContents();
+                    
+                    // Insertar SOLO texto, sin ningún wrapper
+                    const textNode = document.createTextNode(pasteData);
+                    range.insertNode(textNode);
+                    
+                    // Posicionar cursor después del texto
+                    range.setStartAfter(textNode);
+                    range.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+                
+                // Limpiar cualquier formato que se haya colado
+                setTimeout(() => {
+                    // Buscar y eliminar TODOS los elementos con formato
+                    const elementosConFormato = descripcionElement.querySelectorAll('[style], span, font, b, i, strong, em, mark');
+                    
+                    if (elementosConFormato.length > 0) {
+                        console.log('🧹 Limpiando', elementosConFormato.length, 'elementos con formato');
+                        
+                        elementosConFormato.forEach(elem => {
+                            console.log('🧹 Limpiando elemento:', elem.tagName, elem.getAttribute('style'));
+                            // Reemplazar con texto plano
+                            const texto = elem.textContent;
+                            const nodoTexto = document.createTextNode(texto);
+                            elem.parentNode.replaceChild(nodoTexto, elem);
+                        });
+                    }
+                    
+                    console.log('✅ Limpieza completada');
+                }, 10);
+                
+                // Guardar cambios
+                setTimeout(() => {
+                    const taskId = descripcionElement.closest('.task-item')?.dataset.id;
+                    if (taskId) {
+                        const textoFinal = descripcionElement.textContent || '';
+                        actualizarTareaDescripcion(taskId, textoFinal);
+                        console.log('💾 Guardado:', textoFinal.substring(0, 50));
+                    }
+                }, 100);
             }
-            
-            // Confirmación de pegado exitoso
-            mostrarToast("📝 Texto limpio pegado correctamente");
+            return;
         }
-    });
+        
+        // MANEJO PARA TÍTULOS
+        if (targetElement.classList.contains('task-title') || 
+            taskContainer?.classList.contains('task-title')) {
+            
+            console.log('📝 Manejando título');
+            const tituloElement = targetElement.classList.contains('task-title') ? 
+                                targetElement : taskContainer;
+            Object.defineProperty(event, 'target', { value: tituloElement, writable: false });
+            manejarPegadoTitulo(event);
+            return;
+        }
+        
+        // MANEJO PARA INPUTS/TEXTAREAS
+        if (targetElement.classList.contains('input-task') || targetElement.tagName === 'TEXTAREA') {
+            event.preventDefault();
+            const pasteData = (event.clipboardData || window.clipboardData).getData('text/plain');
+            if (pasteData) {
+                const textoLimpio = pasteData.trim();
+                document.execCommand('insertText', false, textoLimpio);
+            }
+            return;
+        }
+        
+        console.log('⚠️ No manejado:', targetElement.tagName, targetElement.className);
+    }, true);
+
+    // ... (resto del código, después de esta función)
 
     // ... (resto del código, después de esta función)
 
@@ -1745,7 +1662,10 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
 
             for (const tarea of todasLasTareas) {
                 if (tarea.descripcion && tarea.descripcion.includes('<')) {
-                    const descripcionLimpia = limpiarHTMLParaTarea(tarea.descripcion);
+                    // Usar DOM parser para limpiar HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = tarea.descripcion;
+                    const descripcionLimpia = tempDiv.textContent || tempDiv.innerText || '';
                     if (descripcionLimpia !== tarea.descripcion) {
                         tarea.descripcion = descripcionLimpia;
                         await guardarTareaIndexedDB(tarea);
