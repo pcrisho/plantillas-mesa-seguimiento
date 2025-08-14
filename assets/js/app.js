@@ -204,7 +204,7 @@ function convertirTextoADivsPorLinea(elemento, texto) {
         return;
     }
     
-    // Si el texto contiene algunos elementos HTML pero no está completamente estructurado
+    // Si el texto contiene algunos elementos HTML pero no está completamente estructurado contiene la lógica general
     if (texto.includes('<') || texto.includes('<br>')) {
         // Crear un elemento temporal para extraer solo el texto
         const tempDiv = document.createElement('div');
