@@ -4698,7 +4698,16 @@
 
         <div class="todo-content">
             <div class="todo-input-container">
-                <input type="text" id="new-task-input" placeholder="Añadir nueva tarea...">
+                <input type="text" 
+                       id="new-task-input" 
+                       placeholder="Añadir nueva tarea..."
+                       autocomplete="off" 
+                       autocorrect="off" 
+                       autocapitalize="off" 
+                       spellcheck="false"
+                       data-gramm="false"
+                       data-gramm_editor="false"
+                       data-enable-grammarly="false">
                 <!-- El botón de añadir tarea está implícito en la pulsación de Enter -->
             </div>
             <ul id="task-list" class="task-list"></ul>
