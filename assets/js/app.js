@@ -1216,8 +1216,8 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
 
     // Funciones adicionales para ventana global
     window.copiarEnlace = copiarEnlace;
-    window.limpiarTareasExistentes = limpiarTareasExistentes; // Desde paste-handler module // Agregar esta línea
-    window.agregarTarea = agregarTarea; // Agregar función para crear tareas desde plantillas
+    window.limpiarTareasExistentes = limpiarTareasExistentes; // Desde paste-handler module
+    window.agregarTarea = agregarTarea; // Para crear tareas desde plantillas
     window.descardarCodigos = function () {
         const codigos = getCodigosGenerados();
         if (codigos.length === 0) {
@@ -1270,7 +1270,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
     }
 
     // Función utilitaria para limpiar tareas existentes con formato corrupto (solo si es necesario)
-    window.limpiarTareasExistentes = async function () {
+    window.limpiarTareasConFormatoCorrupto = async function () {
         try {
             const todasLasTareas = await obtenerTodasTareasIndexedDB();
             let tareasLimpiadas = 0;
