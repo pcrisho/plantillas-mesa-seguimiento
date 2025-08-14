@@ -9,11 +9,11 @@ import {
     eliminarTodasLasTareasIndexedDB
 } from './indexeddb.js';
 
+import { sessionManager, getSessionVars } from './modules/session.js';
+
 // === VARIABLES GLOBALES ===
 let toastVisible = false;
 const toastQueue = [];
-let nombreAsesor = "";
-let usuarioAdp = "";
 let correlativo = 1;
 let letraActual = "A";
 let codigosGenerados = [];
@@ -100,19 +100,28 @@ function toggleElementVisibility(element, visible, displayMode = "flex") {
 }
 
 // === LÓGICA DE SESIÓN Y CÓDIGOS ===
-function claveUsuario() { return `codigos_${usuarioAdp}`; }
+function claveUsuario() { 
+    const { usuarioAdp } = getSessionVars();
+    return `codigos_${usuarioAdp}`;
+}
+
 function guardarDatos() {
     const fecha = new Date().toDateString();
+    const { usuarioAdp } = getSessionVars();
     const clave = `codigos_${usuarioAdp}`;
     localStorage.setItem(clave, JSON.stringify({ fecha, codigos: codigosGenerados }));
 }
+
 function mostrarUltimoCodigoGenerado() {
     const ult = codigosGenerados[codigosGenerados.length - 1] || "";
     const codigoGenerado = document.getElementById("codigo-generado");
     if (codigoGenerado) codigoGenerado.textContent = ult;
 }
+
 function cargarDatosGuardados() {
+    const { usuarioAdp } = getSessionVars();
     if (!usuarioAdp) return;
+    
     const clave = `codigos_${usuarioAdp}`;
     const data = JSON.parse(localStorage.getItem(clave));
     const fechaActual = new Date().toDateString();
@@ -137,7 +146,9 @@ function cargarDatosGuardados() {
     }
     mostrarUltimoCodigoGenerado();
 }
+
 function generarCodigo() {
+    const { usuarioAdp } = getSessionVars();
     if (!usuarioAdp || usuarioAdp.length !== 7) {
         mostrarToast("⚠️ Primero guarda tu usuario correctamente.");
         return;
@@ -182,6 +193,7 @@ function limpiarCodigosVisuales() {
 
 // === LÓGICA DE TO-DO LIST ===
 function saveTareas() {
+    const { usuarioAdp } = getSessionVars();
     localStorage.setItem(`filtro_tareas_${usuarioAdp || 'anonimo'}`, filtroActual);
 }
 
@@ -241,14 +253,8 @@ function renderTareas() {
         const descripcionElement = li.querySelector('.task-description');
 
         if (descripcionElement && task.descripcion) {
-            // SIEMPRE convertir texto a estructura de divs por línea, 
-            // incluso si ya tiene formato (para migrar tareas existentes)
-            console.log(`🔧 Aplicando formato de divs a tarea ${task.id}:`, task.descripcion);
+            // Aplicar formato de divs por línea
             convertirTextoADivsPorLinea(descripcionElement, task.descripcion);
-            
-            // Verificar que se aplicó correctamente
-            const divsGenerados = descripcionElement.querySelectorAll('div');
-            console.log(`✅ Divs generados: ${divsGenerados.length}`);
         } else if (descripcionElement) {
             // Descripción vacía - agregar div placeholder
             descripcionElement.innerHTML = '<div><br></div>';
@@ -256,13 +262,7 @@ function renderTareas() {
 
         taskList.appendChild(li);
     });
-
-    // Configurar event listeners usando delegation (solo una vez)
-    setupTaskEditingListeners();
 }
-
-// === VARIABLES DE CONTROL PARA DESHACER GRANULAR ===
-// (Removidas para evitar interferencia)
 
 // === FUNCIONES PARA MANEJO DE DIVS POR LÍNEA ===
 
@@ -422,31 +422,6 @@ function limpiarDivsVacios(contenedor) {
 }
 
 // Configurar event listeners para edición de tareas usando delegation
-function setupTaskEditingListeners() {
-    // Solo configurar una vez, no en cada render
-    if (setupTaskEditingListeners.configured) return;
-    setupTaskEditingListeners.configured = true;
-
-    // Event listener para guardado al perder foco
-    document.addEventListener('blur', function (event) {
-        if (event.target.classList.contains('task-description')) {
-            const taskId = event.target.closest('.task-item').dataset.id;
-            if (taskId) {
-                // Usar extraerTextoDeLineasDiv para descripciones con estructura de divs
-                const textoDescripcion = extraerTextoDeLineasDiv(event.target);
-                actualizarTareaDescripcion(taskId, textoDescripcion);
-            }
-        } else if (event.target.classList.contains('task-title')) {
-            const taskId = event.target.closest('.task-item').dataset.id;
-            const tarea = tareas.find(t => t.id == taskId);
-            if (tarea) {
-                tarea.titulo = event.target.textContent;
-                guardarTareaIndexedDB(tarea);
-            }
-        }
-    }, true);
-}
-
 // Función para inicializar el sistema de tareas en todas las plantillas
 function inicializarSistemaTareas() {
     const copiadores = document.querySelectorAll('.copiar-contenedor');
@@ -485,6 +460,24 @@ function inicializarSistemaTareas() {
 
     // Event delegation para manejar todos los inputs y botones de tareas
     setupTaskEventListeners();
+    
+    // Event listener para guardado al perder foco (configurado una sola vez)
+    document.addEventListener('blur', function (event) {
+        if (event.target.classList.contains('task-description')) {
+            const taskId = event.target.closest('.task-item')?.dataset.id;
+            if (taskId) {
+                const textoDescripcion = extraerTextoDeLineasDiv(event.target);
+                actualizarTareaDescripcion(taskId, textoDescripcion);
+            }
+        } else if (event.target.classList.contains('task-title')) {
+            const taskId = event.target.closest('.task-item')?.dataset.id;
+            const tarea = tareas.find(t => t.id == taskId);
+            if (tarea) {
+                tarea.titulo = event.target.textContent;
+                guardarTareaIndexedDB(tarea);
+            }
+        }
+    }, true);
 }
 
 // Configurar event listeners usando delegation
@@ -507,9 +500,13 @@ function setupTaskEventListeners() {
     });
 }
 
-// Función para agregar tarea desde plantilla
+// Función unificada para agregar tarea (desde plantilla o modal)
 async function agregarTarea(inputElement) {
-    if (!inputElement) return;
+    if (!inputElement) {
+        // Si no se pasa inputElement, buscar el input del modal
+        inputElement = document.getElementById('new-task-input');
+        if (!inputElement) return;
+    }
 
     const texto = inputElement.value.trim();
     if (!texto) {
@@ -524,62 +521,59 @@ async function agregarTarea(inputElement) {
         return;
     }
 
-    // Buscar la plantilla asociada al input
+    let descripcionPlantilla = '';
+
+    // Si viene desde una plantilla (no desde el modal)
     const plantillaContainer = inputElement.closest('.plantilla');
-    if (!plantillaContainer) {
-        mostrarToast("No se pudo encontrar la plantilla asociada");
-        return;
+    if (plantillaContainer) {
+        // Buscar el texto de la plantilla de manera más flexible
+        let plantillaTexto = plantillaContainer.querySelector('#texto-plantilla');
+        if (!plantillaTexto) {
+            // Buscar cualquier párrafo que contenga contenido de plantilla
+            const paragrafos = plantillaContainer.querySelectorAll('p');
+            plantillaTexto = Array.from(paragrafos).find(p =>
+                p.innerHTML.length > 50 && // Debe tener contenido sustancial
+                !p.closest('.copiar-contenedor') // No debe estar en el contenedor de copia
+            );
+        }
+
+        if (plantillaTexto) {
+            // Obtener el texto de la plantilla usando la misma lógica que copiarPlantilla()
+            descripcionPlantilla = plantillaTexto.innerText || plantillaTexto.textContent;
+
+            // Reemplazar placeholders dinámicos DESPUÉS de obtener el texto limpio
+            const { nombreAsesor } = getSessionVars();
+            if (nombreAsesor) {
+                descripcionPlantilla = descripcionPlantilla.replace(/ADP MULTISKILL HITSS/g, `${nombreAsesor} - ADP MULTISKILL HITSS`);
+            }
+
+            // Reemplazar fechas dinámicas en el texto limpio
+            const fecha = new Date();
+            const dia = fecha.getDate();
+            const mes = fecha.toLocaleString("es-PE", { month: "long" });
+            const anio = fecha.getFullYear();
+            const horas = fecha.getHours().toString().padStart(2, "0");
+            const minutos = fecha.getMinutes().toString().padStart(2, "0");
+            const hora = `${horas}:${minutos}`;
+
+            // Generar saludo dinámico
+            const saludoDinamico = obtenerSaludoDinamico();
+
+            // Reemplazar todos los placeholders dinámicos de manera más eficiente
+            const replacements = [
+                { pattern: /\[dia\]/g, value: dia },
+                { pattern: /\[mes\]/g, value: mes },
+                { pattern: /\[anio\]/g, value: anio },
+                { pattern: /\[hora\]/g, value: hora },
+                { pattern: /\[saludo-dinamico\]/g, value: saludoDinamico }
+            ];
+
+            // Aplicar todos los reemplazos
+            replacements.forEach(({ pattern, value }) => {
+                descripcionPlantilla = descripcionPlantilla.replace(pattern, value);
+            });
+        }
     }
-
-    // Buscar el texto de la plantilla de manera más flexible
-    let plantillaTexto = plantillaContainer.querySelector('#texto-plantilla');
-    if (!plantillaTexto) {
-        // Buscar cualquier párrafo que contenga contenido de plantilla
-        const paragrafos = plantillaContainer.querySelectorAll('p');
-        plantillaTexto = Array.from(paragrafos).find(p =>
-            p.innerHTML.length > 50 && // Debe tener contenido sustancial
-            !p.closest('.copiar-contenedor') // No debe estar en el contenedor de copia
-        );
-    }
-
-    if (!plantillaTexto) {
-        mostrarToast("No se pudo encontrar el texto de la plantilla");
-        return;
-    }
-
-    // Obtener el texto de la plantilla usando la misma lógica que copiarPlantilla()
-    let descripcionPlantilla = plantillaTexto.innerText || plantillaTexto.textContent;
-
-    // Reemplazar placeholders dinámicos DESPUÉS de obtener el texto limpio
-    if (nombreAsesor) {
-        descripcionPlantilla = descripcionPlantilla.replace(/ADP MULTISKILL HITSS/g, `${nombreAsesor} - ADP MULTISKILL HITSS`);
-    }
-
-    // Reemplazar fechas dinámicas en el texto limpio
-    const fecha = new Date();
-    const dia = fecha.getDate();
-    const mes = fecha.toLocaleString("es-PE", { month: "long" });
-    const anio = fecha.getFullYear();
-    const horas = fecha.getHours().toString().padStart(2, "0");
-    const minutos = fecha.getMinutes().toString().padStart(2, "0");
-    const hora = `${horas}:${minutos}`;
-
-    // Generar saludo dinámico
-    const saludoDinamico = obtenerSaludoDinamico();
-
-    // Reemplazar todos los placeholders dinámicos de manera más eficiente
-    const replacements = [
-        { pattern: /\[dia\]/g, value: dia },
-        { pattern: /\[mes\]/g, value: mes },
-        { pattern: /\[anio\]/g, value: anio },
-        { pattern: /\[hora\]/g, value: hora },
-        { pattern: /\[saludo-dinamico\]/g, value: saludoDinamico }
-    ];
-
-    // Aplicar todos los reemplazos
-    replacements.forEach(({ pattern, value }) => {
-        descripcionPlantilla = descripcionPlantilla.replace(pattern, value);
-    });
 
     // Crear nueva tarea
     const nueva = {
@@ -599,10 +593,12 @@ async function agregarTarea(inputElement) {
 
         mostrarToast("✅ Tarea creada exitosamente");
 
-        // Abrir el modal de lista de tareas (usar el selector correcto)
-        const todoDialog = document.getElementById('todo-dialog');
-        if (todoDialog) {
-            todoDialog.showModal();
+        // Si viene desde plantilla, abrir el modal de lista de tareas
+        if (plantillaContainer) {
+            const todoDialog = document.getElementById('todo-dialog');
+            if (todoDialog) {
+                todoDialog.showModal();
+            }
         }
 
         // Actualizar vista de tareas si es necesario
@@ -642,59 +638,9 @@ function obtenerSaludoDinamico() {
     }
 }
 
-async function addTarea() {
-    const newTaskInput = document.getElementById('new-task-input');
-    if (!newTaskInput) return;
-    const texto = newTaskInput.value.trim();
-    if (!texto) return;
-    const pendientes = tareas.filter(t => !t.completada);
-    if (pendientes.length >= 6) {
-        mostrarToast("Regulariza tus plantillas antes de agregar más");
-        return;
-    }
-    const nueva = {
-        id: Date.now(),
-        titulo: texto,
-        descripcion: '',
-        completada: false,
-        fechaCreacion: new Date().toISOString() // Debe guardar la hora exacta
-    };
-    tareas.push(nueva);
-    await guardarTareaIndexedDB(nueva);
-    newTaskInput.value = '';
-    if (fechaSeleccionada !== fechaHoy) {
-        fechaSeleccionada = fechaHoy;
-        const dateInput = document.getElementById('date-input');
-        if (dateInput) dateInput.value = fechaHoy;
-        await actualizarVistaTareas(fechaSeleccionada);
-    } else {
-        renderTareas();
-    }
-}
-
 async function actualizarVistaTareas(fecha) {
     try {
         tareas = await obtenerTareasPorFecha(fecha);
-        
-        // Proceso de migración: asegurar que todas las descripciones usen formato de texto plano
-        let hayMigracion = false;
-        for (let tarea of tareas) {
-            if (tarea.descripcion && (tarea.descripcion.includes('<div>') || tarea.descripcion.includes('<br>'))) {
-                // Esta tarea tiene HTML, necesita migración
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = tarea.descripcion;
-                tarea.descripcion = tempDiv.textContent || tempDiv.innerText || '';
-                hayMigracion = true;
-                
-                // Guardar la tarea migrada
-                await guardarTareaIndexedDB(tarea);
-            }
-        }
-        
-        if (hayMigracion) {
-            console.log('🔄 Migración completada: descripciones convertidas a texto plano');
-        }
-        
         renderTareas();
     } catch (error) {
         console.error("Error al cargar las tareas para la fecha seleccionada:", error);
@@ -762,26 +708,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (dateInput) dateInput.value = fechaHoy;
 
-    // === Lógica inicial de carga de sesión ===
-    function cargarCredenciales() {
-        const adpGuardado = localStorage.getItem("adpNombre");
-        const usuarioGuardado = localStorage.getItem("adpUsuario");
-        if (adpGuardado && usuarioGuardado) {
-            nombreAsesor = adpGuardado;
-            usuarioAdp = usuarioGuardado;
-            if (spanAdp) spanAdp.textContent = nombreAsesor;
-            if (spanUsuario) spanUsuario.textContent = usuarioAdp;
-            toggleElementVisibility(userCredentials, true);
-            toggleElementVisibility(btnAbrirModal, false);
-            document.querySelectorAll(".adp").forEach(span => {
-                span.textContent = nombreAsesor;
-            });
-            cargarDatosGuardados();
-        } else {
-            if (modal) modal.showModal();
-        }
-    }
-    cargarCredenciales();
+    // === Inicializar sesión con el SessionManager ===
+    sessionManager.inicializar();
 
     // === Event listeners para la sesión ===
     if (btnAbrirModal) {
@@ -794,17 +722,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const nombre = inputAdp.value.trim();
             const usuario = inputUsuario.value.trim().toUpperCase();
             if (nombre && usuario.length === 7) {
-                localStorage.setItem("adpNombre", nombre);
-                localStorage.setItem("adpUsuario", usuario);
-                nombreAsesor = nombre;
-                usuarioAdp = usuario;
-                if (spanAdp) spanAdp.textContent = nombreAsesor;
-                if (spanUsuario) spanUsuario.textContent = usuarioAdp;
-                toggleElementVisibility(userCredentials, true);
-                toggleElementVisibility(btnAbrirModal, false);
-                document.querySelectorAll(".adp").forEach(span => {
-                    span.textContent = nombreAsesor;
-                });
+                sessionManager.guardarCredenciales(nombre, usuario);
                 cerrarDialogConAnimacion(modal);
                 cargarDatosGuardados();
             } else {
@@ -824,22 +742,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (btnConfirmarCerrarSesion) {
         btnConfirmarCerrarSesion.addEventListener("click", () => {
-            localStorage.removeItem("adpNombre");
-            localStorage.removeItem("adpUsuario");
-            toggleElementVisibility(userCredentials, false);
-            toggleElementVisibility(btnAbrirModal, true);
-            if (spanAdp) spanAdp.textContent = "";
-            if (spanUsuario) spanUsuario.textContent = "";
-            document.querySelectorAll(".adp").forEach(span => {
-                span.textContent = "";
-            });
-            nombreAsesor = "";
-            usuarioAdp = "";
+            sessionManager.cerrarSesion();
             codigosGenerados = [];
             const listaCodigos = document.getElementById("lista-codigos");
             if (listaCodigos) listaCodigos.innerHTML = "";
             const codigoGenerado = document.getElementById("codigo-generado");
             if (codigoGenerado) codigoGenerado.textContent = "";
+            if (confirmDialog) confirmDialog.close();
+            if (modal) modal.showModal();
             if (confirmDialog) confirmDialog.close();
             if (modal) modal.showModal();
         });
@@ -887,10 +797,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
         
-        // Event listener MÍNIMO - solo guardado
+        // Event listener para manejar Enter en descripciones
         taskList.addEventListener('keydown', async (e) => {
-            // Comentar manejo de Enter para debugging
-            /*
             if (e.target.classList.contains('task-description') && e.key === 'Enter') {
                 manejarEnterEnDescripcion(e);
                 
@@ -908,7 +816,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 }, 10);
             }
-            */
         });
         
         // Event listener para actualizar tarea al perder foco o modificar
@@ -933,7 +840,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         newTaskInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                addTarea();
+                agregarTarea(); // Llamar función unificada sin parámetros
             }
         });
     }
@@ -961,6 +868,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // === PDF limpio estilo Notion con jsPDF ===
     function descargarTareasPDF(tareas) {
         try {
+            const { nombreAsesor } = getSessionVars();
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF();
 
@@ -1148,6 +1056,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // === Función para generar contenido Markdown ===
     function generarMarkdown(tareas) {
+        const { nombreAsesor } = getSessionVars();
         const fecha = new Date().toLocaleDateString('es-PE');
         const usuario = nombreAsesor || 'Usuario';
 
@@ -1323,6 +1232,7 @@ ${descripcionEscapada}
             const [año, mes, dia] = fechaVisita.split('-');
             fechaFormateada = `${dia}/${mes}`;
         }
+        const { nombreAsesor } = getSessionVars();
         const plantillaTexto = `MESA DE PROGRAMACIONES HITSS<br>
 REPROGRAMADO EN ${tipoRepro} / REAGENDADO POR ${tipoReagen}<br>
 CLIENTE:&nbsp;${nombreCliente}<br>
@@ -1576,65 +1486,6 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
         }, 20);
     }
 
-    // === FUNCIÓN DE UTILIDAD PARA DEBUGGING ===
-    window.debugPasteInfo = function() {
-        console.log('🔍 === INFORMACIÓN DE DEBUG PARA PEGADO ===');
-        console.log('⏰ Timestamp:', new Date().toLocaleString());
-        
-        // Verificar si las funciones están disponibles
-        console.log('🔧 Funciones disponibles:', {
-            manejarPegadoTitulo: typeof manejarPegadoTitulo,
-            manejarPegadoDescripcion: typeof manejarPegadoDescripcion,
-            posicionarCursorEnTexto: typeof posicionarCursorEnTexto,
-            actualizarTareaDescripcion: typeof actualizarTareaDescripcion,
-            actualizarTareaTitulo: typeof actualizarTareaTitulo
-        });
-        
-        // Verificar elementos en la página
-        const descripciones = document.querySelectorAll('.task-description');
-        const titulos = document.querySelectorAll('.task-title');
-        
-        console.log('📋 Elementos en la página:', {
-            descripciones: descripciones.length,
-            titulos: titulos.length,
-            tareas: document.querySelectorAll('.task-item').length
-        });
-        
-        // Verificar selección actual
-        const selection = window.getSelection();
-        console.log('🎯 Selección actual:', {
-            type: selection.type,
-            rangeCount: selection.rangeCount,
-            isCollapsed: selection.isCollapsed,
-            anchorNode: selection.anchorNode?.nodeName || 'N/A',
-            focusNode: selection.focusNode?.nodeName || 'N/A'
-        });
-        
-        // Verificar support de execCommand
-        console.log('⚡ Soporte execCommand:', {
-            insertText: document.queryCommandSupported('insertText'),
-            copy: document.queryCommandSupported('copy'),
-            paste: document.queryCommandSupported('paste')
-        });
-        
-        console.log('✅ Debug info completado');
-    };
-    
-    // === FUNCIÓN PARA TESTEAR PEGADO ===
-    window.testPaste = function(texto = 'Texto de prueba') {
-        console.log('🧪 === INICIANDO TEST DE PEGADO ===');
-        
-        const selection = window.getSelection();
-        if (selection.rangeCount === 0) {
-            console.warn('⚠️ No hay selección activa. Haz clic en una descripción o título primero.');
-            return;
-        }
-        
-        const resultado = document.execCommand('insertText', false, texto);
-        console.log('✅ Test execCommand resultado:', resultado);
-        console.log('🧪 === FIN TEST DE PEGADO ===');
-    };
-
     // === EVENT LISTENER PARA PEGADO SIMPLIFICADO ===
     document.addEventListener('paste', function(event) {
         let targetElement = event.target;
@@ -1779,9 +1630,7 @@ REALIZADO POR: ${nombreAsesor || ""} - ADP MULTISKILL HITSS`;
 
     // ... (resto del código, después de esta función)
 
-    // ... (resto del código, después de esta función)
-
-    // Función utilitaria para limpiar tareas existentes con formato corrupto
+    // Función utilitaria para limpiar tareas existentes con formato corrupto (solo si es necesario)
     window.limpiarTareasExistentes = async function () {
         try {
             const todasLasTareas = await obtenerTodasTareasIndexedDB();
