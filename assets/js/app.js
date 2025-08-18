@@ -30,7 +30,7 @@ const toastQueue = [];
 let tareas = [];
 let filtroActual = 'all';
 
-// --- VARIABLES PARA EL FILTRO POR FECHA ---
+// --- VARIABLES PARA EL FILTRO POR FECHA - LISTA DE TAREAS---
 // Usamos el formato YYYY-MM-DD para compatibilidad
 const hoy = new Date();
 const anio = hoy.getFullYear();
